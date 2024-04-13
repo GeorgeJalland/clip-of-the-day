@@ -1,19 +1,29 @@
 import os
 from datetime import datetime, timedelta
 from random import randrange
-import shutil
 
+today = datetime.now().date()
 
-original_name = "Rocket League (64-bit, DX11, Cooked) 2024-04-12 17-32-37.mp4"
+def get_random_video(directory):
+    days = 0
+    eligible_vids = []
+    while not eligible_vids:
+        date = today - timedelta(days)
+        eligible_vids = get_videos(directory, date)
+        days += 1
+        
+    return eligible_vids[randrange(len(eligible_vids))]
 
-today = datetime.now().date() - timedelta(3)
+def get_videos(directory, date):
+        vids = os.listdir(directory)
+        eligible_vids = []
+        for vid_name in vids:
+            filepath = os.path.join(directory, vid_name)
+            created_time = datetime.fromtimestamp(os.path.getctime(filepath))
+            if created_time.date() == date:
+                eligible_vids.append(vid_name)
 
-directory = '/Users/georg/Videos/Captures'
-files = os.listdir(directory)
-files_created_today = []
+        return eligible_vids
 
-for filename in files:
-    filepath = os.path.join(directory, filename)
-    created_time = datetime.fromtimestamp(os.path.getctime(filepath))
-    if created_time.date() == today:
-        files_created_today.append(filename)
+if __name__ == "__main__":
+    print(get_random_video('/Users/georg/Videos/Captures/'))
