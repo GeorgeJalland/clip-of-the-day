@@ -3,9 +3,6 @@ from datetime import datetime, timedelta
 from random import randrange
 import shutil
 
-def copy_file(source_path, destination_path):
-    shutil.copy(source_path, destination_path)
-
 
 original_name = "Rocket League (64-bit, DX11, Cooked) 2024-04-12 17-32-37.mp4"
 
