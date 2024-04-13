@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Clip of the Day</title>
+        <h1>Rocket League Clip of the Day</h1>
+        <style>
+            #videoElement {
+              width: 50vw;
+              height: auto;
+              display: block;
+              margin: 0 auto;
+            }
+            body {
+                text-align: center; /* Center aligns all content within the body */
+                font-family: Arial, sans-serif; /* Change font to Arial or fallback sans-serif */
+            }
+          </style>
+          <link rel="icon" href="/static/fennec.ico" type="image/x-icon">
+    </head>
+    <body>
+        <video id="videoElement" controls autoplay muted>
+            <source src={{url_for('static', filename=path_to_video)}} type="video/mp4">
+        </video>
+    </body>
+</html>
