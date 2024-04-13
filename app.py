@@ -11,4 +11,4 @@ def main():
     if not os.path.isfile(destination_path):
         print("file copied")
         copy_file(source_path, destination_path)
-    return render_template('index.html', path_to_video="latest.mp4")
+    return render_template('index.html', path_to_video="/Users/georg/Videos/Captures/latest.mp4")
