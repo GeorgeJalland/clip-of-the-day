@@ -14,7 +14,7 @@
             #videoElement {
               border: 2px solid rgb(74, 246, 38);
               border-radius: 8px;
-              width: 60vw;
+              width: 65vw;
               height: auto;
               display: block;
               margin: 0 auto;
@@ -25,6 +25,11 @@
                 right: 0;
                 padding: 10px;
                 color: white
+            }
+            @media screen and (orientation: portrait) {
+                #videoElement {
+                    width: 90vw; /* Adjust width for smaller screens */
+                }
             }
           </style>
           <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
