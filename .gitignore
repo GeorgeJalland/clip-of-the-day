@@ -1,5 +1,8 @@
 # ignore venv
 venv
 
-#ignore pycache
+# ignore pycache
 __pycache__
+
+#ignore copied file
+static/*.mp4

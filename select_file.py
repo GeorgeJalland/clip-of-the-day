@@ -1,6 +1,11 @@
 import os
 from datetime import datetime, timedelta
 from random import randrange
+import shutil
+
+def copy_file(source_path, destination_path):
+    shutil.copy(source_path, destination_path)
+
 
 original_name = "Rocket League (64-bit, DX11, Cooked) 2024-04-12 17-32-37.mp4"
 
@@ -15,9 +20,3 @@ for filename in files:
     created_time = datetime.fromtimestamp(os.path.getctime(filepath))
     if created_time.date() == today:
         files_created_today.append(filename)
-
-print(files_created_today)
-print(today)
-print(len(files_created_today))
-print(randrange(1, len(files_created_today)+1))
-
