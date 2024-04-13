@@ -5,21 +5,32 @@
         <h1>Rocket League Clip of the Day</h1>
         <style>
             #videoElement {
-              width: 50vw;
+              border: 2px solid rgb(74, 246, 38);
+              border-radius: 8px;
+              width: 60vw;
               height: auto;
               display: block;
               margin: 0 auto;
             }
             body {
                 text-align: center; /* Center aligns all content within the body */
-                font-family: Arial, sans-serif; /* Change font to Arial or fallback sans-serif */
+                font-family: 'VT323', monospace;
+                background-color: #1e1e1e;
+                color: rgb(74, 246, 38);
+            }
+            .actions{
+                font-size: large;
             }
           </style>
           <link rel="icon" href="/static/fennec.ico" type="image/x-icon">
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
     </head>
     <body>
         <video id="videoElement" controls autoplay muted loop>
             <source src={{path_to_video}} type="video/mp4">
         </video>
+        <div class="actions" id="new_clip">
+            <br>[RANDOM CLIP]
+        </div>
     </body>
 </html>
