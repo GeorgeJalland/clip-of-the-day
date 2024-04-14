@@ -5,15 +5,6 @@ from random import randrange
 class VideoManager:
     def __init__(self, directory):
         self.directory = directory
-
-    def _remove_filename_whitespace(self, files):
-        for file_name in files:
-            if " " in file_name:
-                old_path = os.path.join(self.directory, file_name)
-                new_path = os.path.join(self.directory, file_name.replace(' ', '_'))
-                os.rename(old_path, new_path)
-            
-        return files
     
     def get_latest_video(self):
         return os.listdir(self.directory)[-1]
@@ -38,7 +29,6 @@ class VideoManager:
             eligible_vids = self.get_videos(date)
             if eligible_vids:
                 if not offset:
-                    eligible_vids = self._remove_filename_whitespace(eligible_vids)
                     return eligible_vids[randrange(len(eligible_vids))]
                 else:
                     offset -= 1
