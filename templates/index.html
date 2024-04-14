@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Clip of the Day</title>
-        <h1>ROCKET LEAGUE CLIP OF THE DAY</h1>
+        <h1><< ROCKET LEAGUE CLIP OF THE DAY >></h1>
         <style>
             body {
                 text-align: center; /* Center aligns all content within the body */
@@ -18,6 +18,10 @@
               height: auto;
               display: block;
               margin: 0 auto;
+            }
+            #videoMeta{
+                padding: 5px;
+                color: white
             }
             footer {
                 position: fixed;
@@ -46,8 +50,9 @@
         <video id="videoElement" controls autoplay muted loop>
             <source src={{path_to_video}} type="video/mp4">
         </video>
-        <div class="actions" id="new_clip">
-            <br><a href={{url_for('original')}}>[LATEST CLIP]</a> <a href={{url_for('random_video')}}>[RANDOM CLIP]</a>  <a href={{url_for('next_video')}}>[NEXT CLIP]</a>
+        <div id="videoMeta">{{player}} | {{filedate}}</div>
+        <div class="actions">
+            <a href={{url_for('original')}}>[LATEST]</a> <a href={{url_for('random_video')}}>[RANDOM]</a>  <a href={{url_for('next_video')}}>[NEXT]</a>
         </div>
         <footer> [ABOUT THIS PROJECT] <br> [SOME LINK] <br> [BY GEORGE JALLAND]</footer>
     </body>

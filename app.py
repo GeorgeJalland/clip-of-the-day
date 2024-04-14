@@ -11,7 +11,7 @@ video_manager = VideoManager(VIDEO_DIRECTORY, game="Rocket League", format=".mp4
 @app.route('/')
 def main():
     vid = session.get('video', video_manager.get_nth_latest_video(0))
-    return render_template('index.html', path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}")
+    return render_template('index.html', path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
 
 @app.route('/video/<subdir>/<filename>')
 def video(subdir, filename):
