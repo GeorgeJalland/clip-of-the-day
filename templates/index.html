@@ -3,48 +3,9 @@
     <head>
         <title>Clip of the Day</title>
         <h1><< ROCKET LEAGUE CLIP OF THE DAY >></h1>
-        <style>
-            body {
-                text-align: center; /* Center aligns all content within the body */
-                font-family: 'VT323', monospace;
-                background-color: #1e1e1e;
-                color: rgb(74, 246, 38);
-                font-size: large;
-            }
-            #videoElement {
-              border: 2px solid rgb(74, 246, 38);
-              border-radius: 8px;
-              width: 65vw;
-              height: auto;
-              display: block;
-              margin: 0 auto;
-            }
-            #videoMeta{
-                padding: 5px;
-                color: white
-            }
-            footer {
-                position: fixed;
-                bottom: 0;
-                right: 0;
-                padding: 10px;
-                color: white
-            }
-            a {
-                color: inherit; /* Use the same color as its parent element */
-                text-decoration: none;
-            }
-            a:hover {
-                text-decoration: underline;
-            }
-            @media screen and (orientation: portrait) {
-                #videoElement {
-                    width: 90vw; /* Adjust width for smaller screens */
-                }
-            }
-          </style>
-          <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+        <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+        <link rel="stylesheet" type="text/css" href={{url_for('static', filename='styles.css')}}>
     </head>
     <body>
         <video id="videoElement" controls autoplay muted loop>
