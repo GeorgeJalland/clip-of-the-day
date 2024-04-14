@@ -26,6 +26,13 @@
                 padding: 10px;
                 color: white
             }
+            a {
+                color: inherit; /* Use the same color as its parent element */
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
             @media screen and (orientation: portrait) {
                 #videoElement {
                     width: 90vw; /* Adjust width for smaller screens */
@@ -40,7 +47,7 @@
             <source src={{path_to_video}} type="video/mp4">
         </video>
         <div class="actions" id="new_clip">
-            <br>[RANDOM CLIP]  [NEXT CLIP]
+            <br><a href={{url_for('next_video')}}>[RANDOM CLIP]</a>  [NEXT CLIP]
         </div>
         <footer> [ABOUT THIS PROJECT] <br> [SOME LINK] <br> [BY GEORGE JALLAND]</footer>
     </body>
