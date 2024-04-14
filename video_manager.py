@@ -8,9 +8,9 @@ class VideoManager:
         self.game = game
         self.format = format
     
-    def get_latest_video(self):
-        # this needs to return sub direcory
-        return sorted(self.get_all_game_videos(), key=lambda x: x['filename'])[-1]
+    def get_nth_latest_video(self, n):
+        index = -n - 1
+        return sorted(self.get_all_game_videos(), key=lambda x: x['filename'])[index]
     
     def get_all_game_videos(self):
         vids = []
@@ -28,17 +28,7 @@ class VideoManager:
                 eligible_vids.append(vid)
 
         return eligible_vids
-    
-    def get_random_video(self, offset):
-        today = datetime.now().date()
-        days = 0
-        eligible_vids = []
-        while days < 30: # Only go back 30 days to avoid infinite loop
-            date = today - timedelta(days)
-            eligible_vids = self.get_videos_by_date(date)
-            if eligible_vids:
-                if not offset:
-                    return eligible_vids[randrange(len(eligible_vids))]
-                else:
-                    offset -= 1
-            days += 1
+
+    def get_random_video(self):
+        vids = self.get_all_game_videos()
+        return vids[randrange(len(vids))]
