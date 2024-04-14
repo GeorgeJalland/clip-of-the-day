@@ -35,10 +35,10 @@ class VideoManager:
         eligible_vids = []
         while days < 30: # Only go back 30 days to avoid infinite loop
             date = today - timedelta(days)
-            eligible_vids = self.get_videos(self.directory, date)
+            eligible_vids = self.get_videos(date)
             if eligible_vids:
                 if not offset:
-                    eligible_vids = self._remove_filename_whitespace(self.directory, eligible_vids)
+                    eligible_vids = self._remove_filename_whitespace(eligible_vids)
                     return eligible_vids[randrange(len(eligible_vids))]
                 else:
                     offset -= 1
