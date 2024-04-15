@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, redirect, session
+from flask import Flask, render_template, send_from_directory, redirect, session, request, abort
 from urllib.parse import quote
 from video_manager import VideoManager
 
@@ -12,11 +12,14 @@ video_manager = VideoManager(VIDEO_DIRECTORY, game=GAME, format=".mp4")
 @app.route('/')
 def main():
     vid = session.get('video', video_manager.get_nth_latest_video(0))
-    return render_template('index.html', game=GAME.upper(), path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
+    return render_template('index.html', game=GAME.upper(), subdir=vid['subdir'], filename=vid['filename'], player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
 
-@app.route('/video/<subdir>/<filename>')
-def video(subdir, filename):
-    # Serve the video file using send_from_directory
+@app.route('/video')
+def video():
+    subdir = request.args.get("subdir")
+    filename = request.args.get("filename")
+    if not subdir or not filename:
+        abort(400, "Both 'subdir' and 'filename' query parameters are required.")
     return send_from_directory(VIDEO_DIRECTORY+subdir, filename)
 
 @app.route('/original')
