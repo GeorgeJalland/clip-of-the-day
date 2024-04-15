@@ -1,9 +1,10 @@
 from flask import Flask, render_template, send_from_directory, redirect, session, request, abort
 from urllib.parse import quote
 from video_manager import VideoManager
+import os
 
 app = Flask(__name__)
-app.secret_key = 'dc726efe259959c9c259996fa4ef418e'
+app.secret_key = os.getenv('SECRET_KEY')
 
 VIDEO_DIRECTORY = '/Users/georg/OneDrive/Captures/'
 GAME = "Rocket League"
