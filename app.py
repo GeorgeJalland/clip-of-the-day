@@ -6,12 +6,13 @@ app = Flask(__name__)
 app.secret_key = 'dc726efe259959c9c259996fa4ef418e'
 
 VIDEO_DIRECTORY = '/Users/georg/OneDrive/Captures/'
-video_manager = VideoManager(VIDEO_DIRECTORY, game="Rocket League", format=".mp4")
+GAME = "Rocket League"
+video_manager = VideoManager(VIDEO_DIRECTORY, game=GAME, format=".mp4")
 
 @app.route('/')
 def main():
     vid = session.get('video', video_manager.get_nth_latest_video(0))
-    return render_template('index.html', path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
+    return render_template('index.html', game=GAME.upper(), path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
 
 @app.route('/video/<subdir>/<filename>')
 def video(subdir, filename):

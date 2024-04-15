@@ -2,16 +2,16 @@
 <html>
     <head>
         <title>Clip of the Day</title>
-        <h1><< ROCKET LEAGUE CLIP OF THE DAY >></h1>
+        <h1><< {{game}} CLIP OF THE DAY >></h1>
         <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
         <link rel="stylesheet" type="text/css" href={{url_for('static', filename='styles.css')}}>
     </head>
     <body>
+        <div id="videoMeta">{{player}} | {{filedate}}</div>
         <video id="videoElement" controls autoplay muted loop>
             <source src={{path_to_video}} type="video/mp4">
         </video>
-        <div id="videoMeta">{{player}} | {{filedate}}</div>
         <div class="actions">
             <a href={{url_for('original')}}>[LATEST]</a> <a href={{url_for('random_video')}}>[RANDOM]</a>  <a href={{url_for('next_video')}}>[NEXT]</a>
         </div>
