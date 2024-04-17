@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  clip-of-the-day:
+    image: clip-of-the-day
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+    volumes:
+      - type: bind
+        source: /home/george/share/Captures/
+        target: /home/george/share/Captures/
