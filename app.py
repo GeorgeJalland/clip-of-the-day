@@ -20,8 +20,8 @@ def video(subdir, filename):
     # Serve the video file using send_from_directory
     return send_from_directory(VIDEO_DIRECTORY+subdir, filename)
 
-@app.route('/original')
-def original():
+@app.route('/latest-video')
+def latest_video():
     session.pop('video', None)
     session.pop('nth_latest', None)
     return redirect('/')
