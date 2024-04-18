@@ -8,11 +8,26 @@
     </head>
     <body>
         <div id="videoMeta">{{player}} | {{filedate}}</div>
-        <video id="videoElement" controls autoplay muted loop>
-            <source src={{path_to_video}} type="video/mp4">
-        </video>
+        <div class="container">
+            <div class="mobileActionsContainer">
+                <a class="mobileActions" href={{url_for('latest_video')}}>[<<]</a>
+                <a class="mobileActions" href={{url_for('iterate_video', iterate='prev')}}>[<]</a>
+            </div>
+            <div>
+                <video id="videoElement" controls autoplay muted loop>
+                    <source src={{path_to_video}} type="video/mp4">
+                </video>
+            </div>
+            <div class="mobileActionsContainer">
+                <a class="mobileActions" href={{url_for('random_video')}}>[?]</a>
+                <a class="mobileActions" href={{url_for('iterate_video', iterate='next')}}>[>]</a>
+            </div>
+        </div>
         <div class="actions">
-            <a href={{url_for('iterate_video', iterate='prev')}}>[PREV]</a> <a href={{url_for('latest_video')}}>[LATEST]</a> <a href={{url_for('random_video')}}>[RANDOM]</a>  <a href={{url_for('iterate_video', iterate='next')}}>[NEXT]</a>
+            <a href={{url_for('iterate_video', iterate='prev')}}>[PREV]</a> 
+            <a href={{url_for('latest_video')}}>[LATEST]</a> 
+            <a href={{url_for('random_video')}}>[RANDOM]</a> 
+            <a href={{url_for('iterate_video', iterate='next')}}>[NEXT]</a>
         </div>
         <footer> [ABOUT THIS PROJECT] <br> [SOME LINK] <br> [BY GEORGE JALLAND]</footer>
     </body>

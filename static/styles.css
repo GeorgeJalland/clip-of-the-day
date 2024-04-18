@@ -12,6 +12,10 @@ body {
 h1 {
     margin-bottom: 8px;
 }
+.container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* Middle box takes up 65vw */
+  }
 #videoElement {
   border: 2px solid rgb(74, 246, 38);
   border-radius: 8px;
@@ -23,6 +27,18 @@ h1 {
 #videoMeta{
     margin-bottom: 5px;
     color: white
+}
+.mobileActionsContainer{
+    display: flex;
+    justify-content: center; /* Horizontally center content */
+    align-items: center;
+    font-size: 7vw;
+    flex-direction: column;
+}
+.mobileActions{
+    display: none;
+    margin-top: 2vw;
+    margin-bottom: 2vw;
 }
 .actions{
     margin-top: 10px;
@@ -53,5 +69,8 @@ a:hover {
 @media only screen and (max-width: 1100px) and (orientation: landscape) {
     h1, .actions {
         display: none;
+    }
+    .mobileActions{
+        display: block;
     }
 }
