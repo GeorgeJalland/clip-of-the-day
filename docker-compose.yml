@@ -9,10 +9,9 @@ services:
     volumes:
       - type: bind
         source: ${VIDEO_DIRECTORY}
-        target: ./Captures/
+        target: /Captures/
     build:
       context: .
       dockerfile: dockerfile
       labels:
         - "clip-of-the-day"
-        
