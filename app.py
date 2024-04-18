@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
-VIDEO_DIRECTORY = '/home/george/share/Captures/'
+VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
 GAME = "Rocket League"
 video_manager = VideoManager(VIDEO_DIRECTORY, game=GAME, format=".mp4")
 

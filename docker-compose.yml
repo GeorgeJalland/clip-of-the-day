@@ -5,6 +5,7 @@ services:
       - "8000:8000"
     environment:
       - SECRET_KEY=$SECRET_KEY
+      - VIDEO_DIRECTORY=/home/george/share/Captures/
     volumes:
       - type: bind
         source: /home/george/share/Captures/
