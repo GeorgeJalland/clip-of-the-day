@@ -3,6 +3,9 @@ services:
     image: clip-of-the-day
     ports:
       - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - VIDEO_DIRECTORY=${VIDEO_DIRECTORY}
     volumes:
       - type: bind
         source: ${VIDEO_DIRECTORY}
@@ -10,8 +13,5 @@ services:
     build:
       context: .
       dockerfile: dockerfile
-      environment:
-        - SECRET_KEY=${SECRET_KEY}
-        - VIDEO_DIRECTORY=${VIDEO_DIRECTORY}
       labels:
         - "clip-of-the-day"
