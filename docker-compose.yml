@@ -4,9 +4,15 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - SECRET_KEY=$SECRET_KEY
-      - VIDEO_DIRECTORY=/home/george/share/Captures/
+      - SECRET_KEY=${SECRET_KEY}
+      - VIDEO_DIRECTORY=${VIDEO_DIRECTORY}
     volumes:
       - type: bind
-        source: /home/george/share/Captures/
-        target: /home/george/share/Captures/
+        source: ${VIDEO_DIRECTORY}
+        target: ./Captures/
+    build:
+      context: .
+      dockerfile: dockerfile
+      labels:
+        - "clip-of-the-day"
+        
