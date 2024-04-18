@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   clip-of-the-day:
     image: clip-of-the-day
