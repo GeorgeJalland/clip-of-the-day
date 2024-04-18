@@ -46,3 +46,9 @@ a:hover {
         width: 90vw; /* Adjust width for smaller screens */
     }
 }
+
+@media only screen and (max-width: 767px) and (orientation: landscape) {
+    h1 {
+        display: none;
+    }
+}
