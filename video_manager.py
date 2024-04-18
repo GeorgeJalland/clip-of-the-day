@@ -9,8 +9,9 @@ class VideoManager:
         self.format = format
     
     def get_nth_latest_video(self, n):
-        index = -n - 1
-        return sorted(self.get_all_game_videos(), key=lambda x: x['filename'])[index]
+        vids = self.get_all_game_videos()
+        index = -(n % len(vids)) - 1 # loop back to latest video if end of list reached
+        return sorted(vids, key=lambda x: x['filename'])[index]
     
     def get_all_game_videos(self):
         vids = []
