@@ -1,6 +1,10 @@
+@font-face {
+    font-family: 'VT323';
+    src: url('/static/cool_font.woff2') format('woff2');
+}
 body {
     text-align: center; /* Center aligns all content within the body */
-    font-family: 'VT323', monospace;
+    font-family: 'VT323';
     background-color: #1e1e1e;
     color: rgb(74, 246, 38);
     font-size: 1.2vw;
