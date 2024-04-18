@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, redirect, session
+from flask import Flask, render_template, send_from_directory, redirect, session, request
 from urllib.parse import quote
 from video_manager import VideoManager
 import os
@@ -32,9 +32,9 @@ def random_video():
     session.pop('nth_latest', None)
     return redirect('/')
 
-@app.route('/next-video')
-def next_video():
-    nth_latest = session.get('nth_latest', 1)
-    session['video'] = video_manager.get_nth_latest_video(nth_latest)
-    session['nth_latest'] = nth_latest + 1
+@app.route('/iterate-video')
+def iterate_video():
+    prev_or_next = request.args.get('iterate')
+    session['nth_latest'] = session.get('nth_latest', 0) + (1 if prev_or_next == 'next' else - 1)
+    session['video'] = video_manager.get_nth_latest_video(session['nth_latest'])
     return redirect('/')
