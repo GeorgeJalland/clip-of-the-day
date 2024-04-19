@@ -7,12 +7,12 @@ app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
 VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
-GAME = "Rocket League"
+GAMES = ["Rocket League", "Fortnite"]
 video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 
 @app.route('/')
 def main():
-    game = session.get('game', GAME)
+    game = session.get('game', GAMES[0])
     vid = session.get('video', video_manager.get_random_video(game=game))
     return render_template('index.html', game=game.upper(), path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
 
@@ -23,7 +23,7 @@ def video(subdir, filename):
 
 @app.route('/latest-video')
 def latest_video():
-    session['video'] = video_manager.get_nth_latest_video(game=session.get('game', GAME), n=0)
+    session['video'] = video_manager.get_nth_latest_video(game=session.get('game', GAMES[0]), n=0)
     session['nth_latest'] = 0
     return redirect('/')
 
@@ -37,10 +37,11 @@ def random_video():
 def iterate_video():
     prev_or_next = request.args.get('iterate')
     session['nth_latest'] = session.get('nth_latest', 0) + (1 if prev_or_next == 'next' else - 1)
-    session['video'] = video_manager.get_nth_latest_video(game=session.get('game', GAME), n=session['nth_latest'])
+    session['video'] = video_manager.get_nth_latest_video(game=session.get('game', GAMES[0]), n=session['nth_latest'])
     return redirect('/')
 
 @app.route('/change-game')
 def change_game():
-    session['game'] = "Fortnite" if session.get('game') == GAME else GAME
+    game_index = GAMES.index(session.get('game', GAMES[0]))
+    session['game'] = GAMES[(game_index + 1) % len(GAMES)]
     return redirect('/')
