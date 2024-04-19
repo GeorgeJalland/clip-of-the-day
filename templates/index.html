@@ -15,7 +15,7 @@
                 <a class="mobileActions" href={{url_for('iterate_video', iterate='prev')}}>[PREV]</a>
             </div>
             <div>
-                <video id="videoElement" controls autoplay muted loop>
+                <video id="videoElement" controls autoplay muted loop playsinline>
                     <source src={{path_to_video}} type="video/mp4">
                 </video>
             </div>
