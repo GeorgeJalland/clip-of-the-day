@@ -12,8 +12,9 @@ video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 
 @app.route('/')
 def main():
-    vid = session.get('video', video_manager.get_nth_latest_video(game=GAME, n=0))
-    return render_template('index.html', game=GAME.upper(), path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
+    game = session.get('game', GAME)
+    vid = session.get('video', video_manager.get_nth_latest_video(game=game, n=0))
+    return render_template('index.html', game=game.upper(), path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
 
 @app.route('/video/<subdir>/<filename>')
 def video(subdir, filename):
@@ -28,7 +29,7 @@ def latest_video():
 
 @app.route('/random-video')
 def random_video():
-    session['video'] = video_manager.get_random_video(game=GAME)
+    session['video'] = video_manager.get_random_video(game=session.get('game', GAME))
     session.pop('nth_latest', None)
     return redirect('/')
 
@@ -36,5 +37,10 @@ def random_video():
 def iterate_video():
     prev_or_next = request.args.get('iterate')
     session['nth_latest'] = session.get('nth_latest', 0) + (1 if prev_or_next == 'next' else - 1)
-    session['video'] = video_manager.get_nth_latest_video(game=GAME, n=session['nth_latest'])
+    session['video'] = video_manager.get_nth_latest_video(game=session.get('game', GAME), n=session['nth_latest'])
+    return redirect('/')
+
+@app.route('/change-game')
+def change_game():
+    session['game'] = "Fortnite" if session.get('game') == GAME else GAME
     return redirect('/')
