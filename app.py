@@ -8,11 +8,11 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
 GAME = "Rocket League"
-video_manager = VideoManager(VIDEO_DIRECTORY, game=GAME, format=".mp4")
+video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 
 @app.route('/')
 def main():
-    vid = session.get('video', video_manager.get_nth_latest_video(0))
+    vid = session.get('video', video_manager.get_nth_latest_video(game=GAME, n=0))
     return render_template('index.html', game=GAME.upper(), path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
 
 @app.route('/video/<subdir>/<filename>')
@@ -28,7 +28,7 @@ def latest_video():
 
 @app.route('/random-video')
 def random_video():
-    session['video'] = video_manager.get_random_video()
+    session['video'] = video_manager.get_random_video(game=GAME)
     session.pop('nth_latest', None)
     return redirect('/')
 
@@ -36,5 +36,5 @@ def random_video():
 def iterate_video():
     prev_or_next = request.args.get('iterate')
     session['nth_latest'] = session.get('nth_latest', 0) + (1 if prev_or_next == 'next' else - 1)
-    session['video'] = video_manager.get_nth_latest_video(session['nth_latest'])
+    session['video'] = video_manager.get_nth_latest_video(game=GAME, n=session['nth_latest'])
     return redirect('/')
