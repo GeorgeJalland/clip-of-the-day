@@ -32,13 +32,13 @@ h1 {
     display: flex;
     justify-content: center; /* Horizontally center content */
     align-items: center;
-    font-size: 7vw;
+    font-size: 4vw;
     flex-direction: column;
 }
 .mobileActions{
     display: none;
-    margin-top: 2vw;
-    margin-bottom: 2vw;
+    margin-top: 3vw;
+    margin-bottom: 3vw;
 }
 .actions{
     margin-top: 10px;

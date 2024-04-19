@@ -11,8 +11,8 @@
         <div id="videoMeta">{{player}} | {{filedate}}</div>
         <div class="container">
             <div class="mobileActionsContainer">
-                <a class="mobileActions" href={{url_for('latest_video')}}>[<<]</a>
-                <a class="mobileActions" href={{url_for('iterate_video', iterate='prev')}}>[<]</a>
+                <a class="mobileActions" href={{url_for('latest_video')}}>[LATEST]</a>
+                <a class="mobileActions" href={{url_for('iterate_video', iterate='prev')}}>[PREV]</a>
             </div>
             <div>
                 <video id="videoElement" controls autoplay muted loop>
@@ -20,8 +20,8 @@
                 </video>
             </div>
             <div class="mobileActionsContainer">
-                <a class="mobileActions" href={{url_for('random_video')}}>[?]</a>
-                <a class="mobileActions" href={{url_for('iterate_video', iterate='next')}}>[>]</a>
+                <a class="mobileActions" href={{url_for('random_video')}}>[RANDOM]</a>
+                <a class="mobileActions" href={{url_for('iterate_video', iterate='next')}}>[NEXT]</a>
             </div>
         </div>
         <div class="actions">
