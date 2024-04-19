@@ -73,4 +73,10 @@ a:hover {
     .mobileActions{
         display: block;
     }
+    #videoMeta{
+        font-size: 1.7vw;
+    }
+    footer {
+        font-size: 1.5vw;
+    }
 }
