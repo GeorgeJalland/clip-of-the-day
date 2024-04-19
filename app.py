@@ -13,7 +13,7 @@ video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 @app.route('/')
 def main():
     game = session.get('game', GAME)
-    vid = session.get('video', video_manager.get_nth_latest_video(game=game, n=0))
+    vid = session.get('video', video_manager.get_random_video(game=game))
     return render_template('index.html', game=game.upper(), path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
 
 @app.route('/video/<subdir>/<filename>')
@@ -23,13 +23,13 @@ def video(subdir, filename):
 
 @app.route('/latest-video')
 def latest_video():
-    session.pop('video', None)
-    session.pop('nth_latest', None)
+    session['video'] = video_manager.get_nth_latest_video(game=session.get('game', GAME), n=0)
+    session['nth_latest'] = 0
     return redirect('/')
 
 @app.route('/random-video')
 def random_video():
-    session['video'] = video_manager.get_random_video(game=session.get('game', GAME))
+    session.pop('video', None)
     session.pop('nth_latest', None)
     return redirect('/')
 
