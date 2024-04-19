@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from random import randrange
+from cachetools import cached, TTLCache
 
 class VideoManager:
     def __init__(self, directory, game, format):
@@ -13,6 +14,7 @@ class VideoManager:
         index = -(n % len(vids)) - 1 # loop back to latest video if end of list reached
         return sorted(vids, key=lambda x: x['filename'])[index]
     
+    @cached(TTLCache(maxsize=1, ttl=600))
     def get_all_game_videos(self):
         vids = []
         for root, _, files in os.walk(self.directory):
