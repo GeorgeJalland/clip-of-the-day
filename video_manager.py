@@ -20,6 +20,9 @@ class VideoManager:
             vids += [{"subdir": os.path.basename(root), "filename":file} for file in files if game in file and self.format in file]
         return vids
     
+    def get_video_count(self, game):
+        return len(self.get_all_game_videos(game))
+    
     def get_videos_by_date(self, game, date):
         vids = self.get_all_game_videos(game)
         eligible_vids = []

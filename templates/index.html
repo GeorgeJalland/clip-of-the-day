@@ -30,6 +30,11 @@
             <a href={{url_for('random_video')}}>[RANDOM]</a> 
             <a href={{url_for('iterate_video', iterate='next')}}>[NEXT]</a>
         </div>
-        <footer> [ABOUT THIS PROJECT] <br> [SOME LINK] <br> [BY <a href={{url_for('change_game')}}>GEORGE</a> JALLAND]</footer>
+        <footer>
+            <div id="videoCount">[VIDEO COUNT]: {{video_count}}</div>
+            <div id="about">
+                [ABOUT THIS PROJECT] <br> [SOME LINK] <br> [BY <a href={{url_for('change_game')}}>GEORGE</a> JALLAND]
+            </div>
+        </footer>
     </body>
 </html>

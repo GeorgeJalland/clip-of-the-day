@@ -14,7 +14,15 @@ video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 def main():
     game = session.get('game', GAMES[0])
     vid = session.get('video', video_manager.get_random_video(game=game))
-    return render_template('index.html', game=game.upper(), path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", player=vid['subdir'].upper(), filedate=vid['filename'][-23:-4])
+    video_count = video_manager.get_video_count(game)
+    return render_template(
+            'index.html', 
+            game=game.upper(), 
+            path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", 
+            player=vid['subdir'].upper(), 
+            filedate=vid['filename'][-23:-4],
+            video_count=video_count
+        )
 
 @app.route('/video/<subdir>/<filename>')
 def video(subdir, filename):
