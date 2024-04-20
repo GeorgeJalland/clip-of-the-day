@@ -52,4 +52,6 @@ def iterate_video():
 def change_game():
     game_index = GAMES.index(session.get('game', GAMES[0]))
     session['game'] = GAMES[(game_index + 1) % len(GAMES)]
+    session.pop('video', None)
+    session.pop('nth_latest', None)
     return redirect('/')
