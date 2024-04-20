@@ -15,6 +15,7 @@ h1 {
 .container {
     display: grid;
     grid-template-columns: 1fr auto 1fr; /* Middle box takes up 65vw */
+    grid-template-rows: repeat(2, auto);
   }
 #videoElement {
   border: 2px solid rgb(74, 246, 38);
@@ -24,16 +25,24 @@ h1 {
   display: block;
   margin: 0 auto;
 }
-#videoMeta{
-    margin-bottom: 5px;
-    color: white
-}
 .mobileActionsContainer{
     display: flex;
     justify-content: center; /* Horizontally center content */
     align-items: center;
     font-size: 4vw;
     flex-direction: column;
+}
+#videoMeta{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+    color: white
+}
+#videoIndex{
+    margin-right: auto;
+}
+#nameDate{
+    margin-right: auto;
 }
 .mobileActions{
     display: none;

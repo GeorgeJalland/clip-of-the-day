@@ -7,11 +7,18 @@ class VideoManager:
     def __init__(self, directory, format):
         self.directory = directory
         self.format = format
+
+    def return_dict(func):
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            return {'index': result[0], 'vid': result[1]}
+        return wrapper
     
+    @return_dict
     def get_nth_latest_video(self, game, n):
         vids = self.get_all_game_videos(game)
-        index = -(n % len(vids)) - 1 # loop back to latest video if end of list reached
-        return sorted(vids, key=lambda x: x['filename'])[index]
+        index = len(vids) - (n % len(vids)) - 1 # loop back to latest video if end of list reached
+        return index, sorted(vids, key=lambda x: x['filename'])[index]
     
     @cached(TTLCache(maxsize=10, ttl=600))
     def get_all_game_videos(self, game):
@@ -34,6 +41,8 @@ class VideoManager:
 
         return eligible_vids
 
+    @return_dict
     def get_random_video(self, game):
         vids = self.get_all_game_videos(game)
-        return vids[randrange(len(vids))]
+        index = randrange(len(vids))
+        return index, vids[index]

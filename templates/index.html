@@ -8,8 +8,13 @@
         <link rel="stylesheet" type="text/css" href={{url_for('static', filename='styles.css')}}>
     </head>
     <body>
-        <div id="videoMeta">{{player}} | {{filedate}}</div>
         <div class="container">
+            <div></div>
+            <div id="videoMeta">
+                <div id="videoIndex">[{{vid_index}}/{{video_count}}]</div>
+                <div id="nameDate">{{player}} | {{filedate}}</div>
+            </div>
+            <div></div>
             <div class="mobileActionsContainer">
                 <a class="mobileActions" href={{url_for('latest_video')}}>[LATEST]</a>
                 <a class="mobileActions" href={{url_for('iterate_video', iterate='prev')}}>[PREV]</a>

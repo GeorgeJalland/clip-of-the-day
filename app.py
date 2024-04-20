@@ -14,7 +14,8 @@ video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 def main():
     session.setdefault('nth_latest', 0)
     game = session.setdefault('game', GAMES[0])
-    vid = session.get('video', video_manager.get_random_video(game=game))
+
+    vid_index, vid = session.get('video', video_manager.get_random_video(game=game)).values()
     video_count = video_manager.get_video_count(game)
 
     return render_template(
@@ -23,6 +24,7 @@ def main():
             path_to_video=f"/video/{quote(vid['subdir'])}/{quote(vid['filename'])}", 
             player=vid['subdir'].upper(), 
             filedate=vid['filename'][-23:-4],
+            vid_index=vid_index+1,
             video_count=video_count
         )
 
