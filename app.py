@@ -12,13 +12,15 @@ video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 
 @app.route('/')
 def main():
-    game = session.get('game', GAMES[0])
+    session.setdefault('nth_latest', 0)
+    game = session.setdefault('game', GAMES[0])
     vid = session.get('video', video_manager.get_random_video(game=game))
     video_count = video_manager.get_video_count(game)
+
     return render_template(
             'index.html', 
             game=game.upper(), 
-            path_to_video=f"/video/{vid['subdir']}/{quote(vid['filename'])}", 
+            path_to_video=f"/video/{quote(vid['subdir'])}/{quote(vid['filename'])}", 
             player=vid['subdir'].upper(), 
             filedate=vid['filename'][-23:-4],
             video_count=video_count
@@ -31,7 +33,7 @@ def video(subdir, filename):
 
 @app.route('/latest-video')
 def latest_video():
-    session['video'] = video_manager.get_nth_latest_video(game=session.get('game', GAMES[0]), n=0)
+    session['video'] = video_manager.get_nth_latest_video(game=session.get('game'), n=0)
     session['nth_latest'] = 0
     return redirect('/')
 
@@ -45,12 +47,12 @@ def random_video():
 def iterate_video():
     prev_or_next = request.args.get('iterate')
     session['nth_latest'] = session.get('nth_latest', 0) + (1 if prev_or_next == 'next' else - 1)
-    session['video'] = video_manager.get_nth_latest_video(game=session.get('game', GAMES[0]), n=session['nth_latest'])
+    session['video'] = video_manager.get_nth_latest_video(game=session.get('game'), n=session['nth_latest'])
     return redirect('/')
 
 @app.route('/change-game')
 def change_game():
-    game_index = GAMES.index(session.get('game', GAMES[0]))
+    game_index = GAMES.index(session.get('game'))
     session['game'] = GAMES[(game_index + 1) % len(GAMES)]
     session.pop('video', None)
     session.pop('nth_latest', None)
