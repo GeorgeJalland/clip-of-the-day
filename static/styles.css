@@ -39,10 +39,10 @@ h1 {
     color: white
 }
 #videoIndex{
-    margin-right: auto;
+    margin-left: auto;
 }
 #nameDate{
-    margin-right: auto;
+    position: absolute;
 }
 .mobileActions{
     display: none;
