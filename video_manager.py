@@ -7,31 +7,20 @@ class VideoManager:
     def __init__(self, directory, format):
         self.directory = directory
         self.format = format
-
-    def return_dict(func):
-        def wrapper(*args, **kwargs):
-            result = func(*args, **kwargs)
-            return {'index': result[0], 'vid': result[1]}
-        return wrapper
     
-    @return_dict
-    def get_nth_latest_video(self, game, n):
+    def get_video_by_index(self, game, index):
         vids = self.get_all_game_videos(game)
-        index = len(vids) - (n % len(vids)) - 1 # loop back to latest video if end of list reached
-        return index, vids[index]
+        return {'index': index, 'vid': vids[index % len(vids)]}
     
-    @return_dict
     def get_random_video(self, game):
-        vids = self.get_all_game_videos(game)
-        index = randrange(len(vids))
-        return index, vids[index]
+        return self.get_video_by_index(game, randrange(self.get_video_count(game)))
     
     @cached(TTLCache(maxsize=10, ttl=600))
     def get_all_game_videos(self, game):
         vids = []
         for root, _, files in os.walk(self.directory):
             vids += [{"subdir": os.path.basename(root), "filename":file} for file in files if game in file and self.format in file]
-        return sorted(vids, key=lambda x: x['filename'])
+        return sorted(vids, key=lambda x: x['filename'], reverse=True) # return list of vids descending by date in filename
     
     def get_video_count(self, game):
         return len(self.get_all_game_videos(game))

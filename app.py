@@ -12,10 +12,8 @@ video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 
 @app.route('/')
 def main():
-    session.setdefault('nth_latest', 0)
     game = session.setdefault('game', GAMES[0])
-
-    vid_index, vid = session.get('video', video_manager.get_random_video(game=game)).values()
+    vid_index, vid = session.setdefault('video', video_manager.get_random_video(game=game)).values()
     video_count = video_manager.get_video_count(game)
 
     return render_template(
@@ -24,7 +22,7 @@ def main():
             path_to_video=f"/video/{quote(vid['subdir'])}/{quote(vid['filename'])}", 
             player=vid['subdir'].upper(), 
             filedate=vid['filename'][-23:-4],
-            vid_index=vid_index+1,
+            vid_index=video_count - (vid_index % video_count),
             video_count=video_count
         )
 
@@ -35,21 +33,20 @@ def video(subdir, filename):
 
 @app.route('/latest-video')
 def latest_video():
-    session['video'] = video_manager.get_nth_latest_video(game=session.get('game'), n=0)
-    session['nth_latest'] = 0
+    session['video'] = video_manager.get_video_by_index(game=session.get('game'), index=0)
     return redirect('/')
 
 @app.route('/random-video')
 def random_video():
     session.pop('video', None)
-    session.pop('nth_latest', None)
     return redirect('/')
 
 @app.route('/iterate-video')
 def iterate_video():
     prev_or_next = request.args.get('iterate')
-    session['nth_latest'] = session.get('nth_latest', 0) + (1 if prev_or_next == 'next' else - 1)
-    session['video'] = video_manager.get_nth_latest_video(game=session.get('game'), n=session['nth_latest'])
+    new_index = session.get('video').get('index') + (1 if prev_or_next == 'next' else - 1)
+    session['video']['index'] = new_index
+    session['video'] = video_manager.get_video_by_index(game=session.get('game'), index=new_index)
     return redirect('/')
 
 @app.route('/change-game')
@@ -57,5 +54,4 @@ def change_game():
     game_index = GAMES.index(session.get('game'))
     session['game'] = GAMES[(game_index + 1) % len(GAMES)]
     session.pop('video', None)
-    session.pop('nth_latest', None)
     return redirect('/')
