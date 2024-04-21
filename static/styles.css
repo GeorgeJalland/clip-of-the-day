@@ -41,10 +41,10 @@ h1 {
 #nameDate{
     position: absolute;
 }
-#playerHeader{
+#playerHeaderPC{
     color: white;
 }
-.player{
+.playerPC{
     color: white;
 }
 .mobileActions{
@@ -69,6 +69,11 @@ h1 {
     padding: 10px;
     color: white   
 }
+#playersPortrait{
+    display: none;
+    color: white;
+    margin-top: 3vw;
+}
 a {
     color: inherit; /* Use the same color as its parent element */
     text-decoration: none;
@@ -83,13 +88,17 @@ a:hover {
     #videoElement {
         width: 90vw; /* Adjust width for smaller screens */
     }
-    #playerHeader, .player {
+    #playerHeaderPC, .playerPC {
         display: none;
+    }
+    #playersPortrait{
+        display: flex;
+        flex-direction: column;
     }
 }
 
 @media only screen and (max-width: 1100px) and (orientation: landscape) {
-    h1, .actions, #playerHeader, .player {
+    h1, .actions, #playerHeaderPC, .playerPC {
         display: none;
     }
     .mobileActions{
