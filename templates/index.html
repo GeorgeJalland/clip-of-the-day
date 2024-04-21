@@ -15,7 +15,11 @@
                 <div id="videoIndex">[{{vid_index}}/{{video_count}}]</div>
             </div>
             <div></div>
-            <div class="mobileActionsContainer">
+            <div class="sideContainers">
+                <span id="playerHeader">[PLAYERS]</span>
+                {% for player in players %}
+                <a class="player" href={{url_for('change_player', player=player)}}>{{player}}</a>
+                {% endfor %}
                 <a class="mobileActions" href={{url_for('latest_video')}}>[LATEST]</a>
                 <a class="mobileActions" href={{url_for('iterate_video', iterate='prev')}}>[PREV]</a>
             </div>
@@ -24,7 +28,7 @@
                     <source src={{path_to_video}} type="video/mp4">
                 </video>
             </div>
-            <div class="mobileActionsContainer">
+            <div class="sideContainers">
                 <a class="mobileActions" href={{url_for('random_video')}}>[RANDOM]</a>
                 <a class="mobileActions" href={{url_for('iterate_video', iterate='next')}}>[NEXT]</a>
             </div>

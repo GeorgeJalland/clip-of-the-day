@@ -25,11 +25,8 @@ h1 {
   display: block;
   margin: 0 auto;
 }
-.mobileActionsContainer{
+.sideContainers{
     display: flex;
-    justify-content: center; /* Horizontally center content */
-    align-items: center;
-    font-size: 4vw;
     flex-direction: column;
 }
 #videoMeta{
@@ -43,6 +40,12 @@ h1 {
 }
 #nameDate{
     position: absolute;
+}
+#playerHeader{
+    color: white;
+}
+.player{
+    color: white;
 }
 .mobileActions{
     display: none;
@@ -80,14 +83,21 @@ a:hover {
     #videoElement {
         width: 90vw; /* Adjust width for smaller screens */
     }
+    #playerHeader, .player {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 1100px) and (orientation: landscape) {
-    h1, .actions {
+    h1, .actions, #playerHeader, .player {
         display: none;
     }
     .mobileActions{
         display: block;
+    }
+    .sideContainers{
+        justify-content: center !important; 
+        font-size: 4vw;
     }
     #videoMeta{
         font-size: 1.7vw;
