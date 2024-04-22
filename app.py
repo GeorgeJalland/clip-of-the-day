@@ -26,7 +26,8 @@ def main():
             filedate=vid['filename'][-23:-4],
             vid_index=video_count - (vid_index % video_count),
             video_count=video_count,
-            players = players
+            players = players,
+            current_player = player
         )
 
 @app.route('/video/<subdir>/<filename>')

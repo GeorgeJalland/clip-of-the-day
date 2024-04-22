@@ -46,6 +46,10 @@ h1 {
     color: white;
     margin-left: 1vw;
 }
+#currentPlayer{
+    color: rgb(74, 246, 38);
+    font-weight: bold;
+}
 .mobileActions{
     display: none;
     margin-top: 3vw;
