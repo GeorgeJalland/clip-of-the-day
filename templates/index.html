@@ -30,9 +30,16 @@
                     <source src={{path_to_video}} type="video/mp4">
                 </video>
             </div>
-            <div class="sideContainers">
-                <a class="mobileActions" href="{{url_for('random_video')}}">[RANDOM]</a>
-                <a class="mobileActions" href="{{url_for('iterate_video', iterate='next')}}">[NEXT]</a>
+            <div class="sideContainers" id="scRight">
+                <div class="ratings">
+                    <div class="rating" id="rating5"></div>
+                    <div class="rating" id="rating4"></div>
+                    <div class="rating" id="rating3"></div>
+                    <div class="rating" id="rating2"></div>
+                    <div class="rating" id="rating1"></div>
+                </div>
+                <a class="mobileActions" href={{url_for('random_video')}}>[RANDOM]</a>
+                <a class="mobileActions" href={{url_for('iterate_video', iterate='next')}}>[NEXT]</a>
             </div>
         </div>
         <div class="actions">
