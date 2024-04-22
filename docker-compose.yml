@@ -1,5 +1,8 @@
 services:
   clip-of-the-day:
+    build:
+      context: .
+      dockerfile: app/dockerfile
     image: clip-of-the-day
     ports:
       - "8000:8000"
@@ -10,8 +13,20 @@ services:
       - type: bind
         source: ${VIDEO_DIRECTORY}
         target: /Captures/
+      - type: bind
+        source: ${DB_PATH}
+        target: /clip-of-the-day/instance
+  file-watcher:
     build:
       context: .
-      dockerfile: dockerfile
-      labels:
-        - "clip-of-the-day"
+      dockerfile: file_watcher/dockerfile
+    image: file-watcher
+    environment:
+      - VIDEO_DIRECTORY=/Captures/
+    volumes:
+      - type: bind
+        source: ${VIDEO_DIRECTORY}
+        target: /Captures/
+      - type: bind
+        source: ${DB_PATH}
+        target: /file-watcher/instance

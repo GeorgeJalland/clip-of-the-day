@@ -1,0 +1,341 @@
+@font-face {
+    font-family: 'VT323';
+    src: url('./fonts/cool_font.woff2') format('woff2');
+}
+body {
+    text-align: center; /* Center aligns all content within the body */
+    font-family: 'VT323';
+    background-color: #1e1e1e;
+    color: white;
+    font-size: 1.2rem;
+}
+h1 {
+    color: rgb(74, 246, 38);
+}
+#mainContainer {
+    display: inline-flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+#videoElement {
+    border: 0.125rem solid rgb(74, 246, 38);
+    border-radius: 0.5rem;
+    width: 65vw;
+    height: auto;
+    aspect-ratio: 16/9;
+}
+.slide-out-up {
+  transform: translateY(-100%);
+}
+.slide-out-down {
+  transform: translateY(100%);
+}
+.slide-transition {
+    transition: transform 0.5s ease;
+}
+#customControls {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    width: 100%;
+}
+.visible {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+}
+.hidden {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+#progressContainer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    height: 2vw;
+}
+#progressBar {
+    width: 0%;
+    background-color: white;
+    height: 15%;
+    transition: width 0.3s linear;
+}
+#pauseplayButton {
+    position: absolute;
+    height: 4vw;
+    width: 4vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: invert(1);
+}
+#mainContainer:fullscreen #pauseplayButton {
+    height: 6vw;
+    width: 6vw;
+}
+#exitFullscreen {
+    position: absolute;
+    height: 4vw;
+    width: 4vw;
+    top: 9%;
+    right: 2%;
+    filter: invert(1);
+    cursor: pointer;
+    display: none;
+}
+#mainContainer:fullscreen #exitFullscreen {
+    display: block;
+}
+#mainContainer:fullscreen #videoElement{
+    height: 100%;
+    width: 100%;
+    border: none;
+}
+.videoMeta{
+    position: absolute;
+    bottom: 102%;
+}
+#mainContainer:fullscreen .videoMeta{
+    bottom: auto;
+    top: 0;
+    transition: opacity 0.5s ease;
+}
+#videoIndex{
+    right: 0.5rem;
+}
+#playerDate{
+    left: 0;
+    right: 0;
+}
+#playerBoard {
+    position: absolute;
+    top: 0;
+    right: 102%;
+    text-align: left;
+}
+#mainContainer:fullscreen #playerBoard{
+    left: 0%;
+    right: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: opacity 0.5s ease;
+}
+.padRight {
+    padding-right: 0.5rem;
+}
+#ratings {
+    position: absolute;
+    left: 102%;
+    top: 0;
+    text-align: left;
+}
+#ratings th {
+    text-align: right;
+}
+#mainContainer:fullscreen #ratings{
+    left: auto;
+    right: 0;
+    bottom: 5%;
+    top: auto;
+}
+.smallRatingIcon {
+    height: 1rem;
+    width: auto;
+    filter: hue-rotate(50deg)
+}
+#mainContainer:fullscreen .smallRatingIcon{
+    height: 1.5vw;
+}
+.flexCell {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+#submitRatings {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vw;
+    left: 105%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+#mainContainer:fullscreen #submitRatings{
+    flex-direction: column;
+    top: 50%;
+    transform: translateY(-50%);
+    left: auto;
+    right: 0%;
+}
+#mainContainer:fullscreen #playerTable,
+#mainContainer:fullscreen #submitRatings,
+#mainContainer:fullscreen #ratings,
+#mainContainer:fullscreen #playerDate {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem;
+    font-size: 2vw;
+}
+#mainContainer:fullscreen #videoIndex {
+    padding: 0.5rem;
+    font-size: 2vw;
+}
+.rating {
+    background-image: url('./images/empty-star.png');
+    background-size: cover;
+    height: 4vw;
+    width: 4vw;
+    cursor: pointer;
+    filter: hue-rotate(50deg)
+}
+.rating:hover, .rating:hover ~ .rating{
+    background-image: url('./images/star.png');
+    filter: hue-rotate(50deg)
+}
+.rated {
+    background-image: url('./images/star.png');
+    filter: hue-rotate(50deg)
+}
+.selectedPlayer{
+    color: rgb(74, 246, 38);
+    font-weight: bold;
+}
+.actions{
+    color: rgb(74, 246, 38);
+    position: absolute;
+    top: 101%;
+    left: 0;
+    right: 0;
+}
+#about {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    bottom: 1%;
+    right: 2%;
+    text-align: right;
+}
+#signature {
+    color: rgb(74, 246, 38);
+}
+#videoCountContainer{
+    position: fixed;
+    display: flex;
+    bottom: 1%;
+    left: 2%;
+}
+.clickableText {
+
+}
+.clickableText:hover {
+    text-decoration: underline;
+    cursor: pointer;    
+}
+#fsButtonContainer {
+    position: absolute;
+    top: 4.6%;
+    right: 2.8%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#mainContainer:fullscreen #fsButtonContainer {
+    display: none;
+}
+#fsButton {
+    width: 2vw;
+    height: 2vw;
+    filter: invert(1);
+    cursor: pointer;
+}
+#fsHelp {
+    font-size: 1vw;
+}
+#newFeatures {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 110%;
+    gap: 0.5rem;
+    padding-bottom: 3vw;
+}
+#newFeatures span {
+    text-align: left;
+    margin-left: 3vw;
+    margin-right: 3vw;
+}
+#newFeatures h2 {
+    font-weight: normal;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+th {
+    font-weight: normal;
+}
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 15px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    h1 {
+        font-size: 6.5vw;
+    }
+    #mainContainer {
+        display: flex;
+        margin-top: 2rem;
+    }
+    #videoElement {
+        width: 100%;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+    }
+    #progressContainer {
+        height: 3.5vw;
+    }
+    #playerBoard {
+        top: 115%;
+        left: 3vw;
+    }
+    #submitRatings {
+        flex-direction: row-reverse;
+        top: 115%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .rating {
+        height: 8vw;
+        width: 8vw;
+    }
+    #ratings {
+        top: 115%;
+        right: 3vw;
+        left: auto;
+    }
+    #fsButton {
+        width: 5vw;
+        height: 5vw;
+    }
+    #fsHelp {
+        font-size: 2vw;
+    }
+    #pauseplayButton {
+        width: 8vw;
+        height: 8vw;
+    }
+    #newFeatures {
+        top: 160%
+    }
+}

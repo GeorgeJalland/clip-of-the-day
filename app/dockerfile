@@ -1,0 +1,9 @@
+FROM python:3.10.0-alpine
+
+WORKDIR /clip-of-the-day
+COPY ./app ./app
+COPY ./common ./common
+RUN pip install --upgrade pip
+RUN pip install -r ./app/requirements.txt
+EXPOSE 8000
+CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "--workers", "5", "--timeout", "60", "app.app:create_app()"]
