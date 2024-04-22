@@ -17,6 +17,7 @@
             <div></div>
             <div class="sideContainers">
                 <span id="playerHeaderPC">[PLAYERS]</span>
+                <a class="playerPC" href={{url_for('change_player', player='')}}>All</a>
                 {% for player in players %}
                 <a class="playerPC" href={{url_for('change_player', player=player)}}>{{player}}</a>
                 {% endfor %}
@@ -41,6 +42,7 @@
         </div>
         <div id="playersPortrait">
             <span id="playerHeader">[PLAYERS]</span>
+            <a href={{url_for('change_player', player='')}}>All</a>
             {% for player in players %}
             <a class="player" href={{url_for('change_player', player=player)}}>{{player}}</a>
             {% endfor %}

@@ -16,7 +16,7 @@ def main():
     game = session.setdefault('game', GAMES[0])
     vid_index, vid = session.setdefault('video', video_manager.get_random_video(game=game, player=player)).values()
     video_count = video_manager.get_video_count(game, player)
-    players = ["All Players"] + video_manager.get_all_game_subdirs(game)
+    players = video_manager.get_all_game_subdirs(game)
 
     return render_template(
             'index.html', 
@@ -62,6 +62,6 @@ def change_game():
 @app.route('/change-player')
 def change_player():
     player = request.args.get('player')
-    session['player'] = "" if player == "All Players" else player
+    session['player'] = player
     session.pop('video')
     return redirect('/')

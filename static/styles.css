@@ -28,6 +28,7 @@ h1 {
 .sideContainers{
     display: flex;
     flex-direction: column;
+    text-align: left;
 }
 #videoMeta{
     display: flex;
@@ -41,11 +42,9 @@ h1 {
 #nameDate{
     position: absolute;
 }
-#playerHeaderPC{
+#playerHeaderPC, .playerPC{
     color: white;
-}
-.playerPC{
-    color: white;
+    margin-left: 1vw;
 }
 .mobileActions{
     display: none;
@@ -70,9 +69,12 @@ h1 {
     color: white   
 }
 #playersPortrait{
+    text-align: left;
     display: none;
     color: white;
     margin-top: 3vw;
+    margin-left: 5vw;
+    font-size: 4vw;
 }
 a {
     color: inherit; /* Use the same color as its parent element */
