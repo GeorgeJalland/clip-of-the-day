@@ -6,6 +6,8 @@ from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable track modifications for SQLAlchemy
 
 VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
 GAMES = ["Rocket League", "Fortnite"]
