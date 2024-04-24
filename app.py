@@ -2,7 +2,7 @@ from flask import Flask, render_template, send_from_directory, redirect, session
 from urllib.parse import quote
 from video_manager import VideoManager
 import os
-from db_models import db
+from db_models import db, submit_rating
 from config import Config
 
 VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
@@ -15,13 +15,21 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
     db.init_app(app)
 
-    @app.route('/')
+    @app.route('/', methods=['GET', 'POST'])
     def main():
         player = session.setdefault('player', '')
         game = session.setdefault('game', GAMES[0])
         vid_index, vid = session.setdefault('video', video_manager.get_random_video(game=game, player=player)).values()
         video_count = video_manager.get_video_count(game, player)
         players = video_manager.get_all_game_subdirs(game)
+
+        if request.method == 'POST':
+            rating = request.form.get('rating')
+            ip_address = request.remote_addr
+            # add rating to database
+            submit_rating(ip_address=ip_address, video=vid['filename'], rating=rating)
+            #catch integrity error or check existence of rating on vid first?
+            return f"<h1>FORM RATING: {rating}</h1>"
 
         return render_template(
                 'index.html', 

@@ -19,3 +19,8 @@ class Ratings(db.Model):
     
     def __repr__(self) -> str:
         return f'<Rating {self.content}>'
+
+def submit_rating(ip_address, video, rating):
+    new_rating = Ratings(ip_address=ip_address, video=video, rating=rating)
+    db.session.add(new_rating)
+    db.session.commit()

@@ -31,17 +31,15 @@ h1 {
     text-align: left;
 }
 #scRight {
+    text-align: center;
     justify-content: center;
     align-items: center;
 }
 .rating {
-    background-image: url(/static/eggplant_grey.png);
-    background-size: cover;
+    display: flex;
+    flex-direction: column;
     height: 4vw;
     width: 4vw;
-}
-.rating:hover, .rating:hover ~ .rating{
-    background-image: url(/static/eggplant.png);
 }
 #videoMeta{
     display: flex;
