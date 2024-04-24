@@ -31,13 +31,14 @@
                 </video>
             </div>
             <div class="sideContainers" id="scRight">
-                <div class="ratings">
-                    <div class="rating" id="rating5"></div>
-                    <div class="rating" id="rating4"></div>
-                    <div class="rating" id="rating3"></div>
-                    <div class="rating" id="rating2"></div>
-                    <div class="rating" id="rating1"></div>
-                </div>
+                <form class="ratings" action="/" method="POST">
+                    <input type="hidden" id="rating_input" name="rating">
+                    <input type="image" class="rating" src="{{ url_for('static', filename='eggplant_grey.png') }}" alt="5" onclick="submitRating(5)">
+                    <input type="image" class="rating" src="{{ url_for('static', filename='eggplant_grey.png') }}" alt="4" onclick="submitRating(4)">
+                    <input type="image" class="rating" src="{{ url_for('static', filename='eggplant_grey.png') }}" alt="3" onclick="submitRating(3)">
+                    <input type="image" class="rating" src="{{ url_for('static', filename='eggplant_grey.png') }}" alt="2" onclick="submitRating(2)">
+                    <input type="image" class="rating" src="{{ url_for('static', filename='eggplant_grey.png') }}" alt="1" onclick="submitRating(1)">
+                </form>
                 <a class="mobileActions" href={{url_for('random_video')}}>[RANDOM]</a>
                 <a class="mobileActions" href={{url_for('iterate_video', iterate='next')}}>[NEXT]</a>
             </div>
