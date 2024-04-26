@@ -28,8 +28,7 @@ def create_app(config_class=Config):
             ip_address = request.remote_addr
             # add rating to database
             submit_rating(ip_address=ip_address, video=vid['filename'], rating=rating)
-            #catch integrity error or check existence of rating on vid first?
-            return f"<h1>FORM RATING: {rating}</h1>"
+
 
         return render_template(
                 'index.html', 

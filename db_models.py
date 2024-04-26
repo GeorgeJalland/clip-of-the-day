@@ -21,6 +21,22 @@ class Ratings(db.Model):
         return f'<Rating {self.content}>'
 
 def submit_rating(ip_address, video, rating):
-    new_rating = Ratings(ip_address=ip_address, video=video, rating=rating)
-    db.session.add(new_rating)
+    existing_rating = db.session.query(Ratings).filter_by(ip_address=ip_address, video=video).one_or_none()
+    if existing_rating:
+        existing_rating.rating = rating
+    else:
+        new_rating = Ratings(ip_address=ip_address, video=video, rating=rating)
+        db.session.add(new_rating)
     db.session.commit()
+
+def get_ratings_by_video(video):
+    # return dictionary of sum ratings, ratings count, avg rating
+    pass
+
+def get_ratings_by_player(video, game):
+    # return dictionary of sum ratings, ratings count, avg rating for given game
+    pass
+
+def get_user_video_rating(video, ip_address):
+    # return the rating of a given video for given ip_address
+    pass
