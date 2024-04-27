@@ -2,7 +2,7 @@ from flask import Flask, render_template, send_from_directory, redirect, session
 from urllib.parse import quote
 from video_manager import VideoManager
 import os
-from db_models import db, submit_rating
+from db_models import db, submit_rating, get_ratings_by_player
 from config import Config
 
 VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
@@ -24,10 +24,12 @@ def create_app(config_class=Config):
         players = video_manager.get_all_game_subdirs(game)
 
         if request.method == 'POST':
-            rating = request.form.get('rating')
+            rating_ = request.form.get('rating')
+            player_ = request.form.get('player')
+            video_ = request.form.get('video')
             ip_address = request.remote_addr
             # add rating to database
-            submit_rating(ip_address=ip_address, video=vid['filename'], rating=rating)
+            submit_rating(ip_address=ip_address, video=video_, player=player_, rating=rating_)
 
 
         return render_template(
@@ -35,11 +37,11 @@ def create_app(config_class=Config):
                 game=game.upper(), 
                 path_to_video=f"/video/{quote(vid['subdir'])}/{quote(vid['filename'])}", 
                 player=vid['subdir'].upper(), 
-                filedate=vid['filename'][-23:-4],
+                video_name=vid['filename'],
                 vid_index=video_count - (vid_index % video_count),
                 video_count=video_count,
                 players = players,
-                current_player = player
+                selected_player = player,
             )
 
     @app.route('/video/<subdir>/<filename>')

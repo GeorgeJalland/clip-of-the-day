@@ -12,15 +12,16 @@
         <div class="container">
             <div></div>
             <div id="videoMeta">
-                <div id="nameDate">{{player}} | {{filedate}}</div>
+                <div id="nameDate">{{player}} | {{video_name[-23:-4]}}</div>
                 <div id="videoIndex">[{{vid_index}}/{{video_count}}]</div>
             </div>
             <div></div>
             <div class="sideContainers">
                 <span id="playerHeaderPC">[PLAYERS]</span>
-                <a class="playerPC" id="{% if not current_player %}currentPlayer{% endif %}" href="{{url_for('change_player', player='')}}">All</a>
+                <a class="playerPC" id="{% if not selected_player %}currentPlayer{% endif %}" href={{url_for('change_player', player='')}}>All</a>
                 {% for player in players %}
-                    <a class="playerPC" id="{% if player == current_player %}currentPlayer{% endif %}" href="{{url_for('change_player', player=player)}}">{{player}}</a>
+                    <img src={{url_for('static', filename='eggplant.png')}}>
+                    <a class="playerPC" id="{% if player == selected_player %}currentPlayer{% endif %}" href={{url_for('change_player', player=player)}}>{{player}}</a>
                 {% endfor %}
                 <a class="mobileActions" href="{{url_for('latest_video')}}">[LATEST]</a>
                 <a class="mobileActions" href="{{url_for('iterate_video', iterate='prev')}}">[PREV]</a>
@@ -33,6 +34,8 @@
             <div class="sideContainers" id="scRight">
                 <form id="ratings" action="/" method="POST">
                     <input type="hidden" id="rating_input" name="rating">
+                    <input type="hidden" id="player_input" name="player">
+                    <input type="hidden" id="video_input" name="video">
                     <div class="rating" onclick="submitRating(5)"></div>
                     <div class="rating" onclick="submitRating(4)"></div>
                     <div class="rating" onclick="submitRating(3)"></div>
@@ -51,9 +54,9 @@
         </div>
         <div id="playersPortrait">
             <span id="playerHeader">[PLAYERS]</span>
-            <a id="{% if not current_player %}currentPlayer{% endif %}" href="{{url_for('change_player', player='')}}">All</a>
+            <a id="{% if not selected_player %}currentPlayer{% endif %}" href={{url_for('change_player', player='')}}>All</a>
             {% for player in players %}
-                <a class="player" id="{% if player == current_player %}currentPlayer{% endif %}" href="{{url_for('change_player', player=player)}}">{{player}}</a>
+                <a class="player" id="{% if player == selected_player %}currentPlayer{% endif %}" href={{url_for('change_player', player=player)}}>{{player}}</a>
             {% endfor %}
         </div>
         <footer>
