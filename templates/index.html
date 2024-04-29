@@ -20,8 +20,11 @@
                 <span id="playerHeaderPC">[PLAYERS]</span>
                 <a class="playerPC" id="{% if not selected_player %}currentPlayer{% endif %}" href={{url_for('change_player', player='')}}>All</a>
                 {% for player in players %}
-                    <img src={{url_for('static', filename='eggplant.png')}}>
+                <div>
+                    <span id="playerRatingValue">23</span>
+                    <img id="playerRating" src={{url_for('static', filename='eggplant.png')}}>
                     <a class="playerPC" id="{% if player == selected_player %}currentPlayer{% endif %}" href={{url_for('change_player', player=player)}}>{{player}}</a>
+                </div>
                 {% endfor %}
                 <a class="mobileActions" href="{{url_for('latest_video')}}">[LATEST]</a>
                 <a class="mobileActions" href="{{url_for('iterate_video', iterate='prev')}}">[PREV]</a>
