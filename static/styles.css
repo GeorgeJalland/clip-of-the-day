@@ -55,9 +55,17 @@ h1 {
 #nameDate{
     position: absolute;
 }
+#playerRatingValue{
+    position: absolute;
+}
+#playerRating{
+    height: 1vw;
+    width: 1vw;
+    position: absolute;
+}
 #playerHeaderPC, .playerPC{
     color: white;
-    margin-left: 1vw;
+    margin-left: 2vw;
 }
 #currentPlayer{
     color: rgb(74, 246, 38);
