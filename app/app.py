@@ -1,19 +1,17 @@
 from flask import Flask, render_template, send_from_directory, redirect, session, request
 from urllib.parse import quote
-from video_manager import VideoManager
-import os
-from db_models import db, submit_rating, get_ratings_by_player
+from app.video_manager import VideoManager
+from app.db_models import db, submit_rating, get_ratings_by_player
 from config import Config
 
-VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
-GAMES = ["Rocket League", "Fortnite"]
-video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
+video_manager = VideoManager(Config.VIDEO_DIRECTORY, format=".mp4")
 
 def create_app(config_class=Config):
 
     app = Flask(__name__)
     app.config.from_object(config_class)
     db.init_app(app)
+    GAMES = app.config.get('GAMES')
 
     @app.route('/', methods=['GET', 'POST'])
     def main():
@@ -46,7 +44,7 @@ def create_app(config_class=Config):
 
     @app.route('/video/<subdir>/<filename>')
     def video(subdir, filename):
-        return send_from_directory(VIDEO_DIRECTORY+subdir, filename)
+        return send_from_directory(Config.VIDEO_DIRECTORY+subdir, filename)
 
     @app.route('/latest-video')
     def latest_video():
@@ -82,4 +80,3 @@ def create_app(config_class=Config):
         return redirect('/')
     
     return app
-
