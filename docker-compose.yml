@@ -12,6 +12,6 @@ services:
         target: /Captures/
     build:
       context: .
-      dockerfile: dockerfile
+      dockerfile: app/dockerfile
       labels:
         - "clip-of-the-day"
