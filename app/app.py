@@ -1,7 +1,8 @@
 from flask import Flask, render_template, send_from_directory, redirect, session, request
 from urllib.parse import quote
 from app.video_manager import VideoManager
-from app.db_models import db, submit_rating, get_ratings_by_player
+from app.db_models import Base, submit_rating, get_ratings_by_player
+from sqlalchemy import create_engine
 from config import Config
 
 video_manager = VideoManager(Config.VIDEO_DIRECTORY, format=".mp4")
@@ -10,7 +11,11 @@ def create_app(config_class=Config):
 
     app = Flask(__name__)
     app.config.from_object(config_class)
-    db.init_app(app)
+    db = create_engine(Config.SQLALCHEMY_DATABASE_URI)
+
+    with app.app_context():
+        Base.metadata.create_all(db)
+
     GAMES = app.config.get('GAMES')
 
     @app.route('/', methods=['GET', 'POST'])
@@ -27,7 +32,7 @@ def create_app(config_class=Config):
             video_ = request.form.get('video')
             ip_address = request.remote_addr
             # add rating to database
-            submit_rating(ip_address=ip_address, video=video_, player=player_, rating=rating_)
+            submit_rating(db, ip_address=ip_address, video=video_, player=player_, rating=rating_)
 
 
         return render_template(
