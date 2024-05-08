@@ -1,9 +1,9 @@
 import time
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from watchdog.events import FileSystemEvent, FileSystemEventHandler
 import os
 from config import Config
-from app.db_models import new_video_record
+from app.db_models import new_video_record, new_player_record
 from sqlalchemy import create_engine
 import logging#
 
@@ -35,15 +35,32 @@ class Watcher:
 
 class VideoFileHandler(FileSystemEventHandler):
 
-    def on_any_event(self, event):
-        if event.event_type == "created":
+    def on_created(self, event):
+        if event.is_directory:
+            logger.info(f"new directory detected: {event}")
+            player_name = os.path.basename(event.src_path)
+            new_player_record(db, player_name)
+        else:        
             logger.info(f"new file detected: {event}")
-            player = os.path.basename(os.path.dirname(event.src_path))
-            video_name = os.path.dirname(event.src_path)
-            subdir_and_filename = player+'/'+video_name
+            player_name = os.path.basename(os.path.dirname(event.src_path))
+            video_name = os.path.basename(event.src_path)
+            subdir_and_filename = player_name+'/'+video_name
             full_path = event.src_path
-            new_video_record(db, player, video_name, subdir_and_filename, full_path)
+            new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
 
+    def on_moved(self, event):
+        if event.is_directory:
+            logger.info(f"directory moved {event}")
+
+            # take destination path and update player name
+
+    def on_deleted(self, event):
+        # if event.is_directory:
+            # delete player record
+        logger.info(f"some sort of deletion: {event}")
+
+    def on_any_event(self, event: FileSystemEvent) -> None:
+        logger.info(event)
 
 if __name__=="__main__":
     w = Watcher(directory=Config.VIDEO_DIRECTORY, handler=VideoFileHandler())

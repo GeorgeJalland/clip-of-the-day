@@ -15,6 +15,9 @@ class Player(Base):
     id = Column((Integer), primary_key=True)
     name = Column(String(50), nullable=False)
     __table_args__ = (UniqueConstraint('name', name='player_name_unique'),)
+
+    def __repr__(self) -> str:
+        return f'<Player {self.name}>'
     
 class Video(Base):
     __tablename__ = 'video'
@@ -24,6 +27,9 @@ class Video(Base):
     name = Column(String(50), nullable=False)
     subdir_and_filename = Column(String(100), nullable=False)
     full_path = Column(String(200), nullable=False)
+
+    def __repr__(self) -> str:
+        return f'<Video {self.name}>'
 
 class Rating(Base):
     __tablename__ = 'rating'
@@ -67,11 +73,25 @@ def get_user_video_rating(db, video, ip_address) -> int:
     # return the rating of a given video for given ip_address
     pass
 
-def new_video_record(db, player, video_name, subdir_and_filename, full_video_path):
-    logger.info("creating new video record")
+def new_video_record(db, player_name, video_name, subdir_and_filename, full_video_path):
+    logger.info(f"creating new video record for {video_name}")
     with Session(db) as session:
-        player = session.query(Player).filter_by(name=player).first()
-        if not player:
-            session.add(Player(name=player))
-        session.add(Video(name=video_name, subdir_and_filename=subdir_and_filename, full_video_path=full_video_path))
-        session.commit
+        player = session.query(Player).filter_by(name=player_name).first()
+        player_id = player.id if player else new_player_record(db, player_name)
+        new_video = Video(player_id=player_id, name=video_name, subdir_and_filename=subdir_and_filename, full_path=full_video_path)
+        session.add(new_video)
+        session.commit()
+        new_video_id = new_video.id
+        logger.info(f"new video record added: {new_video}")
+    return new_video_id
+
+def new_player_record(db, player_name):
+    # catch not unique exception?
+    logger.info(f"creating new player record for {player_name}")
+    with Session(db) as session:
+        new_player = Player(name=player_name)
+        session.add(new_player)
+        session.commit()
+        new_player_id = new_player.id
+        logger.info(f"new player record created: {new_player}")
+    return new_player_id
