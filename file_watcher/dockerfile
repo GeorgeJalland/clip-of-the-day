@@ -4,4 +4,4 @@ WORKDIR /file-watcher
 COPY ./file_watcher ./config.py ./app/db_models.py ./
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-CMD [ "python", "-u", "-m", "file_watcher.file_watcher"]
+CMD [ "python", "-u", "-m", "file_watcher"]
