@@ -3,7 +3,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 import os
 from config import Config
-from app.db_models import new_video_record, new_player_record
+from db_models import new_video_record, new_player_record
 from sqlalchemy import create_engine
 import logging
 
