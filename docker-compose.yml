@@ -30,4 +30,3 @@ services:
       - type: bind
         source: ${DB_PATH}
         target: /file-watcher/instance/app.db
-      
