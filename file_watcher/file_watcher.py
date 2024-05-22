@@ -4,11 +4,18 @@ from watchdog.events import FileSystemEvent, FileSystemEventHandler
 import os
 from config import Config
 from db_models import new_video_record, new_player_record, delete_player_record
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
+from sqlalchemy.engine import Engine
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("file_watcher")
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 db = create_engine(Config.SQLALCHEMY_DATABASE_URI)
 
