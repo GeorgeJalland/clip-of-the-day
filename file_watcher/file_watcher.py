@@ -24,6 +24,7 @@ class Watcher:
             self.handler, self.directory, recursive=True)
         self.observer.start()
         logger.info(f"Watcher Running in {format(self.directory)}.")
+        logger.info(f"Watcher connected to db: {Config.SQLALCHEMY_DATABASE_URI}")
         try:
             while True:
                 time.sleep(1)
