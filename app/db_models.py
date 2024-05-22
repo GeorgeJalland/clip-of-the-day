@@ -15,6 +15,7 @@ class Player(Base):
     id = Column((Integer), primary_key=True)
     name = Column(String(50), nullable=False)
     __table_args__ = (UniqueConstraint('name', name='player_name_unique'),)
+    videos = relationship("Video", back_populates="player")
 
     def __repr__(self) -> str:
         return f'<Player {self.name}>'
@@ -23,10 +24,11 @@ class Video(Base):
     __tablename__ = 'video'
     id = Column((Integer), primary_key=True)
     player_id = Column(Integer, ForeignKey('player.id'), nullable=False)
-    player = relationship("Player")
+    player = relationship("Player", back_populates="videos", cascade="all, delete-orphan")
     name = Column(String(50), nullable=False)
     subdir_and_filename = Column(String(100), nullable=False)
     full_path = Column(String(200), nullable=False)
+    ratings = relationship("Rating", back_populates="video")
 
     def __repr__(self) -> str:
         return f'<Video {self.name}>'
@@ -36,7 +38,7 @@ class Rating(Base):
     id = Column((Integer), primary_key=True)
     ip_address = Column(String(15), nullable=False)
     video_id = Column(Integer, ForeignKey('video.id'), nullable=False)
-    video = relationship("Video")
+    video = relationship("Video", back_populates="ratings", cascade="all, delete-orphan")
     rating = Column((Integer), nullable=False)
     __table_args__ = (UniqueConstraint('ip_address', 'video_id', name='cant_rate_vid_twice'),
                       CheckConstraint("1 <=  rating <= 5"),)
@@ -60,6 +62,7 @@ def get_ratings_for_video(db, video):
     pass
 
 def get_ratings_by_player(db, game):
+    # needs reworking
     with Session(db) as session:
         # cache for 1 minute?
         result = session.query(
