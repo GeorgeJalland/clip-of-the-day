@@ -15,7 +15,7 @@ class Player(Base):
     id = Column((Integer), primary_key=True)
     name = Column(String(50), nullable=False)
     __table_args__ = (UniqueConstraint('name', name='player_name_unique'),)
-    videos = relationship("Video", back_populates="player", cascade="all, delete-orphan")
+    videos = relationship("Video", backref="player", passive_deletes=True)
 
     def __repr__(self) -> str:
         return f'<Player {self.name}>'
@@ -23,12 +23,11 @@ class Player(Base):
 class Video(Base):
     __tablename__ = 'video'
     id = Column((Integer), primary_key=True)
-    player_id = Column(Integer, ForeignKey('player.id'), nullable=False)
-    player = relationship("Player", back_populates="videos")
+    player_id = Column(Integer, ForeignKey('player.id', ondelete="CASCADE"), nullable=False)
     name = Column(String(50), nullable=False)
     subdir_and_filename = Column(String(100), nullable=False)
     full_path = Column(String(200), nullable=False)
-    ratings = relationship("Rating", back_populates="video", cascade="all, delete-orphan")
+    ratings = relationship("Rating", backref="video", passive_deletes=True)
 
     def __repr__(self) -> str:
         return f'<Video {self.name}>'
@@ -37,8 +36,7 @@ class Rating(Base):
     __tablename__ = 'rating'
     id = Column((Integer), primary_key=True)
     ip_address = Column(String(15), nullable=False)
-    video_id = Column(Integer, ForeignKey('video.id'), nullable=False)
-    video = relationship("Video", back_populates="ratings")
+    video_id = Column(Integer, ForeignKey('video.id', ondelete="CASCADE"), nullable=False)
     rating = Column((Integer), nullable=False)
     __table_args__ = (UniqueConstraint('ip_address', 'video_id', name='cant_rate_vid_twice'),
                       CheckConstraint("1 <=  rating <= 5"),)
