@@ -3,7 +3,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 import os
 from config import Config
-from db_models import new_video_record, new_player_record
+from db_models import new_video_record, new_player_record, delete_player_record
 from sqlalchemy import create_engine
 import logging
 
@@ -56,10 +56,9 @@ class VideoFileHandler(FileSystemEventHandler):
             # update video name method?
 
     def on_deleted(self, event):
-        # if event.is_directory:
-            # delete player record
-        # else delete video record
-        logger.info(f"some sort of deletion: {event}")
+        logger.info(f"directory deleted: {event}")
+        player_name = os.path.basename(event.src_path)
+        delete_player_record(db, player_name)
 
     def on_any_event(self, event: FileSystemEvent) -> None:
         logger.info(event)

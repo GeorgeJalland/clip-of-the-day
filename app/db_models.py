@@ -96,3 +96,10 @@ def new_player_record(db, player_name):
         new_player_id = new_player.id
         logger.info(f"new player record created: {new_player}")
     return new_player_id
+
+def delete_player_record(db, player_name):
+    logger.info(f"deleting player {player_name} and all associated videos")
+    with Session(db) as session:
+        session.query(Player).filter_by(name=player_name).delete()
+    logger.info(f"deleted player {player_name} and all associated videos")
+    
