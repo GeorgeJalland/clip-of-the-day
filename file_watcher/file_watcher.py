@@ -56,9 +56,10 @@ class VideoFileHandler(FileSystemEventHandler):
             # update video name method?
 
     def on_deleted(self, event):
-        logger.info(f"directory deleted: {event}")
-        player_name = os.path.basename(event.src_path)
-        delete_player_record(db, player_name)
+        if event.is_directory:
+            logger.info(f"directory deleted: {event}")
+            player_name = os.path.basename(event.src_path)
+            delete_player_record(db, player_name)
 
     def on_any_event(self, event: FileSystemEvent) -> None:
         logger.info(event)
