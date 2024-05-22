@@ -51,17 +51,19 @@ class VideoFileHandler(FileSystemEventHandler):
     def on_moved(self, event):
         if event.is_directory:
             logger.info(f"directory moved {event}")
-
             # take destination path and update player name
+            # update video name method?
 
     def on_deleted(self, event):
         # if event.is_directory:
             # delete player record
+        # else delete video record
         logger.info(f"some sort of deletion: {event}")
 
     def on_any_event(self, event: FileSystemEvent) -> None:
         logger.info(event)
 
 if __name__=="__main__":
+    # migrate database with changes, scan all dirs and add records
     w = Watcher(directory=Config.VIDEO_DIRECTORY, handler=VideoFileHandler())
     w.run()

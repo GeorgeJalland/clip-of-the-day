@@ -25,6 +25,9 @@ class VideoManager:
 
     def get_all_game_subdirs(self, game) -> List:
         return list({game_dict.get('subdir') for game_dict in self.get_all_game_videos(game)})
+
+
+        
     
     def get_video_count(self, game: str, player: str) -> int:
         return len(self.get_all_game_videos(game, player))
