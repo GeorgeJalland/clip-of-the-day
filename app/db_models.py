@@ -101,5 +101,5 @@ def delete_player_record(db, player_name):
     logger.info(f"deleting player {player_name} and all associated videos")
     with Session(db) as session:
         session.query(Player).filter_by(name=player_name).delete()
-    logger.info(f"deleted player {player_name} and all associated videos")
-    
+        session.commit()
+        logger.info(f"deleted player {player_name} and all associated videos")
