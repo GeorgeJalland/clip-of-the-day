@@ -3,6 +3,7 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 from datetime import datetime
 from sqlalchemy.orm import Session
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -36,14 +37,26 @@ class Rating(Base):
     __tablename__ = 'rating'
     id = Column((Integer), primary_key=True)
     ip_address = Column(String(15), nullable=False)
-    video_id = Column(Integer, ForeignKey('video.id', ondelete="CASCADE"), nullable=False)
+    video_id = Column(Integer, ForeignKey('video.id'), nullable=False)
     rating = Column((Integer), nullable=False)
     __table_args__ = (UniqueConstraint('ip_address', 'video_id', name='cant_rate_vid_twice'),
                       CheckConstraint("1 <=  rating <= 5"),)
     
     def __repr__(self) -> str:
         return f'<Rating {self.id}>'
-
+    
+def migrate_video_data(db, video_directory, file_format=".mp4"):
+    # compare filesystem to db records, if difference add/de
+    videos_in_filesystem = {}
+    for root, _, files in os.walk(video_directory):
+        player = os.path.basename(root)
+        if not player or player[0:1] == ".":
+            continue
+        videos_in_filesystem[player] = []
+        for file in files:
+            if file[-4:] == file_format:
+                videos_in_filesystem[player].append(file)
+    
 
 def submit_rating(db, ip_address, video, player, rating):
     with Session(db) as session:
@@ -73,6 +86,10 @@ def get_ratings_by_player(db, game):
 def get_user_video_rating(db, video, ip_address) -> int:
     # return the rating of a given video for given ip_address
     pass
+
+def get_all_videos(db):
+    with Session(db) as session:
+        session.query(Video).all()
 
 def new_video_record(db, player_name, video_name, subdir_and_filename, full_video_path):
     logger.info(f"creating new video record for {video_name}")

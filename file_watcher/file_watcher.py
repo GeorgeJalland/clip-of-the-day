@@ -50,8 +50,11 @@ class VideoFileHandler(FileSystemEventHandler):
             new_player_record(db, player_name)
         else:        
             logger.info(f"new file detected: {event}")
-            player_name = os.path.basename(os.path.dirname(event.src_path))
             video_name = os.path.basename(event.src_path)
+            if video_name[-4:] != ".mp4":
+                logger.info("file not video format")
+                return
+            player_name = os.path.basename(os.path.dirname(event.src_path))
             subdir_and_filename = player_name+'/'+video_name
             full_path = event.src_path
             new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
@@ -64,14 +67,17 @@ class VideoFileHandler(FileSystemEventHandler):
 
     def on_deleted(self, event):
         if event.is_directory:
+            # since on delete cascade this will drop all videos for given player too
             logger.info(f"directory deleted: {event}")
             player_name = os.path.basename(event.src_path)
             delete_player_record(db, player_name)
 
     def on_any_event(self, event: FileSystemEvent) -> None:
+        # remove once finished
         logger.info(event)
 
 if __name__=="__main__":
+    # apply migration arg, pass via env var in docker compose up
     # migrate database with changes, scan all dirs and add records
     w = Watcher(directory=Config.VIDEO_DIRECTORY, handler=VideoFileHandler())
     w.run()
