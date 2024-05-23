@@ -45,6 +45,8 @@ class Rating(Base):
     __table_args__ = (UniqueConstraint('ip_address', 'video_id', name='cant_rate_vid_twice'),
                       CheckConstraint("1 <=  rating <= 5"),)
     
+    video = relationship("Video")
+    
     def __repr__(self) -> str:
         return f'<Rating {self.id}>'
     
