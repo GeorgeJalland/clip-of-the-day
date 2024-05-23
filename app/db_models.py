@@ -30,7 +30,7 @@ class Video(Base):
     subdir_and_filename = Column(String(100), nullable=False)
     full_path = Column(String(200), nullable=False)
 
-    player = relationship("Player")
+    player = relationship("Player", lazy="joined")
     ratings = relationship("Rating", back_populates="video", passive_deletes=True)
 
     def __repr__(self) -> str:
