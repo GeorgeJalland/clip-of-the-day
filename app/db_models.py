@@ -16,6 +16,7 @@ class Player(Base):
     id = Column((Integer), primary_key=True)
     name = Column(String(50), nullable=False)
     __table_args__ = (UniqueConstraint('name', name='player_name_unique'),)
+
     videos = relationship("Video", back_populates="player", passive_deletes=True)
 
     def __repr__(self) -> str:
@@ -28,6 +29,8 @@ class Video(Base):
     name = Column(String(50), nullable=False)
     subdir_and_filename = Column(String(100), nullable=False)
     full_path = Column(String(200), nullable=False)
+
+    player = relationship("Player")
     ratings = relationship("Rating", back_populates="video", passive_deletes=True)
 
     def __repr__(self) -> str:
