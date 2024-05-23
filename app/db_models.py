@@ -89,7 +89,8 @@ def get_user_video_rating(db, video, ip_address) -> int:
 
 def get_all_videos(db):
     with Session(db) as session:
-        session.query(Video).all()
+        vids = session.query(Video).all()
+    return vids
 
 def new_video_record(db, player_name, video_name, subdir_and_filename, full_video_path):
     logger.info(f"creating new video record for {video_name}")
