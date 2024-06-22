@@ -61,6 +61,16 @@ def migrate_video_data(db, video_directory, file_format=".mp4"):
         for file in files:
             if file[-4:] == file_format:
                 videos_in_filesystem[player].append(file)
+
+    videos_in_database = {}
+    for video in get_all_videos(db):
+        if not videos_in_database.get(video.player.name):
+            videos_in_database[video.player.name] = [video.name]
+        else:
+            videos_in_database[video.player.name].append(video.name)
+
+    
+
     
 
 def submit_rating(db, ip_address, video, player, rating):
