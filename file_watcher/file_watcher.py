@@ -77,10 +77,6 @@ class VideoFileHandler(FileSystemEventHandler):
             player_name = os.path.basename(os.path.dirname(event.src_path))
             db_models.delete_video_record(db, player_name, video_name)
 
-    def on_any_event(self, event: FileSystemEvent) -> None:
-        # remove once finished
-        logger.info(event)
-
 if __name__=="__main__":
     # apply migration arg, pass via env var in docker compose up
     # migrate database with changes, scan all dirs and add records
