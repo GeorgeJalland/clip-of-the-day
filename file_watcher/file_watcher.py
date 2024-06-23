@@ -3,7 +3,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 import os
 from config import Config
-from db_models import add_new_video_record, add_new_player_record, delete_player_record, delete_video_record
+import db_models
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 import logging
@@ -47,7 +47,7 @@ class VideoFileHandler(FileSystemEventHandler):
         if event.is_directory:
             logger.info(f"new directory detected: {event}")
             player_name = os.path.basename(event.src_path)
-            add_new_player_record(db, player_name)
+            db_models.add_new_player_record(db, player_name)
         else:        
             logger.info(f"new file detected: {event}")
             video_name = os.path.basename(event.src_path)
@@ -57,7 +57,7 @@ class VideoFileHandler(FileSystemEventHandler):
             player_name = os.path.basename(os.path.dirname(event.src_path))
             subdir_and_filename = player_name+'/'+video_name
             full_path = event.src_path
-            add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
+            db_models.add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
 
     def on_moved(self, event):
         if event.is_directory:
@@ -70,12 +70,12 @@ class VideoFileHandler(FileSystemEventHandler):
             # since on delete cascade this will drop all videos for given player too
             logger.info(f"directory deleted: {event}")
             player_name = os.path.basename(event.src_path)
-            delete_player_record(db, player_name)
+            db_models.delete_player_record(db, player_name)
         else:
             logger.info(f"file deleted: {event}")
             video_name = os.path.basename(event.src_path)
             player_name = os.path.basename(os.path.dirname(event.src_path))
-            delete_video_record(db, player_name, video_name)
+            db_models.delete_video_record(db, player_name, video_name)
 
     def on_any_event(self, event: FileSystemEvent) -> None:
         # remove once finished
@@ -84,5 +84,6 @@ class VideoFileHandler(FileSystemEventHandler):
 if __name__=="__main__":
     # apply migration arg, pass via env var in docker compose up
     # migrate database with changes, scan all dirs and add records
+    db_models.migrate_video_data()
     w = Watcher(directory=Config.VIDEO_DIRECTORY, handler=VideoFileHandler())
     w.run()
