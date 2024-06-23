@@ -80,6 +80,6 @@ class VideoFileHandler(FileSystemEventHandler):
 if __name__=="__main__":
     # apply migration arg, pass via env var in docker compose up
     # migrate database with changes, scan all dirs and add records
-    db_models.migrate_video_data()
+    db_models.migrate_video_data(db, Config.VIDEO_DIRECTORY)
     w = Watcher(directory=Config.VIDEO_DIRECTORY, handler=VideoFileHandler())
     w.run()
