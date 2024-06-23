@@ -51,27 +51,37 @@ class Rating(Base):
         return f'<Rating {self.id}>'
     
 def migrate_video_data(db, video_directory, file_format=".mp4"):
-    # compare filesystem to db records, if difference add/de
-    videos_in_filesystem = {}
-    for root, _, files in os.walk(video_directory):
-        player = os.path.basename(root)
-        if not player or player[0:1] == ".":
-            continue
-        videos_in_filesystem[player] = []
-        for file in files:
-            if file[-4:] == file_format:
-                videos_in_filesystem[player].append(file)
+    def get_videos_in_filesystem():
+        videos = {}
+        for root, _, files in os.walk(video_directory):
+            player = os.path.basename(root)
+            if not player or player[0:1] == ".":
+                continue
+            for file in files:
+                if file[-4:] == file_format:
+                    videos.add((player, file, video_directory+'/'+player+'/'+file))
+        return videos
 
-    videos_in_database = {}
-    for video in get_all_videos(db):
-        if not videos_in_database.get(video.player.name):
-            videos_in_database[video.player.name] = [video.name]
-        else:
-            videos_in_database[video.player.name].append(video.name)
-
+    def get_videos_in_database():
+        return {(video.player.name, video.name, video.full_path) for video in get_all_videos(db)}
     
+    logger.info("migrating video data")
 
-    
+    videos_in_filesystem = get_videos_in_filesystem()
+    videos_in_database = get_videos_in_database()
+
+    # if video in filesystem and not db; add record
+    vids_not_in_database = videos_in_filesystem - videos_in_database
+    for video in vids_not_in_database:
+        add_new_player_record(db=db, player_name=video[0], video_name=video[1], subdir_and_filename=video[0]+'/'+video[1], full_video_path=video[3])
+        
+    # if video in db but not file system; delete record
+    vids_not_in_filesystem = videos_in_database - videos_in_filesystem
+    for video in vids_not_in_filesystem:
+        delete_video_record(db=db, player_name=video[0], video_name=video[1])
+
+    logger.info("migration complete")
+
 
 def submit_rating(db, ip_address, video, player, rating):
     with Session(db) as session:
@@ -107,11 +117,11 @@ def get_all_videos(db):
         vids = session.query(Video).all()
     return vids
 
-def new_video_record(db, player_name, video_name, subdir_and_filename, full_video_path):
+def add_new_video_record(db, player_name, video_name, subdir_and_filename, full_video_path):
     logger.info(f"creating new video record for {video_name}")
     with Session(db) as session:
         player = session.query(Player).filter_by(name=player_name).first()
-        player_id = player.id if player else new_player_record(db, player_name)
+        player_id = player.id if player else add_new_player_record(db, player_name)
         new_video = Video(player_id=player_id, name=video_name, subdir_and_filename=subdir_and_filename, full_path=full_video_path)
         session.add(new_video)
         session.commit()
@@ -119,7 +129,7 @@ def new_video_record(db, player_name, video_name, subdir_and_filename, full_vide
         logger.info(f"new video record added: {new_video}")
     return new_video_id
 
-def new_player_record(db, player_name):
+def add_new_player_record(db, player_name):
     # catch not unique exception?
     logger.info(f"creating new player record for {player_name}")
     with Session(db) as session:
@@ -136,3 +146,11 @@ def delete_player_record(db, player_name):
         session.query(Player).filter_by(name=player_name).delete()
         session.commit()
         logger.info(f"deleted player {player_name} and all associated videos")
+
+def delete_video_record(db, player_name, video_name):
+    logger.info(f"deleting video {video_name} by player {player_name}")
+    with Session(db) as session:
+        player = session.query(Player).filter_by(name=player_name).first()
+        session.query(Video).filter_by(player_id=player.id, name=video_name).delete()
+        session.commit()
+        logger.info("video deleted")    

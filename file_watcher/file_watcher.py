@@ -3,7 +3,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 import os
 from config import Config
-from db_models import new_video_record, new_player_record, delete_player_record
+from db_models import add_new_video_record, add_new_player_record, delete_player_record, delete_video_record
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 import logging
@@ -47,7 +47,7 @@ class VideoFileHandler(FileSystemEventHandler):
         if event.is_directory:
             logger.info(f"new directory detected: {event}")
             player_name = os.path.basename(event.src_path)
-            new_player_record(db, player_name)
+            add_new_player_record(db, player_name)
         else:        
             logger.info(f"new file detected: {event}")
             video_name = os.path.basename(event.src_path)
@@ -57,7 +57,7 @@ class VideoFileHandler(FileSystemEventHandler):
             player_name = os.path.basename(os.path.dirname(event.src_path))
             subdir_and_filename = player_name+'/'+video_name
             full_path = event.src_path
-            new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
+            add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
 
     def on_moved(self, event):
         if event.is_directory:
@@ -71,6 +71,11 @@ class VideoFileHandler(FileSystemEventHandler):
             logger.info(f"directory deleted: {event}")
             player_name = os.path.basename(event.src_path)
             delete_player_record(db, player_name)
+        else:
+            logger.info(f"file deleted: {event}")
+            video_name = os.path.basename(event.src_path)
+            player_name = os.path.basename(os.path.dirname(event.src_path))
+            delete_video_record(db, player_name, video_name)
 
     def on_any_event(self, event: FileSystemEvent) -> None:
         # remove once finished
