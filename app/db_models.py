@@ -73,7 +73,7 @@ def migrate_video_data(db, video_directory, file_format=".mp4"):
     # if video in filesystem and not db; add record
     vids_not_in_database = videos_in_filesystem - videos_in_database
     for video in vids_not_in_database:
-        add_new_player_record(db=db, player_name=video[0], video_name=video[1], subdir_and_filename=video[0]+'/'+video[1], full_video_path=video[3])
+        add_new_player_record(db=db, player_name=video[0], video_name=video[1], subdir_and_filename=video[0]+'/'+video[1], full_video_path=video[2])
         
     # if video in db but not file system; delete record
     vids_not_in_filesystem = videos_in_database - videos_in_filesystem
