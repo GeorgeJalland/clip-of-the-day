@@ -52,7 +52,7 @@ class Rating(Base):
     
 def migrate_video_data(db, video_directory, file_format=".mp4"):
     def get_videos_in_filesystem():
-        videos = {}
+        videos = set()
         for root, _, files in os.walk(video_directory):
             player = os.path.basename(root)
             if not player or player[0:1] == ".":
