@@ -65,7 +65,7 @@ def migrate_video_data(db, video_directory, file_format=".mp4"):
     def get_videos_in_database():
         return {(video.player.name, video.name, video.full_path) for video in get_all_videos(db)}
     
-    logger.info("migrating video data")
+    logger.info("--------------------------- migrating video data ---------------------------")
 
     videos_in_filesystem = get_videos_in_filesystem()
     videos_in_database = get_videos_in_database()
@@ -80,7 +80,7 @@ def migrate_video_data(db, video_directory, file_format=".mp4"):
     for video in vids_not_in_filesystem:
         delete_video_record(db=db, player_name=video[0], video_name=video[1])
 
-    logger.info("migration complete")
+    logger.info("--------------------------- migration complete ---------------------------")
 
 
 def submit_rating(db, ip_address, video, player, rating):
