@@ -14,7 +14,7 @@ services:
   #       source: ${VIDEO_DIRECTORY}
   #       target: /Captures/
   #     - type: bind
-  #       source: instance
+  #       source: ${DB_PATH}
   #       target: instance
   file-watcher:
     build:
