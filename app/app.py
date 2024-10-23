@@ -5,8 +5,6 @@ from app.db_models import Base, submit_rating, get_ratings_by_player
 from sqlalchemy import create_engine
 from config import Config
 
-video_manager = VideoManager(Config.VIDEO_DIRECTORY, format=".mp4")
-
 def create_app(config_class=Config):
 
     app = Flask(__name__)
@@ -16,6 +14,7 @@ def create_app(config_class=Config):
     with app.app_context():
         Base.metadata.create_all(db)
 
+    video_manager = VideoManager(db, Config.VIDEO_DIRECTORY, format=".mp4")
     GAMES = app.config.get('GAMES')
 
     @app.route('/', methods=['GET', 'POST'])

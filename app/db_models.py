@@ -153,4 +153,28 @@ def delete_video_record(db, player_name, video_name):
         player = session.query(Player).filter_by(name=player_name).first()
         session.query(Video).filter_by(player_id=player.id, name=video_name).delete()
         session.commit()
-        logger.info("video deleted")    
+        logger.info("video deleted")
+
+def get_video_count(db):
+    with Session(db) as session:
+        return session.query(Video).count()
+
+def get_next_video_and_ratings(db, index):
+    with Session(db) as session:
+        # redo this using subquery in select
+        subquery = session.query(Video).filter(Video.id > index).limit(1).subquery()
+        result = session.query(
+            Video.id,
+            Video.name,
+            func.sum(Rating.rating),
+            func.avg(Rating.rating)
+            ).filter(Rating.video_id == subquery.c.id).join(subquery).all()
+        return result
+
+
+def get_random_video_and_ratings(db):
+    pass
+
+
+def get_all_players_and_ratings(db):
+    pass

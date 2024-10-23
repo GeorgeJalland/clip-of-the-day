@@ -5,7 +5,8 @@ from cachetools import cached, TTLCache
 from typing import Dict, List
 
 class VideoManager:
-    def __init__(self, directory: str, format: str):
+    def __init__(self, db, directory: str, format: str):
+        self.db = db
         self.directory = directory
         self.format = format
     
@@ -26,9 +27,6 @@ class VideoManager:
     def get_all_game_subdirs(self, game) -> List:
         return list({game_dict.get('subdir') for game_dict in self.get_all_game_videos(game)})
 
-
-        
-    
     def get_video_count(self, game: str, player: str) -> int:
         return len(self.get_all_game_videos(game, player))
     
