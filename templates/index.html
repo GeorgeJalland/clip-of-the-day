@@ -2,9 +2,10 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="description" content="Effortlessly view and organize Rocket League clips on Clip of the Day for ultimate convenience. Automatically sync highlights from your capture folder so you can view your gameplay highlights from anywhere!">
         <title>Clip of the Day</title>
         <h1><< {{game}} CLIP OF THE DAY >></h1>
-        <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+        <link rel="icon" href={{url_for('static', filename='favicon.ico')}} type="image/x-icon">
         <link rel="stylesheet" type="text/css" href={{url_for('static', filename='styles.css')}}>
     </head>
     <body>
@@ -49,9 +50,9 @@
         </div>
         <footer>
             <div id="videoCount">[VIDEO COUNT]: {{video_count}}</div>
-            <div id="about">
-                [ABOUT THIS PROJECT] <br> [SOME LINK] <br> [BY <a href={{url_for('change_game')}}>GEORGE</a> JALLAND]
-            </div>
+            <nav id="about">
+                 <a href="https://www.tiktok.com/@clipofthedayrl">[TIKTOK]</a> <br> <a href="https://www.youtube.com/@clipofthedayRL">[YOUTUBE]</a> <br> [ABOUT THIS PROJECT] <br> [BY <a href={{url_for('change_game')}}>GEORGE</a> JALLAND]
+            </nav>
         </footer>
     </body>
 </html>
