@@ -16,7 +16,7 @@ def check_session_exists(func):
     def wrapper(*args, **kwargs):
         game = session.get('game')
         if not game:
-            return redirect('/')
+            return redirect('/', code=301)
         return func(*args, **kwargs)
     return wrapper
 
@@ -48,13 +48,13 @@ def video(subdir, filename):
 @check_session_exists
 def latest_video():
     session['video'] = video_manager.get_video_by_index(game=session.get('game'), player=session.get('player'), index=0)
-    return redirect('/')
+    return redirect('/', code=301)
 
 @app.route('/random-video')
 @check_session_exists
 def random_video():
     session.pop('video', None)
-    return redirect('/')
+    return redirect('/', code=301)
 
 @app.route('/iterate-video')
 @check_session_exists
@@ -63,7 +63,7 @@ def iterate_video():
     new_index = session.get('video').get('index') + (1 if prev_or_next == 'next' else - 1)
     session['video']['index'] = new_index
     session['video'] = video_manager.get_video_by_index(game=session.get('game'), player=session.get('player'), index=new_index)
-    return redirect('/')
+    return redirect('/', code=301)
 
 @app.route('/change-game')
 @check_session_exists
@@ -72,7 +72,7 @@ def change_game():
     session['game'] = GAMES[(game_index + 1) % len(GAMES)]
     session.pop('video', None)
     session.pop('player', None)
-    return redirect('/')
+    return redirect('/', code=301)
 
 @app.route('/change-player')
 @check_session_exists
@@ -81,4 +81,4 @@ def change_player():
     player = request.args.get('player')
     session['player'] = player if player in players else ''
     session.pop('video')
-    return redirect('/')
+    return redirect('/', code=301)
