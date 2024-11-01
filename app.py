@@ -2,6 +2,7 @@ from flask import Flask, render_template, send_from_directory, redirect, session
 from urllib.parse import quote
 from video_manager import VideoManager
 import os
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
@@ -10,13 +11,22 @@ VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
 GAMES = ["Rocket League", "Fortnite"]
 video_manager = VideoManager(VIDEO_DIRECTORY, format=".mp4")
 
+def check_session_exists(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        game = session.get('game')
+        if not game:
+            return redirect('/')
+        return func(*args, **kwargs)
+    return wrapper
+
 @app.route('/')
 def main():
-    player = session.setdefault('player', '')
     game = session.setdefault('game', GAMES[0])
+    players = video_manager.get_all_game_subdirs(game)
+    player = session.setdefault('player', '')
     vid_index, vid = session.setdefault('video', video_manager.get_random_video(game=game, player=player)).values()
     video_count = video_manager.get_video_count(game, player)
-    players = video_manager.get_all_game_subdirs(game)
 
     return render_template(
             'index.html', 
@@ -35,16 +45,19 @@ def video(subdir, filename):
     return send_from_directory(VIDEO_DIRECTORY+subdir, filename)
 
 @app.route('/latest-video')
+@check_session_exists
 def latest_video():
     session['video'] = video_manager.get_video_by_index(game=session.get('game'), player=session.get('player'), index=0)
     return redirect('/')
 
 @app.route('/random-video')
+@check_session_exists
 def random_video():
     session.pop('video', None)
     return redirect('/')
 
 @app.route('/iterate-video')
+@check_session_exists
 def iterate_video():
     prev_or_next = request.args.get('iterate')
     new_index = session.get('video').get('index') + (1 if prev_or_next == 'next' else - 1)
@@ -53,6 +66,7 @@ def iterate_video():
     return redirect('/')
 
 @app.route('/change-game')
+@check_session_exists
 def change_game():
     game_index = GAMES.index(session.get('game'))
     session['game'] = GAMES[(game_index + 1) % len(GAMES)]
@@ -61,8 +75,10 @@ def change_game():
     return redirect('/')
 
 @app.route('/change-player')
+@check_session_exists
 def change_player():
+    players = video_manager.get_all_game_subdirs(session.get('game'))
     player = request.args.get('player')
-    session['player'] = player
+    session['player'] = player if player in players else ''
     session.pop('video')
     return redirect('/')
