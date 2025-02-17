@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <meta name="description" content="Effortlessly view and organize Rocket League clips on Clip of the Day for ultimate convenience. Automatically sync highlights from your capture folder so you can view your gameplay highlights from anywhere!">
+        <meta name="description" content="Rocket League Clips. Best Daily Rocket League Shorts Clips, 15 and 30 seconds clips.">
         <title>Clip of the Day</title>
         <link rel="icon" href="{{url_for('static', filename='favicon.png')}}" type="image/png">
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles.css')}}">
@@ -26,7 +26,7 @@
                 <a class="mobileActions" href="{{url_for('iterate_video', iterate='prev')}}">[PREV]</a>
             </div>
             <div>
-                <video id="videoElement" controls autoplay muted loop playsinline>
+                <video id="videoElement" alt="Rocket League Clip" controls autoplay muted loop playsinline>
                     <source src={{path_to_video}} type="video/mp4">
                 </video>
             </div>
