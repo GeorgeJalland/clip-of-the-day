@@ -1,18 +1,18 @@
 from flask import Flask, render_template, send_from_directory, redirect, session, request
 from urllib.parse import quote
+
 from app.video_manager import VideoManager
-from app.db_models import Base, submit_rating, get_ratings_by_player
-from sqlalchemy import create_engine
-from config import Config
+from app.db import submit_rating, get_ratings_by_player
+from app.db import db, create_schema
+from common.config import Config
 
 def create_app(config_class=Config):
 
     app = Flask(__name__)
     app.config.from_object(config_class)
-    db = create_engine(Config.SQLALCHEMY_DATABASE_URI)
 
     with app.app_context():
-        Base.metadata.create_all(db)
+        create_schema()
 
     video_manager = VideoManager(db, Config.VIDEO_DIRECTORY, format=".mp4")
     GAMES = app.config.get('GAMES')
