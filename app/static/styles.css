@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'VT323';
-    src: url('/static/cool_font.woff2') format('woff2');
+    src: url('./cool_font.woff2') format('woff2');
 }
 body {
     text-align: center; /* Center aligns all content within the body */
@@ -35,13 +35,13 @@ h1 {
     align-items: center;
 }
 .rating {
-    background-image: url(/static/eggplant_grey.png);
+    background-image: url('./eggplant_grey.png');
     background-size: cover;
     height: 4vw;
     width: 4vw;
 }
 .rating:hover, .rating:hover ~ .rating{
-    background-image: url(/static/eggplant.png);
+    background-image: url('./eggplant.png');
 }
 #videoMeta{
     display: flex;

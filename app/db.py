@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, Session
-from sqlalchemy import func
+from sqlalchemy import func, case
 import logging
 
 from common.config import Config
@@ -24,50 +24,52 @@ def submit_rating(session: Session, ip_address, video, player, rating):
         session.add(new_rating)
     session.commit()
 
-def get_ratings_for_video(session: Session, video):
-    # return dictionary of sum ratings, ratings count, avg rating
-    pass
-    # with Session(db) as session:
-    #     session.query()
-
-def get_ratings_by_player(session: Session, game):
+def get_players_with_ratings(session: Session, game):
     # needs reworking
     # cache for 1 minute?
-    result = session.query(
-        Rating.player,
-        func.sum(Rating.rating),
-        func.avg(Rating.rating)
-    ).filter(Rating.video.contains(game)).group_by(Rating.player).all()
-    return [{'player': row[0], 'sum_ratings': row[1], 'avg_rating': row[2]} for row in result]
-
-def get_user_video_rating(session: Session, video, ip_address) -> int:
-    # return the rating of a given video for given ip_address
-    pass
-
-def get_all_videos(session: Session):
-    vids = session.query(Video).all()
-    return vids
-
-def get_video_count(session: Session):
-    return session.query(Video).count()
-  
-def get_video_and_ratings(session: Session, index):
-    result = session.query(
-            Video.id,
-            Video.subdir_and_filename,
+    results = (
+        session.query(
             Player.name,
-            func.coalesce(func.sum(Rating.rating), 0).label("total_rating"),
-            func.coalesce(func.avg(Rating.rating), 0).label("average_rating")
-        ).outerjoin(Rating, Video.id == Rating.video_id) \
-        .join(Player, Video.player_id == Player.id) \
-        .filter(Video.id >= index) \
-        .group_by(Video.id, Video.name) \
-        .limit(1) \
+            func.sum(Rating.rating).label("sum_ratings"),
+            func.avg(Rating.rating).label("average_rating")
+        )
+        .outerjoin(Player.videos)   # Join videos associated with the player
+        .outerjoin(Video.ratings)   # Join ratings associated with the video
+        .group_by(Player.id)        # Group by player to aggregate ratings
         .all()
-    return result[0]
+    )
+    return [{'player': row[0], 'sum_ratings': row[1], 'avg_rating': row[2]} for row in results]
 
-def get_random_video_and_ratings(session: Session):
-    pass
+def get_vid_count(session: Session, player: str) -> dict:
+    query = session.query(Video).join(Video.player)
+    if player:
+        query = query.filter(Player.name == player)
+    return query.count()
+  
+def get_video_and_ratings(session: Session, index: int, ip_address: str) -> dict:
+    user_rating = func.max(
+            case(
+                (Rating.ip_address == ip_address, Rating.rating),
+                else_=None
+        ),
+    ).label("user_rating")
 
-def get_all_players_and_ratings(session: Session):
-    pass
+    result = (
+        session.query(
+            Video.id,
+            Video.name,
+            Video.full_path,
+            Player.name.label("player_name"),
+            func.coalesce(func.sum(Rating.rating), 0).label("total_rating"),
+            func.coalesce(func.avg(Rating.rating), 0).label("average_rating"),
+            user_rating,
+        )
+        .outerjoin(Rating, Video.id == Rating.video_id)
+        .join(Player, Video.player_id == Player.id)
+        .filter(Video.id >= index)
+        .group_by(Video.id, Video.name, Video.full_path, Player.name)
+        .limit(1)
+        .first()
+    )
+
+    return {"id": result[0], "video_name": result[1], "path": result[2], "player": result[3], "total_rating": result[4], "avg_rating": result[5], "user_rating": result[6]}

@@ -1,8 +1,7 @@
-from flask import Flask, render_template, send_from_directory, redirect, session, request, g
+from flask import Flask, session, request, g, jsonify
 from urllib.parse import quote
 
-from app.video_manager import VideoManager
-from app.db import SessionLocal, create_schema, submit_rating, get_ratings_by_player
+from app.db import SessionLocal, create_schema, submit_rating, get_players_with_ratings, get_video_and_ratings, get_vid_count
 from common.config import Config
 
 def create_app(config_class=Config):
@@ -13,7 +12,6 @@ def create_app(config_class=Config):
     with app.app_context():
         create_schema()
 
-    video_manager = VideoManager(Config.VIDEO_DIRECTORY, format=".mp4")
     GAMES = app.config.get('GAMES')
 
     @app.before_request
@@ -26,70 +24,30 @@ def create_app(config_class=Config):
         # Ensure the session is properly closed after each request
         SessionLocal.remove()
 
-    @app.route('/', methods=['GET', 'POST'])
-    def main():
-        player = session.setdefault('player', '')
-        game = session.setdefault('game', GAMES[0])
-        vid_index, vid_path, vid_player = session.setdefault('video', video_manager.get_random_video(g.db, game=game, player=player)).values()
-        video_count = video_manager.get_video_count(g.db, game, player)
-        players = video_manager.get_all_game_subdirs(game)
+    @app.get('/players')
+    def get_players():
+        # need to remove concept of game, make it rocket league only?
+        game = request.args.get('game', GAMES[0])
+        return jsonify(get_players_with_ratings(g.db, game))
 
-        if request.method == 'POST':
-            rating_ = request.form.get('rating')
-            player_ = request.form.get('player')
-            video_ = request.form.get('video')
-            ip_address = request.remote_addr
-            # add rating to database
-            submit_rating(g.db, ip_address=ip_address, video=video_, player=player_, rating=rating_)
+    @app.get('/video/<int:video_id>')
+    def get_video(video_id: int):
+        # add default value for video_id which is random ?
+        ip_addr = request.remote_addr
+        print(ip_addr)
+        return jsonify(get_video_and_ratings(g.db, video_id, ip_addr))
 
+    @app.get('/video-count')
+    def get_video_count():
+        player = request.args.get('player', None)
+        return jsonify(get_vid_count(g.db, player))
 
-        return render_template(
-                'index.html', 
-                game=game.upper(), 
-                path_to_video=f"/video/{quote(vid_path)}", 
-                player=vid_player.upper(), 
-                video_name=vid_path.split("/")[1],
-                vid_index=video_count - (vid_index % video_count),
-                video_count=video_count,
-                players = players,
-                selected_player = player,
-            )
-
-    @app.route('/video/<subdir>/<filename>')
-    def video(subdir, filename):
-        return send_from_directory(Config.VIDEO_DIRECTORY+subdir, filename)
-
-    @app.route('/latest-video')
-    def latest_video():
-        session['video'] = video_manager.get_video_by_index(game=session.get('game'), player=session.get('player'), index=0)
-        return redirect('/')
-
-    @app.route('/random-video')
-    def random_video():
-        session.pop('video', None)
-        return redirect('/')
-
-    @app.route('/iterate-video')
-    def iterate_video():
-        prev_or_next = request.args.get('iterate')
-        new_index = session.get('video').get('index') + (1 if prev_or_next == 'next' else - 1)
-        session['video']['index'] = new_index
-        session['video'] = video_manager.get_video_by_index(game=session.get('game'), player=session.get('player'), index=new_index)
-        return redirect('/')
-
-    @app.route('/change-game')
-    def change_game():
-        game_index = GAMES.index(session.get('game'))
-        session['game'] = GAMES[(game_index + 1) % len(GAMES)]
-        session.pop('video', None)
-        session.pop('player', None)
-        return redirect('/')
-
-    @app.route('/change-player')
-    def change_player():
-        player = request.args.get('player')
-        session['player'] = player
-        session.pop('video')
-        return redirect('/')
+    @app.post('/rating')
+    def post_rating():
+        rating = request.form.get('rating')
+        player = request.form.get('player')
+        video = request.form.get('video')
+        ip_address = request.remote_addr
+        return jsonify(submit_rating(g.db, ip_address=ip_address, video=video, player=player, rating=rating))
     
     return app
