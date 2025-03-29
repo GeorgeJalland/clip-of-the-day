@@ -1,9 +1,8 @@
-from flask import Flask, render_template, send_from_directory, redirect, session, request
+from flask import Flask, render_template, send_from_directory, redirect, session, request, g
 from urllib.parse import quote
 
 from app.video_manager import VideoManager
-from app.db import submit_rating, get_ratings_by_player
-from app.db import db, create_schema
+from app.db import SessionLocal, create_schema, submit_rating, get_ratings_by_player
 from common.config import Config
 
 def create_app(config_class=Config):
@@ -14,15 +13,25 @@ def create_app(config_class=Config):
     with app.app_context():
         create_schema()
 
-    video_manager = VideoManager(db, Config.VIDEO_DIRECTORY, format=".mp4")
+    video_manager = VideoManager(Config.VIDEO_DIRECTORY, format=".mp4")
     GAMES = app.config.get('GAMES')
+
+    @app.before_request
+    def create_session():
+        # Create a new session for each request
+        g.db = SessionLocal()
+
+    @app.teardown_request
+    def remove_session(error=None):
+        # Ensure the session is properly closed after each request
+        SessionLocal.remove()
 
     @app.route('/', methods=['GET', 'POST'])
     def main():
         player = session.setdefault('player', '')
         game = session.setdefault('game', GAMES[0])
-        vid_index, vid = session.setdefault('video', video_manager.get_random_video(game=game, player=player)).values()
-        video_count = video_manager.get_video_count(game, player)
+        vid_index, vid_path, vid_player = session.setdefault('video', video_manager.get_random_video(g.db, game=game, player=player)).values()
+        video_count = video_manager.get_video_count(g.db, game, player)
         players = video_manager.get_all_game_subdirs(game)
 
         if request.method == 'POST':
@@ -31,15 +40,15 @@ def create_app(config_class=Config):
             video_ = request.form.get('video')
             ip_address = request.remote_addr
             # add rating to database
-            submit_rating(db, ip_address=ip_address, video=video_, player=player_, rating=rating_)
+            submit_rating(g.db, ip_address=ip_address, video=video_, player=player_, rating=rating_)
 
 
         return render_template(
                 'index.html', 
                 game=game.upper(), 
-                path_to_video=f"/video/{quote(vid['subdir'])}/{quote(vid['filename'])}", 
-                player=vid['subdir'].upper(), 
-                video_name=vid['filename'],
+                path_to_video=f"/video/{quote(vid_path)}", 
+                player=vid_player.upper(), 
+                video_name=vid_path.split("/")[1],
                 vid_index=video_count - (vid_index % video_count),
                 video_count=video_count,
                 players = players,

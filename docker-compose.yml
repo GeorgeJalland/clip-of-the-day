@@ -1,21 +1,22 @@
 services:
-  # clip-of-the-day:
-  #   build:
-  #     context: .
-  #     dockerfile: app/dockerfile
-  #   image: clip-of-the-day
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     - SECRET_KEY=${SECRET_KEY}
-  #     - VIDEO_DIRECTORY=/Captures/
-  #   volumes:
-  #     - type: bind
-  #       source: ${VIDEO_DIRECTORY}
-  #       target: /Captures/
-  #     - type: bind
-  #       source: ${DB_PATH}
-  #       target: instance
+  clip-of-the-day:
+  # Need to fix this
+    build:
+      context: .
+      dockerfile: app/dockerfile
+    image: clip-of-the-day
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - VIDEO_DIRECTORY=/Captures/
+    volumes:
+      - type: bind
+        source: ${VIDEO_DIRECTORY}
+        target: /Captures/
+      - type: bind
+        source: ${DB_PATH}
+        target: instance
   file-watcher:
     build:
       context: .
