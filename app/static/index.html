@@ -12,20 +12,20 @@
         <div class="container">
             <div></div>
             <div id="videoMeta">
-                <div id="nameDate">George | 22/03/1997</div>
-                <div id="videoIndex">index / total</div>
+                <div id="playerDate">George | 22/03/1997</div>
+                <div id="videoIndex">[/]</div>
             </div>
             <div></div>
-            <div class="sideContainers">
+            <div id="playerBoard" class="sideContainers">
                 <span id="playerHeaderPC">[PLAYERS]</span>
-                <a class="playerPC" href="">All</a>
+                <a class="playerPC">All</a>
                 <table>
                     Table here for player names
                 </table>
                 <div>
                     <span id="playerRatingValue">23</span>
                     <img id="playerRating" src='./eggplant.png'>
-                    <a class="playerPC" href="">Player 123</a>
+                    <a class="playerPC">Player 123</a>
                 </div>
                 {% endfor %}
                 <a class="mobileActions" href="{{url_for('latest_video')}}">[LATEST]</a>
@@ -47,19 +47,19 @@
                     <div class="rating" onclick="submitRating(2)"></div>
                     <div class="rating" onclick="submitRating(1)"></div>
                 </form>
-                <a class="mobileActions" href="">[RANDOM]</a>
-                <a class="mobileActions" href="">[NEXT]</a>
+                <a class="mobileActions">[RANDOM]</a>
+                <a class="mobileActions">[NEXT]</a>
             </div>
         </div>
         <div class="actions">
-            <a href="">[PREV]</a> 
-            <a href="">[LATEST]</a> 
-            <a href="">[RANDOM]</a> 
-            <a href="">[NEXT]</a>
+            <a id="prev">[PREV]</a> 
+            <a id="latest">[LATEST]</a> 
+            <a id="random">[RANDOM]</a> 
+            <a id="next">[NEXT]</a>
         </div>
         <div id="playersPortrait">
             <span id="playerHeader">[PLAYERS]</span>
-            <a href="">All</a>
+            <a>All</a>
             <table>
                 Player tables, maybe can just reused initial table and restyle for mobile
             </table>

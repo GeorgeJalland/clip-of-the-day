@@ -58,7 +58,7 @@ def get_video_and_ratings(session: Session, index: int, ip_address: str) -> dict
         session.query(
             Video.id,
             Video.name,
-            Video.full_path,
+            Video.subdir_and_filename,
             Player.name.label("player_name"),
             func.coalesce(func.sum(Rating.rating), 0).label("total_rating"),
             func.coalesce(func.avg(Rating.rating), 0).label("average_rating"),
