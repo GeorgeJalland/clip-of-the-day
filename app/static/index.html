@@ -17,19 +17,25 @@
             </div>
             <div></div>
             <div id="playerBoard" class="sideContainers">
-                <span id="playerHeaderPC">[PLAYERS]</span>
-                <a class="playerPC">All</a>
-                <table>
-                    Table here for player names
+                <table id="playerTable">
+                    <thead>
+                        <tr>
+                            <th id="playerHeaderPC">[PLAYERS]</th>
+                        </tr>
+                        <tr class="player">
+                            <td id="player-all" class="selectedPlayer player">All</td>
+                        </tr>
+                    </thead>
+                    <tbody id="playerTableBody">
+                    </tbody>
                 </table>
-                <div>
+                <!-- <div>
                     <span id="playerRatingValue">23</span>
-                    <img id="playerRating" src='./eggplant.png'>
+                    <img id="playerRating" src='./images/eggplant.png'>
                     <a class="playerPC">Player 123</a>
-                </div>
-                {% endfor %}
-                <a class="mobileActions" href="{{url_for('latest_video')}}">[LATEST]</a>
-                <a class="mobileActions" href="{{url_for('iterate_video', iterate='prev')}}">[PREV]</a>
+                </div> -->
+                <a class="mobileActions">[LATEST]</a>
+                <a class="mobileActions">[PREV]</a>
             </div>
             <div>
                 <video id="videoElement" alt="Rocket League Clip" controls autoplay muted loop playsinline>

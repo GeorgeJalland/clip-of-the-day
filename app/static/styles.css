@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'VT323';
-    src: url('./cool_font.woff2') format('woff2');
+    src: url('./fonts/cool_font.woff2') format('woff2');
 }
 body {
     text-align: center; /* Center aligns all content within the body */
@@ -35,13 +35,13 @@ h1 {
     align-items: center;
 }
 .rating {
-    background-image: url('./eggplant_grey.png');
+    background-image: url('./images/eggplant_grey.png');
     background-size: cover;
     height: 4vw;
     width: 4vw;
 }
 .rating:hover, .rating:hover ~ .rating{
-    background-image: url('./eggplant.png');
+    background-image: url('./images/eggplant.png');
 }
 #videoMeta{
     display: flex;
@@ -63,11 +63,11 @@ h1 {
     width: 1vw;
     position: absolute;
 }
-#playerHeaderPC, .playerPC{
+#playerHeaderPC, .player{
     color: white;
     margin-left: 2vw;
 }
-#currentPlayer{
+.selectedPlayer{
     color: rgb(74, 246, 38);
     font-weight: bold;
 }
@@ -108,6 +108,10 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+th {
+    font-weight: normal;
+}
 @media screen and (orientation: portrait) {
     body {
         font-size: 3vw;
@@ -115,7 +119,7 @@ a:hover {
     #videoElement {
         width: 90vw; /* Adjust width for smaller screens */
     }
-    #playerHeaderPC, .playerPC, .ratings {
+    #playerHeaderPC, .player, .ratings {
         display: none;
     }
     #playersPortrait{
@@ -125,7 +129,7 @@ a:hover {
 }
 
 @media only screen and (max-width: 1100px) and (orientation: landscape) {
-    h1, .actions, #playerHeaderPC, .playerPC, .ratings {
+    h1, .actions, #playerHeaderPC, .player, .ratings {
         display: none;
     }
     .mobileActions{

@@ -39,7 +39,7 @@ class Rating(Base):
     __tablename__ = 'rating'
     id = Column((Integer), primary_key=True)
     ip_address = Column(String(15), nullable=False)
-    video_id = Column(Integer, ForeignKey('video.id'), nullable=False)
+    video_id = Column(Integer, ForeignKey('video.id', ondelete="CASCADE"), nullable=False)
     rating = Column((Integer), nullable=False)
     __table_args__ = (UniqueConstraint('ip_address', 'video_id', name='cant_rate_vid_twice'),
                       CheckConstraint("1 <=  rating <= 5"),)

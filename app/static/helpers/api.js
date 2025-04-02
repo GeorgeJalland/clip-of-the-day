@@ -37,3 +37,17 @@ export async function fetchVideoCount() {
         console.error("Error:", error);
     }
 }
+
+export async function fetchPlayers() {
+    try {
+        const response = await fetch(buildApiString("/players"), {
+            method: "GET",
+        });
+        if (!response.ok) throw new Error("Failed to fetch");
+
+        return await response.json();
+
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}

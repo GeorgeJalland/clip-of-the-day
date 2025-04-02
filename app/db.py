@@ -38,6 +38,7 @@ def get_players_with_ratings(session: Session, game):
         .group_by(Player.id)        # Group by player to aggregate ratings
         .all()
     )
+    # replace this with _as_dict()?
     return [{'player': row[0], 'sum_ratings': row[1], 'avg_rating': row[2]} for row in results]
 
 def get_vid_count(session: Session, player: str) -> dict:
@@ -58,7 +59,7 @@ def get_video_and_ratings(session: Session, index: int, ip_address: str) -> dict
         session.query(
             Video.id,
             Video.name,
-            Video.subdir_and_filename,
+            Video.subdir_and_filename.label("path"),
             Player.name.label("player_name"),
             func.coalesce(func.sum(Rating.rating), 0).label("total_rating"),
             func.coalesce(func.avg(Rating.rating), 0).label("average_rating"),
@@ -72,4 +73,7 @@ def get_video_and_ratings(session: Session, index: int, ip_address: str) -> dict
         .first()
     )
 
-    return {"id": result[0], "video_name": result[1], "path": result[2], "player": result[3], "total_rating": result[4], "avg_rating": result[5], "user_rating": result[6]}
+    if result:
+        return result._asdict()
+    else:
+        return None

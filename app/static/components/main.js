@@ -1,17 +1,14 @@
-import { fetchVideo, fetchVideoCount } from "./api.js"
-import { getRandomNumber, mod } from "./utils.js"
+import { fetchVideo, fetchVideoCount } from "../helpers/api.js"
+import { getRandomNumber, mod } from "../helpers/utils.js"
+import { PlayerBoard } from "./playerboard.js"
 
 export class Main {
     constructor() {
         this.state = {
-            videoId: null,
+            video: null,
             player: null,
             hasPlayerRated: false,
-            userRating: null,
-            avgRating: 0,
-            totalRating: 0,
             videoCount: 0,
-            videoTitle: "",
         }
 
         this.elements = {
@@ -29,8 +26,7 @@ export class Main {
             videoCount: document.getElementById("videoCount"),
         }
 
-        console.log(this.elements.next)
-
+        this.playerBoard = new PlayerBoard()
         this.addListeners()
     }
 
@@ -43,7 +39,8 @@ export class Main {
 
     async render() {
         await this.getVideoCount()
-        await this.getRandomVideo()   
+        await this.getRandomVideo()
+        await this.playerBoard.render()
     }
 
     async getRandomVideo() {
@@ -52,14 +49,13 @@ export class Main {
     }
 
     async getNextVideo() {
-        const index = mod(this.state.videoId, this.state.videoCount) + 1
+        const index = mod(this.state.video.id, this.state.videoCount) + 1
         await this.getVideo(index)
     }
 
     async getPrevVideo() {
-        const index = mod(this.state.videoId - 2, this.state.videoCount) + 1
+        const index = mod(this.state.video.id - 2, this.state.videoCount) + 1
         await this.getVideo(index)
-        console.log(this.state.videoId)
     }
 
     async getVideo(index) {
@@ -68,22 +64,18 @@ export class Main {
         this.elements.video.load()
         this.elements.video.play()
         this.setVideoStates(videoData)
-        this.updateMetaElements()        
+        this.updateMetaElements()
     }
 
     setVideoStates(videoData) {
-        this.state.videoId = videoData.id
+        this.state.video = videoData
         this.state.hasPlayerRated = !!videoData.user_rating
-        this.state.userRating = videoData.user_rating
-        this.state.avgRating = videoData.avg_rating
-        this.state.totalRating = videoData.total_rating
-        this.state.player = videoData.player
-        this.state.videoTitle = videoData.video_name
+        this.state.player = videoData.player_name
     }
 
     updateMetaElements() {
-        this.elements.playerDate.textContent = this.state.player + " | " + this.state.videoTitle.slice(-23, -4)
-        this.elements.index.textContent = "[" + this.state.videoId + "/" + this.state.videoCount + "]"
+        this.elements.playerDate.textContent = this.state.player + " | " + this.state.video.name.slice(-23, -4)
+        this.elements.index.textContent = "[" + this.state.video.id + "/" + this.state.videoCount + "]"
     }
 
     async getVideoCount() {
