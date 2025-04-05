@@ -4,8 +4,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="description" content="Rocket League Clips. Best Daily Rocket League Shorts Clips, 15 and 30 seconds clips.">
         <title>Clip of the Day</title>
-        <link rel="icon" href="{{url_for('static', filename='favicon.png')}}" type="image/png">
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='styles.css')}}">
+        <h1><< ROCKET LEAGUE CLIP OF THE DAY >></h1>
+        <link rel="icon" href='./images/eggplant.png' type="image/x-icon">
+        <link rel="stylesheet" type="text/css" href='./styles.css'>
+        <script type="module" src="app.js"></script>
     </head>
     <body>
         <h1><< {{game}} CLIP OF THE DAY >></h1>
@@ -23,7 +25,7 @@
                             <th id="playerHeaderPC">[PLAYERS]</th>
                         </tr>
                         <tr class="player">
-                            <td id="player-all" class="selectedPlayer player">All</td>
+                            <td id="player-all" class="selectedPlayer player clickableText">All</td>
                         </tr>
                     </thead>
                     <tbody id="playerTableBody">
@@ -34,8 +36,8 @@
                     <img id="playerRating" src='./images/eggplant.png'>
                     <a class="playerPC">Player 123</a>
                 </div> -->
-                <a class="mobileActions">[LATEST]</a>
-                <a class="mobileActions">[PREV]</a>
+                <!-- <a class="mobileActions">[LATEST]</a>
+                <a class="mobileActions">[PREV]</a> -->
             </div>
             <div>
                 <video id="videoElement" alt="Rocket League Clip" controls autoplay muted loop playsinline>
@@ -58,18 +60,18 @@
             </div>
         </div>
         <div class="actions">
-            <a id="prev">[PREV]</a> 
-            <a id="latest">[LATEST]</a> 
-            <a id="random">[RANDOM]</a> 
-            <a id="next">[NEXT]</a>
+            <span id="prev" class="clickableText">[PREV]</span> 
+            <span id="latest" class="clickableText">[LATEST]</span> 
+            <span id="random" class="clickableText">[RANDOM]</span> 
+            <span id="next" class="clickableText">[NEXT]</span>
         </div>
-        <div id="playersPortrait">
+        <!-- <div id="playersPortrait">
             <span id="playerHeader">[PLAYERS]</span>
-            <a>All</a>
+            <span>All</span>
             <table>
                 Player tables, maybe can just reused initial table and restyle for mobile
             </table>
-        </div>
+        </div> -->
         <footer>
             <div id="videoCount">[VIDEO COUNT]: {{video_count}}</div>
             <nav id="about">

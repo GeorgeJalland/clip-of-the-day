@@ -6,6 +6,7 @@ export class Main {
         this.state = {
             videoCount: 0,
             video: {},
+            minVideoId: 0,
             maxVideoId: 0,
             hasPlayerRated: false,
             selectedPlayer: {
@@ -39,7 +40,7 @@ export class Main {
         this.elements.prev.addEventListener("click", () => this.getPrevVideo())
         this.elements.next.addEventListener("click", () => this.getNextVideo())
         this.elements.random.addEventListener("click", () => this.getRandomVideo())
-        this.elements.latest.addEventListener("click", () => {})
+        this.elements.latest.addEventListener("click", () => this.getLatestVideo())
         this.elements.playerTable.addEventListener("click", event => {
             if (event.target.classList.contains("player")) {
                 this.handleClickPlayer(event)
@@ -59,12 +60,17 @@ export class Main {
     }
 
     async getNextVideo() {
-        const index = mod(this.state.video.id, this.getMaxVideoId()) + 1
-        await this.getVideo(index)
+        const index = mod(this.state.video.id + 1, this.getMaxVideoId()) + this.getMinVideoId() - 1
+        await this.getVideo(index, 'next')
     }
 
     async getPrevVideo() {
-        const index = mod(this.state.video.id - 2, this.getMaxVideoId()) + 1
+        const index = mod(this.state.video.id - 1 - this.getMinVideoId(), this.getMaxVideoId()) + this.getMinVideoId()
+        await this.getVideo(index, 'prev')
+    }
+
+    async getLatestVideo() {
+        const index = this.getMaxVideoId()
         await this.getVideo(index)
     }
 
@@ -72,8 +78,12 @@ export class Main {
         return this.state.selectedPlayer.max_video_id || this.state.maxVideoId
     }
 
-    async getVideo(index) {
-        const videoData = await fetchVideo(index, this.state.selectedPlayer.id)
+    getMinVideoId() {
+        return this.state.selectedPlayer.min_video_id || this.state.minVideoId
+    }
+
+    async getVideo(index, action = null) {
+        const videoData = await fetchVideo(index, this.state.selectedPlayer.id, action)
         this.elements.videoSource.src = videoData.path
         this.elements.video.load()
         this.elements.video.play()
@@ -107,6 +117,7 @@ export class Main {
         const playerList = await fetchPlayers()
         this.state.players = playerList
         this.state.maxVideoId = Math.max(...playerList.map(item => item.max_video_id));
+        this.state.minVideoId = Math.min(...playerList.map(item => item.min_video_id));
         this.updatePlayerBoard()
     }
 
@@ -118,7 +129,7 @@ export class Main {
 
             playerCell.textContent = item["name"]
             playerCell.id = "player-"+item["name"]
-            playerCell.classList = "player"
+            playerCell.classList = "player clickableText"
 
             tr.appendChild(playerCell)
             this.elements.playerTableBody.appendChild(tr);

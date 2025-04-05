@@ -7,10 +7,13 @@ export function buildApiString(endpoint) {
     return apiBase + ':' + apiPort + apiRoot + endpoint
 }
 
-export async function fetchVideo(id, playerId) {
-    let api_uri = "/video" + "/" + id
+export async function fetchVideo(id, playerId, action = null) {
+    let api_uri = "/video" + "/" + id + "?"
     if (playerId !== null) {
-        api_uri += "?player=" + playerId
+        api_uri += "player=" + playerId + "&"
+    }
+    if (action !== null) {
+        api_uri += "action=" + action + "&"
     }
     try {
         const response = await fetch(buildApiString(api_uri), {

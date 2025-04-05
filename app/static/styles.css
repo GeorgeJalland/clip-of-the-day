@@ -102,6 +102,13 @@ h1 {
     margin-left: 5vw;
     font-size: 4vw;
 }
+.clickableText {
+
+}
+.clickableText:hover {
+    text-decoration: underline;
+    cursor: pointer;    
+}
 a {
     color: inherit; /* Use the same color as its parent element */
     text-decoration: none;
@@ -117,8 +124,11 @@ th {
     body {
         font-size: 3vw;
     }
+    #ratings {
+        display: none;
+    }
     #videoElement {
-        width: 90vw; /* Adjust width for smaller screens */
+        width: 100vw; /* Adjust width for smaller screens */
     }
     #playerHeaderPC, .player, .ratings {
         display: none;
@@ -133,9 +143,9 @@ th {
     h1, .actions, #playerHeaderPC, .player, .ratings {
         display: none;
     }
-    .mobileActions{
+    /* .mobileActions{
         display: block;
-    }
+    } */
     .sideContainers{
         justify-content: center; 
         font-size: 4vw;

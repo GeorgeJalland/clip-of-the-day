@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, Session
-from sqlalchemy import func, case
+from sqlalchemy import func, case, desc
 import logging
 
 from common.config import Config
@@ -33,7 +33,8 @@ def get_players_with_ratings(session: Session, game: str) -> list:
             Player.id,
             func.sum(Rating.rating).label("sum_ratings"),
             func.avg(Rating.rating).label("avg_rating"),
-            func.max(Video.id).label("max_video_id")
+            func.max(Video.id).label("max_video_id"),
+            func.min(Video.id).label("min_video_id")
         )
         .outerjoin(Player.videos)   # Join videos associated with the player
         .outerjoin(Video.ratings)   # Join ratings associated with the video
@@ -58,7 +59,7 @@ def get_max_vid_id(session: Session) -> int:
     ).scalar()
     return result
   
-def get_video_and_ratings(session: Session, index: int, ip_address: str, player_id: int | None = None) -> dict:
+def get_video_and_ratings(session: Session, index: int, ip_address: str, player_id: int | None = None, action: str = 'next') -> dict:
     user_rating = func.max(
             case(
                 (Rating.ip_address == ip_address, Rating.rating),
@@ -78,8 +79,14 @@ def get_video_and_ratings(session: Session, index: int, ip_address: str, player_
         )
         .outerjoin(Rating, Video.id == Rating.video_id)
         .join(Player, Video.player_id == Player.id)
-        .filter(Video.id >= index)
     )
+
+    if action == "next":
+        query = query.filter(Video.id >= index).order_by(Video.id)
+    elif action == "prev":
+        query = query.filter(Video.id <= index).order_by(desc(Video.id))
+    else:
+        return "Invalid Action"
 
     if player_id is not None:
         query = query.filter(Player.id == player_id)

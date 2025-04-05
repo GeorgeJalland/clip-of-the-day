@@ -38,9 +38,10 @@ def create_app(config_class=Config):
     @api.get('/video/<int:video_id>')
     def get_video(video_id: int):
         # add default value for video_id which is random ?
+        action = request.args.get('action', 'next')
         player_id = request.args.get('player', None)
         ip_addr = request.remote_addr
-        return jsonify(get_video_and_ratings(g.db, video_id, ip_addr, player_id))
+        return jsonify(get_video_and_ratings(g.db, video_id, ip_addr, player_id, action))
 
     @api.get('/video-count')
     def get_video_count():
@@ -59,7 +60,6 @@ def create_app(config_class=Config):
         video = request.form.get('video')
         ip_address = request.remote_addr
         return jsonify(submit_rating(g.db, ip_address=ip_address, video=video, player=player, rating=rating))
-
     
     @api.route("/videos/<path:filepath>")
     def serve_videos(filepath):
