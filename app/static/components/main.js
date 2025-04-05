@@ -1,14 +1,19 @@
-import { fetchVideo, fetchVideoCount } from "../helpers/api.js"
+import { fetchVideo, fetchVideoCount, fetchPlayers } from "../helpers/api.js"
 import { getRandomNumber, mod } from "../helpers/utils.js"
-import { PlayerBoard } from "./playerboard.js"
 
 export class Main {
     constructor() {
         this.state = {
-            video: null,
-            player: null,
-            hasPlayerRated: false,
             videoCount: 0,
+            video: {},
+            maxVideoId: 0,
+            hasPlayerRated: false,
+            selectedPlayer: {
+                id: null,
+                name: "All",
+                elementId: "player-all"
+            },
+            players: [],
         }
 
         this.elements = {
@@ -17,16 +22,16 @@ export class Main {
             index: document.getElementById("videoIndex"),
             playerDate: document.getElementById("playerDate"),
             videoSource: document.getElementById("videoSource"),
-            playerBoard: document.getElementById("playerBoard"),
             ratings: document.getElementById("ratings"),
             prev: document.getElementById("prev"),
             next: document.getElementById("next"),
             random: document.getElementById("random"),
             latest: document.getElementById("latest"),
             videoCount: document.getElementById("videoCount"),
+            playerBoard: document.getElementById("playerBoard"),
+            playerTable: document.getElementById("playerTable"),
+            playerTableBody: document.getElementById("playerTableBody"),
         }
-
-        this.playerBoard = new PlayerBoard()
         this.addListeners()
     }
 
@@ -35,31 +40,40 @@ export class Main {
         this.elements.next.addEventListener("click", () => this.getNextVideo())
         this.elements.random.addEventListener("click", () => this.getRandomVideo())
         this.elements.latest.addEventListener("click", () => {})
+        this.elements.playerTable.addEventListener("click", event => {
+            if (event.target.classList.contains("player")) {
+                this.handleClickPlayer(event)
+            }
+        })
     }
 
     async render() {
         await this.getVideoCount()
+        await this.getPlayers()
         await this.getRandomVideo()
-        await this.playerBoard.render()
     }
 
     async getRandomVideo() {
-        const index = getRandomNumber(this.state.videoCount)
+        const index = getRandomNumber(this.getMaxVideoId())
         await this.getVideo(index)
     }
 
     async getNextVideo() {
-        const index = mod(this.state.video.id, this.state.videoCount) + 1
+        const index = mod(this.state.video.id, this.getMaxVideoId()) + 1
         await this.getVideo(index)
     }
 
     async getPrevVideo() {
-        const index = mod(this.state.video.id - 2, this.state.videoCount) + 1
+        const index = mod(this.state.video.id - 2, this.getMaxVideoId()) + 1
         await this.getVideo(index)
     }
 
+    getMaxVideoId() {
+        return this.state.selectedPlayer.max_video_id || this.state.maxVideoId
+    }
+
     async getVideo(index) {
-        const videoData = await fetchVideo(index)
+        const videoData = await fetchVideo(index, this.state.selectedPlayer.id)
         this.elements.videoSource.src = videoData.path
         this.elements.video.load()
         this.elements.video.play()
@@ -70,16 +84,59 @@ export class Main {
     setVideoStates(videoData) {
         this.state.video = videoData
         this.state.hasPlayerRated = !!videoData.user_rating
-        this.state.player = videoData.player_name
     }
 
     updateMetaElements() {
-        this.elements.playerDate.textContent = this.state.player + " | " + this.state.video.name.slice(-23, -4)
-        this.elements.index.textContent = "[" + this.state.video.id + "/" + this.state.videoCount + "]"
+        this.elements.playerDate.textContent = this.state.video.player_name + " | " + this.state.video.name.slice(-23, -4)
+        this.elements.index.textContent = "[" + this.state.video.id + "/" + this.getMaxVideoId() + "]"
     }
 
     async getVideoCount() {
-        this.state.videoCount = await fetchVideoCount()
+        this.state.videoCount = await fetchVideoCount(this.state.selectedPlayer.id)
+        this.elements.videoCount.textContent = this.state.videoCount
     }
 
+    handleClickPlayer(event) {
+        this.selectPlayer(event.target)
+        this.getRandomVideo()
+        this.getVideoCount()
+        this.updateMetaElements()
+    }
+
+    async getPlayers() {
+        const playerList = await fetchPlayers()
+        this.state.players = playerList
+        this.state.maxVideoId = Math.max(...playerList.map(item => item.max_video_id));
+        this.updatePlayerBoard()
+    }
+
+    updatePlayerBoard() {
+        this.elements.playerTableBody.innerHTML = "";
+        this.state.players.forEach(item => {
+            const tr = document.createElement('tr');
+            const playerCell = document.createElement('td')
+
+            playerCell.textContent = item["name"]
+            playerCell.id = "player-"+item["name"]
+            playerCell.classList = "player"
+
+            tr.appendChild(playerCell)
+            this.elements.playerTableBody.appendChild(tr);
+        });
+    }
+
+    selectPlayer(playerElement) {
+        document.getElementById(this.state.selectedPlayer.elementId).classList.remove("selectedPlayer")
+        let player = null
+        if (playerElement.textContent === "All") {
+            player = {
+                id: null,
+                name: "All", 
+            }
+        } else {
+            player = this.state.players.find(item => item.name === playerElement.textContent)
+        }
+        this.state.selectedPlayer = { ...player, elementId: playerElement.id}
+        playerElement.classList.add("selectedPlayer")
+    }
 }

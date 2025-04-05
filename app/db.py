@@ -24,30 +24,41 @@ def submit_rating(session: Session, ip_address, video, player, rating):
         session.add(new_rating)
     session.commit()
 
-def get_players_with_ratings(session: Session, game):
+def get_players_with_ratings(session: Session, game: str) -> list:
     # needs reworking
     # cache for 1 minute?
-    results = (
+    result = (
         session.query(
             Player.name,
+            Player.id,
             func.sum(Rating.rating).label("sum_ratings"),
-            func.avg(Rating.rating).label("average_rating")
+            func.avg(Rating.rating).label("avg_rating"),
+            func.max(Video.id).label("max_video_id")
         )
         .outerjoin(Player.videos)   # Join videos associated with the player
         .outerjoin(Video.ratings)   # Join ratings associated with the video
         .group_by(Player.id)        # Group by player to aggregate ratings
         .all()
     )
-    # replace this with _as_dict()?
-    return [{'player': row[0], 'sum_ratings': row[1], 'avg_rating': row[2]} for row in results]
 
-def get_vid_count(session: Session, player: str) -> dict:
+    if result:
+        return [row._asdict() for row in result]
+    else:
+        return []
+
+def get_vid_count(session: Session, player_id: int) -> dict:
     query = session.query(Video).join(Video.player)
-    if player:
-        query = query.filter(Player.name == player)
+    if player_id:
+        query = query.filter(Player.id == player_id)
     return query.count()
+
+def get_max_vid_id(session: Session) -> int:
+    result = session.query(
+        func.max(Video.id)
+    ).scalar()
+    return result
   
-def get_video_and_ratings(session: Session, index: int, ip_address: str) -> dict:
+def get_video_and_ratings(session: Session, index: int, ip_address: str, player_id: int | None = None) -> dict:
     user_rating = func.max(
             case(
                 (Rating.ip_address == ip_address, Rating.rating),
@@ -55,7 +66,7 @@ def get_video_and_ratings(session: Session, index: int, ip_address: str) -> dict
         ),
     ).label("user_rating")
 
-    result = (
+    query = (
         session.query(
             Video.id,
             Video.name,
@@ -68,6 +79,13 @@ def get_video_and_ratings(session: Session, index: int, ip_address: str) -> dict
         .outerjoin(Rating, Video.id == Rating.video_id)
         .join(Player, Video.player_id == Player.id)
         .filter(Video.id >= index)
+    )
+
+    if player_id is not None:
+        query = query.filter(Player.id == player_id)
+
+    result = (
+        query
         .group_by(Video.id, Video.name, Video.full_path, Player.name)
         .limit(1)
         .first()
