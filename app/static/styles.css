@@ -101,6 +101,9 @@ body {
 .rating:hover, .rating:hover ~ .rating{
     background-image: url('./images/star.png');
 }
+.rated {
+    background-image: url('./images/star.png');
+}
 .selectedPlayer{
     color: rgb(74, 246, 38);
     font-weight: bold;

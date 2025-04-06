@@ -112,7 +112,7 @@ export class Main {
                 videoId: videoData.id,
                 totalVideoRating: videoData.total_rating,
                 avgVideoRating: videoData.average_rating,
-                hasPlayerRated: !!videoData.user_rating,
+                hasUserRated: !!videoData.user_rating,
                 userRating: videoData.user_rating,
             }
         )
