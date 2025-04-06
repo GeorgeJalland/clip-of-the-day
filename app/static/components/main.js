@@ -18,7 +18,7 @@ export class Main {
         }
 
         this.elements = {
-            main: document.getElementById("main"),
+            main: document.getElementById("mainContainer"),
             video: document.getElementById("videoElement"),
             index: document.getElementById("videoIndex"),
             playerDate: document.getElementById("playerDate"),
@@ -32,6 +32,7 @@ export class Main {
             playerBoard: document.getElementById("playerBoard"),
             playerTable: document.getElementById("playerTable"),
             playerTableBody: document.getElementById("playerTableBody"),
+            button: document.getElementById("fsButton")
         }
         this.addListeners()
     }
@@ -44,6 +45,19 @@ export class Main {
         this.elements.playerTable.addEventListener("click", event => {
             if (event.target.classList.contains("player")) {
                 this.handleClickPlayer(event)
+            }
+        })
+        this.elements.button.addEventListener("click", () => {
+            console.log(this.elements.main)
+            const fullscreenApi = this.elements.main.requestFullscreen
+            || container.webkitRequestFullScreen
+            || container.mozRequestFullScreen
+            || container.msRequestFullscreen;
+            if (!document.fullscreenElement) {
+                fullscreenApi.call(this.elements.main);
+            }
+            else {
+                document.exitFullscreen();
             }
         })
     }

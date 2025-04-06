@@ -7,32 +7,59 @@ body {
     font-family: 'VT323';
     background-color: #1e1e1e;
     color: rgb(74, 246, 38);
-    font-size: 1.2vw;
+    font-size: 1.2rem;
 }
-h1 {
-    margin-bottom: 8px;
-}
-.container {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr; /* Middle box takes up 65vw */
-    grid-template-rows: repeat(2, auto);
-  }
-#videoElement {
-  border: 2px solid rgb(74, 246, 38);
-  border-radius: 8px;
-  width: 65vw;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-.sideContainers{
-    display: flex;
+#mainContainer {
+    display: inline-flex;
     flex-direction: column;
-    text-align: left;
-}
-#scRight {
-    justify-content: center;
+    position: relative;
     align-items: center;
+    margin-top: 0.5rem;
+}
+#videoElement {
+    border: 0.125rem solid rgb(74, 246, 38);
+    border-radius: 0.5rem;
+    width: 65vw;
+    height: auto;
+}
+#mainContainer:fullscreen video{
+    height: 100vh;
+    width: 100vw;
+}
+.videoMeta{
+    color: white;
+    position: absolute;
+    bottom: 102%;
+}
+#videoIndex{
+    right: 0;
+}
+#playerDate{
+    left: 0;
+    right: 0;
+}
+#playerBoard {
+    position: absolute;
+    top: 0;
+    right: 105%;
+    text-align: left;
+    color: white;
+}
+#mainContainer:fullscreen #playerBoard{
+    left: 2%;
+    bottom: 10%;
+    top: auto;
+}
+#playerRating{
+    height: 1vw;
+    width: 1vw;
+    position: absolute;
+}
+#ratings {
+    position: absolute;
+    left: 105%;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .rating {
     background-image: url('./images/eggplant_grey.png');
@@ -43,41 +70,15 @@ h1 {
 .rating:hover, .rating:hover ~ .rating{
     background-image: url('./images/eggplant.png');
 }
-#videoMeta{
-    display: flex;
-    justify-content: center;
-    margin-bottom: 5px;
-    color: white
-}
-#videoIndex{
-    margin-left: auto;
-}
-#playerDate{
-    position: absolute;
-}
-#playerRatingValue{
-    position: absolute;
-}
-#playerRating{
-    height: 1vw;
-    width: 1vw;
-    position: absolute;
-}
-#playerHeaderPC, .player{
-    color: white;
-    margin-left: 2vw;
-}
 .selectedPlayer{
     color: rgb(74, 246, 38);
     font-weight: bold;
 }
-.mobileActions{
-    display: none;
-    margin-top: 3vw;
-    margin-bottom: 3vw;
-}
 .actions{
-    margin-top: 10px;
+    position: absolute;
+    top: 101%;
+    left: 0;
+    right: 0;
 }
 #about {
     position: fixed;
@@ -113,47 +114,36 @@ a {
     color: inherit; /* Use the same color as its parent element */
     text-decoration: none;
 }
-a:hover {
-    text-decoration: underline;
-}
-
 th {
     font-weight: normal;
 }
-@media screen and (orientation: portrait) {
-    body {
-        font-size: 3vw;
+@media screen and (max-width: 768px) {
+    html {
+        font-size: 10px;
     }
-    #ratings {
-        display: none;
+    body {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    #mainContainer {
+        display: flex;
     }
     #videoElement {
-        width: 100vw; /* Adjust width for smaller screens */
+        width: 100%;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
     }
-    #playerHeaderPC, .player, .ratings {
-        display: none;
+    .videoMeta{
+        /* top: -3.5vw; */
     }
-    #playersPortrait{
-        display: flex;
-        flex-direction: column;
+    #playerBoard {
+        top: 110%;
+        left: 5vw;
     }
-}
-
-@media only screen and (max-width: 1100px) and (orientation: landscape) {
-    h1, .actions, #playerHeaderPC, .player, .ratings {
-        display: none;
-    }
-    /* .mobileActions{
-        display: block;
-    } */
-    .sideContainers{
-        justify-content: center; 
-        font-size: 4vw;
-    }
-    #videoMeta{
-        font-size: 1.7vw;
-    }
-    footer {
-        font-size: 1.5vw;
+    #ratings {
+        top: 110%;
+        right: 5vw;
+        transform: translateY(0);     
     }
 }

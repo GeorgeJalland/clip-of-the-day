@@ -10,14 +10,13 @@
     </head>
     <body>
         <h1><< ROCKET LEAGUE CLIP OF THE DAY >></h1>
-        <div class="container">
-            <div></div>
-            <div id="videoMeta">
-                <div id="playerDate">George | 22/03/1997</div>
-                <div id="videoIndex">[/]</div>
-            </div>
-            <div></div>
-            <div id="playerBoard" class="sideContainers">
+        <div id="mainContainer">
+            <video id="videoElement" alt="Rocket League Clip" controls autoplay muted loop playsinline>
+                <source id="videoSource" src="" type="video/mp4">
+            </video>
+            <div id="playerDate" class="videoMeta">George | 22/03/1997</div>
+            <div id="videoIndex" class="videoMeta">[/]</div>
+            <div id="playerBoard">
                 <table id="playerTable">
                     <thead>
                         <tr>
@@ -30,47 +29,25 @@
                     <tbody id="playerTableBody">
                     </tbody>
                 </table>
-                <!-- <div>
-                    <span id="playerRatingValue">23</span>
-                    <img id="playerRating" src='./images/eggplant.png'>
-                    <a class="playerPC">Player 123</a>
-                </div> -->
-                <!-- <a class="mobileActions">[LATEST]</a>
-                <a class="mobileActions">[PREV]</a> -->
             </div>
-            <div>
-                <video id="videoElement" alt="Rocket League Clip" controls autoplay muted loop playsinline>
-                    <source id="videoSource" src="" type="video/mp4">
-                </video>
-            </div>
-            <div class="sideContainers" id="scRight">
-                <form id="ratings" action="/" method="POST">
-                    <input type="hidden" id="rating_input" name="rating">
-                    <input type="hidden" id="player_input" name="player">
-                    <input type="hidden" id="video_input" name="video">
-                    <div class="rating" onclick="submitRating(5)"></div>
-                    <div class="rating" onclick="submitRating(4)"></div>
-                    <div class="rating" onclick="submitRating(3)"></div>
-                    <div class="rating" onclick="submitRating(2)"></div>
-                    <div class="rating" onclick="submitRating(1)"></div>
-                </form>
-                <!-- <a class="mobileActions">[RANDOM]</a>
-                <a class="mobileActions">[NEXT]</a> -->
+            <form id="ratings" action="/" method="POST">
+                <input type="hidden" id="rating_input" name="rating">
+                <input type="hidden" id="player_input" name="player">
+                <input type="hidden" id="video_input" name="video">
+                <div class="rating" onclick="submitRating(5)"></div>
+                <div class="rating" onclick="submitRating(4)"></div>
+                <div class="rating" onclick="submitRating(3)"></div>
+                <div class="rating" onclick="submitRating(2)"></div>
+                <div class="rating" onclick="submitRating(1)"></div>
+            </form>
+            <div class="actions">
+                <span id="prev" class="clickableText">[PREV]</span> 
+                <span id="latest" class="clickableText">[LATEST]</span> 
+                <span id="random" class="clickableText">[RANDOM]</span> 
+                <span id="next" class="clickableText">[NEXT]</span>
             </div>
         </div>
-        <div class="actions">
-            <span id="prev" class="clickableText">[PREV]</span> 
-            <span id="latest" class="clickableText">[LATEST]</span> 
-            <span id="random" class="clickableText">[RANDOM]</span> 
-            <span id="next" class="clickableText">[NEXT]</span>
-        </div>
-        <!-- <div id="playersPortrait">
-            <span id="playerHeader">[PLAYERS]</span>
-            <span>All</span>
-            <table>
-                Player tables, maybe can just reused initial table and restyle for mobile
-            </table>
-        </div> -->
+        <button id="fsButton"></button>
         <footer>
             <div id="videoCountContainer">
                 [VIDEO COUNT]:&nbsp;<div id="videoCount">...</div>
