@@ -4,13 +4,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta name="description" content="Rocket League Clips. Best Daily Rocket League Shorts Clips, 15 and 30 seconds clips.">
         <title>Clip of the Day</title>
-        <h1><< ROCKET LEAGUE CLIP OF THE DAY >></h1>
-        <link rel="icon" href='./images/eggplant.png' type="image/x-icon">
+        <link rel="icon" href='./images/favicon.png' type="image/x-icon">
         <link rel="stylesheet" type="text/css" href='./styles.css'>
         <script type="module" src="app.js"></script>
     </head>
     <body>
-        <h1><< {{game}} CLIP OF THE DAY >></h1>
+        <h1><< ROCKET LEAGUE CLIP OF THE DAY >></h1>
         <div class="container">
             <div></div>
             <div id="videoMeta">
@@ -41,7 +40,7 @@
             </div>
             <div>
                 <video id="videoElement" alt="Rocket League Clip" controls autoplay muted loop playsinline>
-                    <source src={{path_to_video}} type="video/mp4">
+                    <source id="videoSource" src="" type="video/mp4">
                 </video>
             </div>
             <div class="sideContainers" id="scRight">
@@ -55,8 +54,8 @@
                     <div class="rating" onclick="submitRating(2)"></div>
                     <div class="rating" onclick="submitRating(1)"></div>
                 </form>
-                <a class="mobileActions">[RANDOM]</a>
-                <a class="mobileActions">[NEXT]</a>
+                <!-- <a class="mobileActions">[RANDOM]</a>
+                <a class="mobileActions">[NEXT]</a> -->
             </div>
         </div>
         <div class="actions">
@@ -73,7 +72,9 @@
             </table>
         </div> -->
         <footer>
-            <div id="videoCount">[VIDEO COUNT]: {{video_count}}</div>
+            <div id="videoCountContainer">
+                [VIDEO COUNT]:&nbsp;<div id="videoCount">...</div>
+            </div>
             <nav id="about">
                 <a href="https://www.tiktok.com/@clipofthedayrl">[TIKTOK]</a>
                 <br>
@@ -81,7 +82,7 @@
                 <br>
                 <a href="https://theo-von.com">[THEO VON QUOTES]</a>
                 <br>
-                [BY <a href={{url_for('change_game')}}>GEORGE</a> JALLAND]
+                [BY GEORGE JALLAND]
             </nav>
         </footer>
     </body>
