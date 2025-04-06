@@ -61,3 +61,20 @@ export async function fetchPlayers() {
         console.error("Error:", error);
     }
 }
+
+export async function submitRating(rating, videoId) {
+    try {
+        fetch(buildApiString("/rating"), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                rating,
+                videoId,
+            }),
+        });
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}

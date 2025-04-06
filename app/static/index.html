@@ -30,16 +30,34 @@
                     </tbody>
                 </table>
             </div>
-            <form id="ratings" action="/" method="POST">
-                <input type="hidden" id="rating_input" name="rating">
-                <input type="hidden" id="player_input" name="player">
-                <input type="hidden" id="video_input" name="video">
-                <div class="rating" onclick="submitRating(5)"></div>
-                <div class="rating" onclick="submitRating(4)"></div>
-                <div class="rating" onclick="submitRating(3)"></div>
-                <div class="rating" onclick="submitRating(2)"></div>
-                <div class="rating" onclick="submitRating(1)"></div>
-            </form>
+            <div id="ratings">
+                <table>
+                    <tr>
+                        <th colspan="2">[RATINGS]</th>
+                    </tr>
+                    <tr>
+                        <td>Total:</td>
+                        <td class="flexCell">
+                            <span id="totalRating"></span>
+                            <img src="./images/star.png">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Avg:</td>
+                        <td class="flexCell">
+                            <span id="avgRating"></span>
+                            <img src="./images/star.png">
+                        </td>
+                    </tr>
+                  </table>
+            </div>
+            <div id="submitRatings">
+                <div class="rating" data-value="5"></div>
+                <div class="rating" data-value="4"></div>
+                <div class="rating" data-value="3"></div>
+                <div class="rating" data-value="2"></div>
+                <div class="rating" data-value="1"></div>
+            </div>
             <div class="actions">
                 <span id="prev" class="clickableText">[PREV]</span> 
                 <span id="latest" class="clickableText">[LATEST]</span> 

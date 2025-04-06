@@ -55,11 +55,11 @@ def create_app(config_class=Config):
 
     @api.post('/rating')
     def post_rating():
-        rating = request.form.get('rating')
-        player = request.form.get('player')
-        video = request.form.get('video')
+        data = request.get_json()
+        rating = data.get('rating')
+        videoId = data.get('videoId')
         ip_address = request.remote_addr
-        return jsonify(submit_rating(g.db, ip_address=ip_address, video=video, player=player, rating=rating))
+        return jsonify(submit_rating(g.db, ip_address=ip_address, videoId=videoId, rating=rating))
     
     @api.route("/videos/<path:filepath>")
     def serve_videos(filepath):

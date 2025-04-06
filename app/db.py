@@ -15,12 +15,13 @@ SessionLocal = scoped_session(sessionmaker(bind=engine))
 def create_schema():
     Base.metadata.create_all(engine)
 
-def submit_rating(session: Session, ip_address, video, player, rating):
-    existing_rating = session.query(Rating).filter_by(ip_address=ip_address, video=video, player=player).one_or_none()
+def submit_rating(session: Session, ip_address, videoId, rating):
+    # When foreign key constaint error, return something meaningful?
+    existing_rating = session.query(Rating).filter_by(ip_address=ip_address, video_id=videoId).one_or_none()
     if existing_rating:
         existing_rating.rating = rating
     else:
-        new_rating = Rating(ip_address=ip_address, video=video, player=player, rating=rating)
+        new_rating = Rating(ip_address=ip_address, video_id=videoId, rating=rating)
         session.add(new_rating)
     session.commit()
 

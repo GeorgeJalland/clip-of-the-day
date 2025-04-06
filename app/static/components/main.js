@@ -1,5 +1,6 @@
 import { fetchVideo, fetchVideoCount, fetchPlayers } from "../helpers/api.js"
 import { getRandomNumber, mod } from "../helpers/utils.js"
+import { Ratings } from "./ratings.js"
 
 export class Main {
     constructor() {
@@ -8,7 +9,6 @@ export class Main {
             video: {},
             minVideoId: 0,
             maxVideoId: 0,
-            hasPlayerRated: false,
             selectedPlayer: {
                 id: null,
                 name: "All",
@@ -23,7 +23,6 @@ export class Main {
             index: document.getElementById("videoIndex"),
             playerDate: document.getElementById("playerDate"),
             videoSource: document.getElementById("videoSource"),
-            ratings: document.getElementById("ratings"),
             prev: document.getElementById("prev"),
             next: document.getElementById("next"),
             random: document.getElementById("random"),
@@ -34,6 +33,7 @@ export class Main {
             playerTableBody: document.getElementById("playerTableBody"),
             button: document.getElementById("fsButton")
         }
+        this.ratings = new Ratings()
         this.addListeners()
     }
 
@@ -107,12 +107,21 @@ export class Main {
 
     setVideoStates(videoData) {
         this.state.video = videoData
-        this.state.hasPlayerRated = !!videoData.user_rating
+        this.ratings.setState(
+            {
+                videoId: videoData.id,
+                totalVideoRating: videoData.total_rating,
+                avgVideoRating: videoData.average_rating,
+                hasPlayerRated: !!videoData.user_rating,
+                userRating: videoData.user_rating,
+            }
+        )
     }
 
     updateMetaElements() {
         this.elements.playerDate.textContent = this.state.video.player_name + " | " + this.state.video.name.slice(-23, -4)
         this.elements.index.textContent = "[" + this.state.video.id + "/" + this.getMaxVideoId() + "]"
+        this.ratings.render()
     }
 
     async getVideoCount() {

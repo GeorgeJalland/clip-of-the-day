@@ -14,6 +14,7 @@ body {
     flex-direction: column;
     position: relative;
     align-items: center;
+    justify-content: center;
     margin-top: 0.5rem;
 }
 #videoElement {
@@ -21,15 +22,20 @@ body {
     border-radius: 0.5rem;
     width: 65vw;
     height: auto;
+    aspect-ratio: 16/9;
 }
-#mainContainer:fullscreen video{
-    height: 100vh;
-    width: 100vw;
+#mainContainer:fullscreen #videoElement{
+    height: 90%;
+    width: 100%;
+    border: none;
 }
 .videoMeta{
     color: white;
     position: absolute;
     bottom: 102%;
+}
+#mainContainer:fullscreen .videoMeta{
+    bottom: 2%;
 }
 #videoIndex{
     right: 0;
@@ -41,34 +47,59 @@ body {
 #playerBoard {
     position: absolute;
     top: 0;
-    right: 105%;
+    right: 102%;
     text-align: left;
     color: white;
 }
-#mainContainer:fullscreen #playerBoard{
-    left: 2%;
-    bottom: 10%;
-    top: auto;
-}
-#playerRating{
-    height: 1vw;
-    width: 1vw;
-    position: absolute;
-}
 #ratings {
     position: absolute;
+    left: 102%;
+    top: 0;
+    color: white;
+    text-align: left;
+}
+#ratings img {
+    height: 1rem;
+    width: auto;
+}
+.flexCell {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+#ratings td {
+    padding-right: 0.75rem;
+}
+#mainContainer:fullscreen #playerBoard{
+    left: 2%;
+    bottom: 2%;
+    top: auto;
+}
+#submitRatings {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vw;
     left: 105%;
     top: 50%;
     transform: translateY(-50%);
 }
+#mainContainer:fullscreen #submitRatings{
+    left: auto;
+    right: 1%;
+    bottom: 10%;
+    top: auto;
+    transform: none;
+}
 .rating {
-    background-image: url('./images/eggplant_grey.png');
+    background-image: url('./images/empty-star.png');
     background-size: cover;
-    height: 4vw;
-    width: 4vw;
+    height: 3vw;
+    width: 3vw;
+    cursor: pointer;
 }
 .rating:hover, .rating:hover ~ .rating{
-    background-image: url('./images/eggplant.png');
+    background-image: url('./images/star.png');
 }
 .selectedPlayer{
     color: rgb(74, 246, 38);
@@ -127,6 +158,7 @@ th {
     }
     #mainContainer {
         display: flex;
+        margin-top: 5rem;
     }
     #videoElement {
         width: 100%;
@@ -141,8 +173,10 @@ th {
         top: 110%;
         left: 5vw;
     }
-    #ratings {
-        top: 110%;
+    #submitRatings {
+        flex-direction: row;
+        top: 102%;
+        left: auto;
         right: 5vw;
         transform: translateY(0);     
     }
