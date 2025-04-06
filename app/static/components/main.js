@@ -31,7 +31,7 @@ export class Main {
             playerBoard: document.getElementById("playerBoard"),
             playerTable: document.getElementById("playerTable"),
             playerTableBody: document.getElementById("playerTableBody"),
-            button: document.getElementById("fsButton")
+            button: document.getElementById("fsButton"),
         }
         this.ratings = new Ratings()
         this.addListeners()
@@ -148,13 +148,23 @@ export class Main {
         this.elements.playerTableBody.innerHTML = "";
         this.state.players.forEach(item => {
             const tr = document.createElement('tr');
-            const playerCell = document.createElement('td')
+            const playerCell = document.createElement('td');
+            const ratingCell = document.createElement('td');
+            const totalRatingSpan = document.createElement('span');
+            const imgElement = document.getElementById('ratingIcon').cloneNode();
 
             playerCell.textContent = item["name"]
             playerCell.id = "player-"+item["name"]
-            playerCell.classList = "player clickableText"
+            playerCell.classList = "player clickableText padRight"
+
+            ratingCell.classList = "flexCell"
+            totalRatingSpan.textContent = item["sum_ratings"]
+            ratingCell.appendChild(imgElement)
+            ratingCell.appendChild(totalRatingSpan)
 
             tr.appendChild(playerCell)
+            tr.appendChild(ratingCell)
+
             this.elements.playerTableBody.appendChild(tr);
         });
     }

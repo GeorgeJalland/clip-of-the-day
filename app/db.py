@@ -26,20 +26,17 @@ def submit_rating(session: Session, ip_address, videoId, rating):
     session.commit()
 
 def get_players_with_ratings(session: Session, game: str) -> list:
-    # needs reworking
-    # cache for 1 minute?
     result = (
         session.query(
             Player.name,
             Player.id,
             func.sum(Rating.rating).label("sum_ratings"),
-            func.avg(Rating.rating).label("avg_rating"),
             func.max(Video.id).label("max_video_id"),
             func.min(Video.id).label("min_video_id")
         )
-        .outerjoin(Player.videos)   # Join videos associated with the player
-        .outerjoin(Video.ratings)   # Join ratings associated with the video
-        .group_by(Player.id)        # Group by player to aggregate ratings
+        .outerjoin(Player.videos)
+        .outerjoin(Video.ratings)
+        .group_by(Player.id)
         .all()
     )
 
