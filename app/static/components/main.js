@@ -1,12 +1,13 @@
 import { fetchVideo, fetchVideoCount, fetchPlayers } from "../helpers/api.js"
 import { getRandomNumber, mod } from "../helpers/utils.js"
 import { Ratings } from "./ratings.js"
+import { Video } from "./video.js"
 
 export class Main {
     constructor() {
         this.state = {
             videoCount: 0,
-            video: {},
+            videoMeta: {},
             minVideoId: 0,
             maxVideoId: 0,
             selectedPlayer: {
@@ -19,10 +20,8 @@ export class Main {
 
         this.elements = {
             main: document.getElementById("mainContainer"),
-            video: document.getElementById("videoElement"),
             index: document.getElementById("videoIndex"),
             playerDate: document.getElementById("playerDate"),
-            videoSource: document.getElementById("videoSource"),
             prev: document.getElementById("prev"),
             next: document.getElementById("next"),
             random: document.getElementById("random"),
@@ -33,6 +32,7 @@ export class Main {
             playerTableBody: document.getElementById("playerTableBody"),
             button: document.getElementById("fsButton"),
         }
+        this.video = new Video()
         this.ratings = new Ratings()
         this.addListeners()
     }
@@ -74,12 +74,12 @@ export class Main {
     }
 
     async getNextVideo() {
-        const index = mod(this.state.video.id + 1, this.getMaxVideoId()) + this.getMinVideoId() - 1
+        const index = mod(this.state.videoMeta.id + 1, this.getMaxVideoId()) + this.getMinVideoId() - 1
         await this.getVideo(index, 'next')
     }
 
     async getPrevVideo() {
-        const index = mod(this.state.video.id - 1 - this.getMinVideoId(), this.getMaxVideoId()) + this.getMinVideoId()
+        const index = mod(this.state.videoMeta.id - 1 - this.getMinVideoId(), this.getMaxVideoId()) + this.getMinVideoId()
         await this.getVideo(index, 'prev')
     }
 
@@ -98,15 +98,13 @@ export class Main {
 
     async getVideo(index, action = null) {
         const videoData = await fetchVideo(index, this.state.selectedPlayer.id, action)
-        this.elements.videoSource.src = videoData.path
-        this.elements.video.load()
-        this.elements.video.play()
+        this.video.render(videoData)
         this.setVideoStates(videoData)
         this.updateMetaElements()
     }
 
     setVideoStates(videoData) {
-        this.state.video = videoData
+        this.state.videoMeta = videoData
         this.ratings.setState(
             {
                 videoId: videoData.id,
@@ -119,8 +117,8 @@ export class Main {
     }
 
     updateMetaElements() {
-        this.elements.playerDate.textContent = this.state.video.player_name + " | " + this.state.video.name.slice(-23, -4)
-        this.elements.index.textContent = "[" + this.state.video.id + "/" + this.getMaxVideoId() + "]"
+        this.elements.playerDate.textContent = this.state.videoMeta.player_name + " | " + this.state.videoMeta.name.slice(-23, -4)
+        this.elements.index.textContent = "[" + this.state.videoMeta.id + "/" + this.getMaxVideoId() + "]"
         this.ratings.render()
     }
 
