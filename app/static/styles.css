@@ -83,7 +83,7 @@ body {
 .flexCell {
     display: flex;
     justify-content: left;
-    align-items: flex-end;
+    align-items: center;
 }
 #ratings td {
     padding-right: 0.75rem;
