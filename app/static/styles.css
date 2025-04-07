@@ -24,6 +24,41 @@ body {
     height: auto;
     aspect-ratio: 16/9;
 }
+#customControls {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    width: 100%;
+}
+.visible {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+}
+#progressContainer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    height: 2vw;
+}
+#progressBar {
+    width: 0%;
+    background-color: white;
+    height: 15%;
+    transition: width 0.3s linear;
+}
+#pauseplayButton {
+    position: absolute;
+    height: 4vw;
+    width: 4vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: invert(1);
+}
 #mainContainer:fullscreen #videoElement{
     height: 100%;
     width: 100%;
@@ -35,7 +70,8 @@ body {
     bottom: 102%;
 }
 #mainContainer:fullscreen .videoMeta{
-    bottom: 0%;
+    bottom: auto;
+    top: 0;
 }
 #videoIndex{
     right: 0.5rem;
@@ -70,7 +106,7 @@ body {
 #mainContainer:fullscreen #ratings{
     left: auto;
     right: 0;
-    bottom: 10%;
+    bottom: 5%;
     top: auto;
 }
 .smallRatingIcon {
@@ -108,8 +144,12 @@ body {
 #mainContainer:fullscreen #playerTable,
 #mainContainer:fullscreen #submitRatings,
 #mainContainer:fullscreen #ratings,
-#mainContainer:fullscreen .videoMeta {
+#mainContainer:fullscreen #playerDate {
     background: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem;
+    font-size: 2vw;
+}
+#mainContainer:fullscreen #videoIndex {
     padding: 0.5rem;
     font-size: 2vw;
 }
@@ -171,14 +211,14 @@ body {
     display: none;
 }
 #fsButton {
-    width: 3vw;
-    height: 3vw;
+    width: 2vw;
+    height: 2vw;
     filter: invert(1);
     cursor: pointer;
 }
 #fsHelp {
     color: white;
-    font-size: 1.5vw;
+    font-size: 1vw;
 }
 a {
     color: inherit;
@@ -208,6 +248,9 @@ th {
         border-right: none;
         border-radius: 0;
     }
+    #progressContainer {
+        height: 3.5vw;
+    }
     #playerBoard {
         top: 110%;
         left: 3vw;
@@ -230,5 +273,9 @@ th {
     }
     #fsHelp {
         font-size: 2vw;
+    }
+    #pauseplayButton {
+        width: 8vw;
+        height: 8vw;
     }
 }

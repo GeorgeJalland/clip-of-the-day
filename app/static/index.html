@@ -11,9 +11,15 @@
     <body>
         <h1><< ROCKET LEAGUE CLIP OF THE DAY >></h1>
         <div id="mainContainer">
-            <video id="videoElement" alt="Rocket League Clip" controls autoplay muted loop playsinline>
+            <video id="videoElement" alt="Rocket League Clip" autoplay muted loop playsinline>
                 <source id="videoSource" src="" type="video/mp4">
             </video>
+            <div id="customControls">
+                <img id="pauseplayButton" src="./images/pauseplay.png">
+                <div id="progressContainer">
+                    <div id="progressBar"></div>
+                </div>
+            </div>
             <div id="playerDate" class="videoMeta">George | 22/03/1997</div>
             <div id="videoIndex" class="videoMeta">[/]</div>
             <div id="playerBoard">
