@@ -53,6 +53,7 @@ body {
 }
 #mainContainer:fullscreen #playerBoard{
     left: 0%;
+    right: auto;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -66,14 +67,23 @@ body {
     color: white;
     text-align: left;
 }
+#mainContainer:fullscreen #ratings{
+    left: auto;
+    right: 0;
+    bottom: 10%;
+    top: auto;
+}
 .smallRatingIcon {
     height: 1rem;
     width: auto;
 }
+#mainContainer:fullscreen .smallRatingIcon{
+    height: 1.5vw;
+}
 .flexCell {
     display: flex;
     justify-content: left;
-    align-items: center;
+    align-items: flex-end;
 }
 #ratings td {
     padding-right: 0.75rem;
@@ -88,14 +98,19 @@ body {
     transform: translateY(-50%);
 }
 #mainContainer:fullscreen #submitRatings{
+    flex-direction: column;
+    top: 50%;
+    transform: translateY(-50%);
     left: auto;
     right: 0%;
 }
 #mainContainer:fullscreen #playerTable,
 #mainContainer:fullscreen #submitRatings,
+#mainContainer:fullscreen #ratings,
 #mainContainer:fullscreen .videoMeta {
     background: rgba(0, 0, 0, 0.3);
     padding: 0.5rem;
+    font-size: 2vw;
 }
 .rating {
     background-image: url('./images/empty-star.png');
@@ -125,7 +140,8 @@ body {
     bottom: 0;
     right: 0;
     padding: 10px;
-    color: white
+    color: white;
+    text-align: right;
 }
 #videoCountContainer{
     position: fixed;
@@ -143,8 +159,11 @@ body {
     cursor: pointer;    
 }
 a {
-    color: inherit; /* Use the same color as its parent element */
+    color: inherit;
     text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
 }
 th {
     font-weight: normal;
