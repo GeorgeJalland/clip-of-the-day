@@ -38,7 +38,7 @@ body {
     bottom: 0%;
 }
 #videoIndex{
-    right: 0;
+    right: 0.5rem;
 }
 #playerDate{
     left: 0;

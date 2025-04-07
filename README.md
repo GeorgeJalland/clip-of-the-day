@@ -69,8 +69,12 @@ sqlite3 ./instance/app.db #check
 #### Flask
 
 ```bash
-cd ./app
-flask run --debug
+FLASK_APP=app.app:create_app flask run --debug
+```
+
+#### Client
+```bash
+python -m http.server --directory app/static
 ```
 
 #### File Watcher
