@@ -150,7 +150,7 @@ body {
     bottom: 0;
     left: 0;
     padding: 10px;
-    color: white   
+    color: white
 }
 .clickableText {
 
@@ -158,6 +158,27 @@ body {
 .clickableText:hover {
     text-decoration: underline;
     cursor: pointer;    
+}
+#fsButtonContainer {
+    position: absolute;
+    top: 4.6%;
+    right: 2.8%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#mainContainer:fullscreen #fsButtonContainer {
+    display: none;
+}
+#fsButton {
+    width: 3vw;
+    height: 3vw;
+    filter: invert(1);
+    cursor: pointer;
+}
+#fsHelp {
+    color: white;
+    font-size: 1.5vw;
 }
 a {
     color: inherit;
@@ -171,7 +192,7 @@ th {
 }
 @media screen and (max-width: 768px) {
     html {
-        font-size: 10px;
+        font-size: 11px;
     }
     body {
         margin-left: 0;
@@ -202,5 +223,12 @@ th {
         top: 110%;
         right: 3vw;
         left: auto;
+    }
+    #fsButton {
+        width: 5vw;
+        height: 5vw;
+    }
+    #fsHelp {
+        font-size: 2vw;
     }
 }

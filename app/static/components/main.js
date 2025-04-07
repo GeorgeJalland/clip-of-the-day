@@ -30,7 +30,7 @@ export class Main {
             playerBoard: document.getElementById("playerBoard"),
             playerTable: document.getElementById("playerTable"),
             playerTableBody: document.getElementById("playerTableBody"),
-            button: document.getElementById("fsButton"),
+            fullscreenButton: document.getElementById("fsButton"),
         }
         this.video = new Video()
         this.ratings = new Ratings()
@@ -47,8 +47,7 @@ export class Main {
                 this.handleClickPlayer(event)
             }
         })
-        this.elements.button.addEventListener("click", () => {
-            console.log(this.elements.main)
+        this.elements.fullscreenButton.addEventListener("click", () => {
             const fullscreenApi = this.elements.main.requestFullscreen
             || container.webkitRequestFullScreen
             || container.mozRequestFullScreen
