@@ -2,6 +2,7 @@ export class Video {
     constructor() {
         this.state = {
             video: {},
+            userHasClickedPlay: false,
         }
 
         this.elements = {
@@ -29,7 +30,12 @@ export class Video {
         this.state.video = videoData
         this.elements.videoSource.src = videoData.path
         this.elements.video.load()
-        this.elements.video.play()
+        if (this.userHasClickedPlay) {
+            this.elements.video.play()
+        } else {
+            this.elements.customControls.classList.add("visible");
+            this.userHasClickedPlay = true;
+        }
         this.resetProgressBar()
     }
 
