@@ -1,5 +1,5 @@
 export class Video {
-    constructor() {
+    constructor(getNextVideo, getPrevVideo) {
         this.state = {
             video: {},
             userHasClickedPlay: false,
@@ -12,14 +12,30 @@ export class Video {
             customControls: document.getElementById("customControls"),
             pauseplayButton: document.getElementById("pauseplayButton"),
         }
+        this.getNextVideo = getNextVideo
+        this.getPrevVideo = getPrevVideo
         this.hideControlsTimeout = null;
         this.addListeners()
     }
+
+    touchStartY = 0;
+    touchEndY = 0;
 
     addListeners() {
         this.elements.video.addEventListener("timeupdate", () => this.updateProgressBar());
         this.elements.video.addEventListener("click", () => this.handleClickVideo())
         this.elements.pauseplayButton.addEventListener("click", () => this.pauseplay())
+        this.elements.video.addEventListener('touchstart', (e) => {
+            if (document.fullscreenElement) {
+                this.touchStartY = e.changedTouches[0].screenY;
+            }
+        });
+        this.elements.video.addEventListener('touchend', (e) => {
+            if (document.fullscreenElement) {
+                this.touchEndY = e.changedTouches[0].screenY;
+                this.handleSwipeGesture();
+            }
+        });
     }
 
     setState(newState) {
@@ -70,6 +86,17 @@ export class Video {
             this.elements.video.pause();
             clearTimeout(this.hideControlsTimeout);
             this.elements.customControls.classList.add("visible");
+        }
+    }
+
+    handleSwipeGesture() {
+        const swipeDistance = this.touchEndY - this.touchStartY;
+        if (Math.abs(swipeDistance) < 30) return;
+
+        if (swipeDistance > 0) {
+            this.getPrevVideo()
+        } else {
+            this.getNextVideo()
         }
     }
 }

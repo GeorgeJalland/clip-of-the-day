@@ -32,7 +32,7 @@ export class Main {
             playerTableBody: document.getElementById("playerTableBody"),
             fullscreenButton: document.getElementById("fsButton"),
         }
-        this.video = new Video()
+        this.video = new Video(() => this.getNextVideo(), () => this.getPrevVideo())
         this.ratings = new Ratings()
         this.addListeners()
     }
@@ -47,18 +47,7 @@ export class Main {
                 this.handleClickPlayer(event)
             }
         })
-        this.elements.fullscreenButton.addEventListener("click", () => {
-            const fullscreenApi = this.elements.main.requestFullscreen
-            || container.webkitRequestFullScreen
-            || container.mozRequestFullScreen
-            || container.msRequestFullscreen;
-            if (!document.fullscreenElement) {
-                fullscreenApi.call(this.elements.main);
-            }
-            else {
-                document.exitFullscreen();
-            }
-        })
+        this.elements.fullscreenButton.addEventListener("click", () => this.handleClickFullscreen())
     }
 
     async render() {
@@ -179,5 +168,18 @@ export class Main {
         }
         this.state.selectedPlayer = { ...player, elementId: playerElement.id}
         playerElement.classList.add("selectedPlayer")
+    }
+
+    handleClickFullscreen() {
+        const fullscreenApi = this.elements.main.requestFullscreen
+        || container.webkitRequestFullScreen
+        || container.mozRequestFullScreen
+        || container.msRequestFullscreen;
+        if (!document.fullscreenElement) {
+            fullscreenApi.call(this.elements.main);
+        }
+        else {
+            document.exitFullscreen();
+        }
     }
 }
