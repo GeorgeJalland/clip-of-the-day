@@ -112,6 +112,7 @@ body {
 .smallRatingIcon {
     height: 1rem;
     width: auto;
+    filter: hue-rotate(50deg)
 }
 #mainContainer:fullscreen .smallRatingIcon{
     height: 1.5vw;
@@ -159,12 +160,15 @@ body {
     height: 3vw;
     width: 3vw;
     cursor: pointer;
+    filter: hue-rotate(50deg)
 }
 .rating:hover, .rating:hover ~ .rating{
     background-image: url('./images/star.png');
+    filter: hue-rotate(50deg)
 }
 .rated {
     background-image: url('./images/star.png');
+    filter: hue-rotate(50deg)
 }
 .selectedPlayer{
     color: rgb(74, 246, 38);
