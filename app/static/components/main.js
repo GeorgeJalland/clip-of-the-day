@@ -33,7 +33,7 @@ export class Main {
             fullscreenButton: document.getElementById("fsButton"),
             exitFullscreenButton: document.getElementById("exitFullscreen"),
         }
-        this.video = new Video(() => this.getNextVideo(), () => this.getPrevVideo())
+        this.video = new Video(() => this.getNextVideo(), () => this.getPrevVideo(), [this.elements.playerDate, this.elements.index, this.elements.playerBoard])
         this.ratings = new Ratings()
         this.addListeners()
     }
@@ -50,6 +50,11 @@ export class Main {
         })
         this.elements.fullscreenButton.addEventListener("click", () => this.handleClickFullscreen())
         this.elements.exitFullscreenButton.addEventListener("click", () => this.handleClickExitFullscreen())
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+              this.handleClickExitFullscreen()
+            }
+          });
     }
 
     async render() {
@@ -179,6 +184,9 @@ export class Main {
         || container.msRequestFullscreen;
         if (!document.fullscreenElement) {
             fullscreenApi.call(this.elements.main);
+            if (!this.video.isVideoPaused()) {
+                this.video.hidePassedElements()
+            }
         }
     }
 
@@ -186,5 +194,7 @@ export class Main {
         if (document.fullscreenElement) {
             document.exitFullscreen()
         }
+        this.video.unhidePassedElements()
+        this.video.clearHideTimeout()
     }
 }

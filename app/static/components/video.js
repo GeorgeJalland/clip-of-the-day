@@ -1,5 +1,5 @@
 export class Video {
-    constructor(getNextVideo, getPrevVideo) {
+    constructor(getNextVideo, getPrevVideo, elementsToHide) {
         this.state = {
             video: {},
             userHasClickedPlay: false,
@@ -14,6 +14,7 @@ export class Video {
         }
         this.getNextVideo = getNextVideo
         this.getPrevVideo = getPrevVideo
+        this.elementsToHide = elementsToHide
         this.hideControlsTimeout = null;
         this.addListeners()
     }
@@ -48,6 +49,7 @@ export class Video {
         this.elements.video.load()
         if (this.userHasClickedPlay) {
             this.elements.video.play()
+            this.elements.customControls.classList.remove("visible");
         } else {
             this.elements.customControls.classList.add("visible");
             this.userHasClickedPlay = true;
@@ -65,12 +67,15 @@ export class Video {
     }
 
     handleClickVideo() {
-        if (!this.elements.video.paused) {
-            this.tempShowControlsAndMeta()
+        if (!this.isVideoPaused()) {
+            this.tempShowControls()
+            if (document.fullscreenElement) {
+                this.tempShowAdditionalElements()
+            }
         }
     }
 
-    tempShowControlsAndMeta() {
+    tempShowControls() {
         this.elements.customControls.classList.add("visible");
         clearTimeout(this.hideControlsTimeout);
         this.hideControlsTimeout = setTimeout(() => {
@@ -78,14 +83,28 @@ export class Video {
         }, 2500);
     }
 
+    tempShowAdditionalElements() {
+        this.unhidePassedElements()
+        this.hideAdditionalTimeout = setTimeout(() => {
+            this.hidePassedElements()
+        }, 2500);
+    }
+
     pauseplay() {
-        if (this.elements.video.paused) {
+        if (this.isVideoPaused()) {
             this.elements.video.play();
             this.elements.customControls.classList.remove("visible");
+            if (document.fullscreenElement) {
+                this.hidePassedElements()
+            }
         } else {
             this.elements.video.pause();
             clearTimeout(this.hideControlsTimeout);
+            clearInterval(this.hideAdditionalTimeout);
             this.elements.customControls.classList.add("visible");
+            if (document.fullscreenElement) {
+                this.unhidePassedElements()
+            }
         }
     }
 
@@ -98,5 +117,25 @@ export class Video {
         } else {
             this.getNextVideo()
         }
+    }
+
+    hidePassedElements() {
+        this.elementsToHide.forEach(element => {
+            element.classList.add("hidden")
+        });
+    }
+
+    unhidePassedElements() {
+        this.elementsToHide.forEach(element => {
+            element.classList.remove("hidden")
+        });
+    }
+
+    clearHideTimeout() {
+        clearInterval(this.hideAdditionalTimeout);
+    }
+
+    isVideoPaused() {
+        return this.elements.video.paused
     }
 }
