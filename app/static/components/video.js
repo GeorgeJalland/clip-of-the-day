@@ -75,7 +75,7 @@ export class Video {
         clearTimeout(this.hideControlsTimeout);
         this.hideControlsTimeout = setTimeout(() => {
             this.elements.customControls.classList.remove("visible");
-        }, 2000);
+        }, 2500);
     }
 
     pauseplay() {

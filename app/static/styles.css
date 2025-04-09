@@ -59,6 +59,19 @@ body {
     transform: translate(-50%, -50%);
     filter: invert(1);
 }
+#exitFullscreen {
+    position: absolute;
+    height: 4vw;
+    width: 4vw;
+    top: 7%;
+    right: 2%;
+    filter: invert(1);
+    cursor: pointer;
+    display: none;
+}
+#mainContainer:fullscreen #exitFullscreen {
+    display: block;
+}
 #mainContainer:fullscreen #videoElement{
     height: 100%;
     width: 100%;
