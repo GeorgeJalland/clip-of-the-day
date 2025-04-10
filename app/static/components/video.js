@@ -113,9 +113,21 @@ export class Video {
         if (Math.abs(swipeDistance) < 30) return;
 
         if (swipeDistance > 0) {
+            this.elements.video.classList.add("slide-transition")
+            this.elements.video.classList.add("slide-out-down")
             this.getPrevVideo()
+            setTimeout(() => {
+                this.elements.video.classList.remove("slide-out-down")
+                this.elements.video.classList.remove("slide-transition")
+            }, 1000);
         } else {
+            this.elements.video.classList.add("slide-transition")
+            this.elements.video.classList.add("slide-out-up")
             this.getNextVideo()
+            setTimeout(() => {
+                this.elements.video.classList.remove("slide-out-up")
+                this.elements.video.classList.remove("slide-transition")
+            }, 500);
         }
     }
 
