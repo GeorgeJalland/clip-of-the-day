@@ -1,6 +1,5 @@
 services:
   clip-of-the-day:
-  # Need to fix this
     build:
       context: .
       dockerfile: app/dockerfile
@@ -16,7 +15,7 @@ services:
         target: /Captures/
       - type: bind
         source: ${DB_PATH}
-        target: instance
+        target: /clip-of-the-day/instance
   file-watcher:
     build:
       context: .
