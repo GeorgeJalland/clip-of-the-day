@@ -1,7 +1,7 @@
 const isLocal = window.location.hostname === "localhost"
 const apiBase = window.location.protocol + '//' + window.location.hostname
 const apiRoot = "/api"
-const apiPort = isLocal ? "5000" : ""
+const apiPort = isLocal ? "8000" : ""
 
 export function buildApiString(endpoint) {
     return apiBase + ':' + apiPort + apiRoot + endpoint
