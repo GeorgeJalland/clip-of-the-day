@@ -25,7 +25,7 @@ def submit_rating(session: Session, ip_address, videoId, rating):
         session.add(new_rating)
     session.commit()
 
-def get_players_with_ratings(session: Session, game: str) -> list:
+def get_players_with_ratings(session: Session) -> list:
     result = (
         session.query(
             Player.name,

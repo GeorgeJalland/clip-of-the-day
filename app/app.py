@@ -17,8 +17,6 @@ def create_app(config_class=Config):
     with app.app_context():
         create_schema()
 
-    GAMES = app.config.get('GAMES')
-
     @app.before_request
     def create_session():
         # Create a new session for each request
@@ -31,9 +29,7 @@ def create_app(config_class=Config):
 
     @api.get('/players')
     def get_players():
-        # need to remove concept of game, make it rocket league only?
-        game = request.args.get('game', GAMES[0])
-        return jsonify(get_players_with_ratings(g.db, game))
+        return jsonify(get_players_with_ratings(g.db))
 
     @api.get('/video/<int:video_id>')
     def get_video(video_id: int):
