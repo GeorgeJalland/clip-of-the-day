@@ -1,7 +1,8 @@
 FROM python:3.10.0-alpine
 
 WORKDIR /file-watcher
-COPY ./file_watcher ./common ./
+COPY ./file_watcher ./file_watcher
+COPY ./common ./common
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-CMD [ "python", "-u", "-m", "file_watcher"]
+RUN pip install -r ./file_watcher/requirements.txt
+CMD [ "python", "-u", "-m", "file_watcher.file_watcher"]
