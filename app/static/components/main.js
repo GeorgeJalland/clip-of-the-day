@@ -5,6 +5,22 @@ import { Video } from "./video.js"
 
 export class Main {
     constructor() {
+        this.elements = {
+            main: document.getElementById("mainContainer"),
+            index: document.getElementById("videoIndex"),
+            playerDate: document.getElementById("playerDate"),
+            prev: document.getElementById("prev"),
+            next: document.getElementById("next"),
+            inOrder: document.getElementById("inOrder"),
+            random: document.getElementById("random"),
+            newest: document.getElementById("newest"),
+            videoCount: document.getElementById("videoCount"),
+            playerBoard: document.getElementById("playerBoard"),
+            playerTable: document.getElementById("playerTable"),
+            playerTableBody: document.getElementById("playerTableBody"),
+            fullscreenButton: document.getElementById("fsButton"),
+            exitFullscreenButton: document.getElementById("exitFullscreen"),
+        }
         this.state = {
             videoCount: 0,
             videoMeta: {},
@@ -14,22 +30,10 @@ export class Main {
                 elementId: "player-all"
             },
             players: [],
-        }
-
-        this.elements = {
-            main: document.getElementById("mainContainer"),
-            index: document.getElementById("videoIndex"),
-            playerDate: document.getElementById("playerDate"),
-            prev: document.getElementById("prev"),
-            next: document.getElementById("next"),
-            random: document.getElementById("random"),
-            latest: document.getElementById("latest"),
-            videoCount: document.getElementById("videoCount"),
-            playerBoard: document.getElementById("playerBoard"),
-            playerTable: document.getElementById("playerTable"),
-            playerTableBody: document.getElementById("playerTableBody"),
-            fullscreenButton: document.getElementById("fsButton"),
-            exitFullscreenButton: document.getElementById("exitFullscreen"),
+            iterationMode: {
+                mode: "inOrder",
+                element: this.elements.newest
+            }
         }
         this.video = new Video(() => this.getNextVideo(), () => this.getPrevVideo(), [this.elements.playerDate, this.elements.index, this.elements.playerBoard])
         this.ratings = new Ratings()
@@ -37,10 +41,11 @@ export class Main {
     }
 
     addListeners() {
-        this.elements.prev.addEventListener("click", () => this.getPrevVideo())
-        this.elements.next.addEventListener("click", () => this.getNextVideo())
-        this.elements.random.addEventListener("click", () => this.getRandomVideo())
-        this.elements.latest.addEventListener("click", () => this.getLatestVideo())
+        this.elements.prev.addEventListener("click", () => this.handleClickPrev())
+        this.elements.next.addEventListener("click", () => this.handleClickNext())
+        this.elements.inOrder.addEventListener("click", (event) => this.handleClickInOrder())
+        this.elements.random.addEventListener("click", (event) => this.handleClickRandom(event))
+        this.elements.newest.addEventListener("click", (event) => this.handleClickNewest(event))
         this.elements.playerTable.addEventListener("click", event => {
             if (event.target.classList.contains("player")) {
                 this.handleClickPlayer(event)
@@ -58,12 +63,44 @@ export class Main {
     async render() {
         await this.getVideoCount()
         await this.getPlayers()
+        await this.getLatestVideo()
+    }
+
+    handleClickInOrder() {
+        this.changeIterationMode("inOrder", "inOrder")
+    }
+
+    async handleClickRandom() {
+        this.changeIterationMode("random", "random")
         await this.getRandomVideo()
     }
 
-    async getRandomVideo() {
-        const index = getRandomNumber(this.state.videoCount)
-        await this.getVideo(index)
+    async handleClickNewest() {
+        this.changeIterationMode("newest", "inOrder")
+        await this.getLatestVideo()
+    }
+
+    changeIterationMode(elementId, mode) {
+        this.state.iterationMode.element.classList.remove("selected")
+        this.elements[elementId].classList.add("selected")
+        this.state.iterationMode.mode = mode
+        this.state.iterationMode.element = this.elements[elementId]
+    }
+
+    async handleClickNext() {
+        const map = {
+            "inOrder": () => this.getNextVideo(),
+            "random": () => this.getRandomVideo()
+        }
+        await map[this.state.iterationMode.mode]()
+    }
+
+    async handleClickPrev() {
+        const map = {
+            "inOrder": () => this.getPrevVideo(),
+            "random": () => this.getRandomVideo()
+        }
+        await map[this.state.iterationMode.mode]()
     }
 
     async getNextVideo() {
@@ -73,6 +110,11 @@ export class Main {
 
     async getPrevVideo() {
         const index = mod(this.state.videoMeta.position - 2, this.state.videoCount) + 1
+        await this.getVideo(index)
+    }
+
+    async getRandomVideo() {
+        const index = getRandomNumber(this.state.videoCount)
         await this.getVideo(index)
     }
 

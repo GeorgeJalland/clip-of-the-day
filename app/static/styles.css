@@ -23,7 +23,7 @@ h1 {
 #videoElement {
     border: 0.125rem solid rgb(74, 246, 38);
     border-radius: 0.5rem;
-    width: 65vw;
+    width: 60vw;
     height: auto;
     aspect-ratio: 16/9;
 }
@@ -206,12 +206,24 @@ h1 {
     color: rgb(74, 246, 38);
     font-weight: bold;
 }
-.actions{
-    color: rgb(74, 246, 38);
+.selected {
+    color: white;
+    font-weight: bold;
+}
+#actionsContainer {
     position: absolute;
     top: 101%;
     left: 0;
     right: 0;
+}
+.actions{
+    color: rgb(74, 246, 38);
+}
+#inOrder {
+    margin-left: 4%;
+}
+#random {
+    margin-right: 4%;
 }
 #about {
     position: fixed;
@@ -311,7 +323,7 @@ th {
     }
     #submitRatings {
         flex-direction: row-reverse;
-        top: 115%;
+        top: 118%;
         left: 50%;
         transform: translateX(-50%);
     }
