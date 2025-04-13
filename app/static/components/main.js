@@ -35,7 +35,7 @@ export class Main {
                 element: this.elements.newest
             }
         }
-        this.video = new Video(() => this.getNextVideo(), () => this.getPrevVideo(), [this.elements.playerDate, this.elements.index, this.elements.playerBoard])
+        this.video = new Video(() => this.getNextVideo(), () => this.getPrevVideo())
         this.ratings = new Ratings()
         this.addListeners()
     }
@@ -43,9 +43,9 @@ export class Main {
     addListeners() {
         this.elements.prev.addEventListener("click", () => this.handleClickPrev())
         this.elements.next.addEventListener("click", () => this.handleClickNext())
-        this.elements.inOrder.addEventListener("click", (event) => this.handleClickInOrder())
-        this.elements.random.addEventListener("click", (event) => this.handleClickRandom(event))
-        this.elements.newest.addEventListener("click", (event) => this.handleClickNewest(event))
+        this.elements.inOrder.addEventListener("click", () => this.handleClickInOrder())
+        this.elements.random.addEventListener("click", () => this.handleClickRandom())
+        this.elements.newest.addEventListener("click", () => this.handleClickNewest())
         this.elements.playerTable.addEventListener("click", event => {
             if (event.target.classList.contains("player")) {
                 this.handleClickPlayer(event)

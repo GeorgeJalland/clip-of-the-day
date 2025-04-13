@@ -1,5 +1,5 @@
 export class Video {
-    constructor(getNextVideo, getPrevVideo, elementsToHide) {
+    constructor(getNextVideo, getPrevVideo) {
         this.state = {
             video: {},
             userHasClickedPlay: false,
@@ -11,10 +11,10 @@ export class Video {
             progressBar: document.getElementById("progressBar"),
             customControls: document.getElementById("customControls"),
             pauseplayButton: document.getElementById("pauseplayButton"),
+            disappearingOverlays: document.querySelectorAll('.disappaearing.overlay'),
         }
         this.getNextVideo = getNextVideo
         this.getPrevVideo = getPrevVideo
-        this.elementsToHide = elementsToHide
         this.hideControlsTimeout = null;
         this.addListeners()
     }
@@ -84,9 +84,9 @@ export class Video {
     }
 
     tempShowAdditionalElements() {
-        this.unhidePassedElements()
+        this.unhideOverlayElements()
         this.hideAdditionalTimeout = setTimeout(() => {
-            this.hidePassedElements()
+            this.hideOverlayElements()
         }, 2500);
     }
 
@@ -95,7 +95,7 @@ export class Video {
             this.elements.video.play();
             this.elements.customControls.classList.remove("visible");
             if (document.fullscreenElement) {
-                this.hidePassedElements()
+                this.hideOverlayElements()
             }
         } else {
             this.elements.video.pause();
@@ -103,7 +103,7 @@ export class Video {
             clearInterval(this.hideAdditionalTimeout);
             this.elements.customControls.classList.add("visible");
             if (document.fullscreenElement) {
-                this.unhidePassedElements()
+                this.unhideOverlayElements()
             }
         }
     }
@@ -131,14 +131,14 @@ export class Video {
         }
     }
 
-    hidePassedElements() {
-        this.elementsToHide.forEach(element => {
+    hideOverlayElements() {
+        this.elements.disappearingOverlays.forEach(element => {
             element.classList.add("hidden")
         });
     }
 
-    unhidePassedElements() {
-        this.elementsToHide.forEach(element => {
+    unhideOverlayElements() {
+        this.elements.disappearingOverlays.forEach(element => {
             element.classList.remove("hidden")
         });
     }

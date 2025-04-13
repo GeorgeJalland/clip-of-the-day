@@ -22,10 +22,10 @@
                 </div>
                 <img id="exitFullscreen" src="./images/exit-fullscreen.png">
             </div>
-            <div id="playerDate" class="videoMeta">George | 22/03/1997</div>
-            <div id="videoIndex" class="videoMeta">[/]</div>
+            <div id="playerDate" class="disappaearing overlay videoMeta">George | 22/03/1997</div>
+            <div id="videoIndex" class="disappaearing overlay videoMeta">[/]</div>
             <div id="playerBoard">
-                <table id="playerTable">
+                <table id="playerTable" class="disappaearing overlay">
                     <thead>
                         <tr>
                             <th colspan="2">[PLAYERS]</th>
@@ -38,7 +38,7 @@
                     </tbody>
                 </table>
             </div>
-            <div id="ratings">
+            <div id="ratings" class="overlay">
                 <table>
                     <tr>
                         <th colspan="2">[RATINGS]</th>
@@ -59,7 +59,7 @@
                     </tr>
                   </table>
             </div>
-            <div id="submitRatings">
+            <div id="submitRatings" class="overlay">
                 <div class="rating" data-value="5"></div>
                 <div class="rating" data-value="4"></div>
                 <div class="rating" data-value="3"></div>
@@ -70,9 +70,11 @@
                 <span>Mode</span>
                 <div class="actions">
                     <span id="prev" class="clickableText"><< PREV</span>
-                    <span id="inOrder" class="clickableText">[IN ORDER]</span>
-                    <span id="newest" class="clickableText selected">[NEWEST]</span>
-                    <span id="random" class="clickableText">[RANDOM]</span>
+                    <div id="iterationModes" class="disappaearing overlay">
+                        <span id="inOrder" class="clickableText">[IN ORDER]</span>
+                        <span id="newest" class="clickableText selected">[NEWEST]</span>
+                        <span id="random" class="clickableText">[RANDOM]</span>
+                    </div>
                     <span id="next" class="clickableText">NEXT >></span>
                 </div>
             </div>
