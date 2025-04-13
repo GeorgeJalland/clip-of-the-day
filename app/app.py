@@ -1,9 +1,9 @@
-from flask import Flask, Blueprint, request, g, jsonify, send_from_directory
+from flask import Flask, Blueprint, request, g, jsonify, send_from_directory, Response
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 
-from app.db import SessionLocal, create_schema, submit_rating, get_players_with_ratings, get_video_and_ratings, get_vid_count
+from app.db import SessionLocal, create_schema, submit_rating, get_players_with_ratings, get_video_and_ratings, get_vid_count, get_all_videos
 from common.config import Config
 
 def create_app(config_class=Config):
@@ -59,6 +59,29 @@ def create_app(config_class=Config):
     @api.route("/videos/<path:filepath>")
     def serve_videos(filepath):
         return send_from_directory(app.config.get("VIDEO_DIRECTORY"), filepath)
+
+    @api.get("/sitemap.xml")
+    def sitemap():
+        base_url = "https://clipoftheday.io/rocket-league"
+        lastmod = "2025-04-13"
+        sitemap_items = ""
+
+        videos = get_all_videos(g.db)
+
+        for video in videos:
+            loc = f"{base_url}/clip/{video.id}"
+            sitemap_items += f"""
+            <url>
+                <loc>{loc}</loc>
+                <lastmod>{lastmod}</lastmod>
+            </url>"""
+
+        xml_content = f"""<?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            {sitemap_items}
+        </urlset>"""
+
+        return Response(xml_content, mimetype="application/xml")
     
     @app.route('/')
     def index():

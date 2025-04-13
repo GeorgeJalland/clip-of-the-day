@@ -84,3 +84,6 @@ def get_video_and_ratings(session: Session, filter_criterion_name: str, filter_c
     result = query.first()
 
     return result._asdict() if result else None
+
+def get_all_videos(session: Session) -> list[Video]:
+    return session.query(Video).all()
