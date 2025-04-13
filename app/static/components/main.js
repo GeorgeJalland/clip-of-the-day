@@ -35,7 +35,7 @@ export class Main {
                 element: this.elements.newest
             }
         }
-        this.video = new Video(() => this.getNextVideo(), () => this.getPrevVideo())
+        this.video = new Video(() => this.handleClickNext(), () => this.handleClickPrev())
         this.ratings = new Ratings()
         this.addListeners()
     }
