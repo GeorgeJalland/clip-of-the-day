@@ -214,11 +214,14 @@ export class Main {
             fullscreenApi.call(this.elements.main);
             if (screen.orientation && screen.orientation.lock) {
                 // Attempt to lock the orientation to landscape
-                await screen.orientation.lock('landscape');
-                console.log('Orientation locked to landscape');
+                try {
+                    await screen.orientation.lock('landscape');
+                } catch (error) {
+                    console.error('Error locking orientation:', error);
+                }
             }
             if (!this.video.isVideoPaused()) {
-                this.video.hidePassedElements()
+                this.video.hideOverlayElements()
             }
         }
     }
@@ -227,7 +230,7 @@ export class Main {
         if (document.fullscreenElement) {
             document.exitFullscreen()
         }
-        this.video.unhidePassedElements()
+        this.video.unhideOverlayElements()
         this.video.clearHideTimeout()
     }
 }
