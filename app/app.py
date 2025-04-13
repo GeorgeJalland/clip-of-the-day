@@ -35,7 +35,13 @@ def create_app(config_class=Config):
     def get_video(desired_position: int):
         player_id = request.args.get('player', None)
         ip_addr = request.remote_addr
-        return jsonify(get_video_and_ratings(g.db, desired_position, ip_addr, player_id))
+        return jsonify(get_video_and_ratings(g.db, "position", desired_position, ip_addr, player_id))
+
+    @api.get('/video/id/<int:id>')
+    def get_video_by_id(id: int):
+        player_id = request.args.get('player', None)
+        ip_addr = request.remote_addr
+        return jsonify(get_video_and_ratings(g.db, "id", id, ip_addr, player_id))
 
     @api.get('/video-count')
     def get_video_count():

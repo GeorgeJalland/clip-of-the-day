@@ -7,10 +7,10 @@ export function buildApiString(endpoint) {
     return apiBase + ':' + apiPort + apiRoot + endpoint
 }
 
-export async function fetchVideo(id, playerId=null) {
-    let api_uri = "/video" + "/" + id + "?"
+export async function fetchVideo(position, playerId=null) {
+    let api_uri = "/video" + "/" + position
     if (playerId !== null) {
-        api_uri += "player=" + playerId + "&"
+        api_uri += "?player=" + playerId
     }
     try {
         const response = await fetch(buildApiString(api_uri), {
@@ -26,6 +26,27 @@ export async function fetchVideo(id, playerId=null) {
         console.error("Error:", error);
     }
 }
+
+export async function fetchVideoById(id, playerId=null) {
+    let api_uri = "/video/id/" + id
+    if (playerId !== null) {
+        api_uri += "?player=" + playerId
+    }
+    try {
+        const response = await fetch(buildApiString(api_uri), {
+            method: "GET",
+        });
+        if (!response.ok) throw new Error("Failed to fetch");
+
+        let data = await response.json();
+        data["path"] = buildApiString("/videos/" + data.path)
+        return data
+
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
 
 export async function fetchVideoCount(playerId) {
     let api_uri = "/video-count"

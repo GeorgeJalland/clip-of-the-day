@@ -1,5 +1,5 @@
-import { fetchVideo, fetchVideoCount, fetchPlayers } from "../helpers/api.js"
-import { getRandomNumber, mod } from "../helpers/utils.js"
+import { fetchVideo, fetchVideoCount, fetchPlayers, fetchVideoById } from "../helpers/api.js"
+import { getRandomNumber, mod, updateCanonicalLinkWithUrl } from "../helpers/utils.js"
 import { Ratings } from "./ratings.js"
 import { Video } from "./video.js"
 
@@ -7,7 +7,8 @@ export class Main {
     constructor() {
         this.elements = {
             main: document.getElementById("mainContainer"),
-            index: document.getElementById("videoIndex"),
+            videoPosition: document.getElementById("videoPosition"),
+            videoIndexCount: document.getElementById("videoIndexCount"),
             playerDate: document.getElementById("playerDate"),
             prev: document.getElementById("prev"),
             next: document.getElementById("next"),
@@ -32,7 +33,7 @@ export class Main {
             players: [],
             iterationMode: {
                 mode: "inOrder",
-                element: this.elements.newest
+                elementName: "newest",
             }
         }
         this.video = new Video(() => this.handleClickNext(), () => this.handleClickPrev())
@@ -61,9 +62,35 @@ export class Main {
     }
 
     async render() {
-        await this.getVideoCount()
-        await this.getPlayers()
         await this.getLatestVideo()
+        await this.handleVideoCount()
+        await this.getPlayers()
+        this.pushHistory()
+    }
+
+    renderWithState(state) {
+        this.state = {...state}
+        this.video.render(state.videoMeta)
+        this.displayVideoCount()
+        this.updatePlayerBoard()
+        this.handleRatings(state.videoMeta)
+        this.displayIndexCount()
+        this.displayVideoPosition()
+        this.selectPlayer(document.getElementById(state.selectedPlayer.elementId))
+    }
+
+    async renderFromUrl(videoId, player = null) {
+        if (player !== null) {
+            await this.getPlayers()
+            this.selectPlayer(document.getElementById("player-"+player))
+        }
+        await this.getVideoById(videoId)
+        await this.handleVideoCount()
+
+        if (player == null) {
+            await this.getPlayers()
+        }
+        this.pushHistory()
     }
 
     handleClickInOrder() {
@@ -73,18 +100,20 @@ export class Main {
     async handleClickRandom() {
         this.changeIterationMode("random", "random")
         await this.getRandomVideo()
+        this.pushHistory()
     }
 
     async handleClickNewest() {
         this.changeIterationMode("newest", "inOrder")
         await this.getLatestVideo()
+        this.pushHistory()
     }
 
     changeIterationMode(elementId, mode) {
-        this.state.iterationMode.element.classList.remove("selected")
+        this.elements[this.state.iterationMode.elementName].classList.remove("selected")
         this.elements[elementId].classList.add("selected")
         this.state.iterationMode.mode = mode
-        this.state.iterationMode.element = this.elements[elementId]
+        this.state.iterationMode.elementName = elementId
     }
 
     async handleClickNext() {
@@ -93,6 +122,7 @@ export class Main {
             "random": () => this.getRandomVideo()
         }
         await map[this.state.iterationMode.mode]()
+        this.pushHistory()
     }
 
     async handleClickPrev() {
@@ -101,6 +131,7 @@ export class Main {
             "random": () => this.getRandomVideo()
         }
         await map[this.state.iterationMode.mode]()
+        this.pushHistory()
     }
 
     async getNextVideo() {
@@ -125,12 +156,27 @@ export class Main {
     async getVideo(index) {
         const videoData = await fetchVideo(index, this.state.selectedPlayer.id)
         this.video.render(videoData)
-        this.setVideoStates(videoData)
-        this.updateMetaElements()
+        this.state.videoMeta = videoData
+        this.handleRatings(videoData)
+        this.displayMeta()
+        this.displayVideoPosition()
     }
 
-    setVideoStates(videoData) {
+    async getVideoById(id) {
+        // This is repeating myself
+        const videoData = await fetchVideoById(id, this.state.selectedPlayer.id )
+        this.video.render(videoData)
         this.state.videoMeta = videoData
+        this.handleRatings(videoData)
+        this.displayMeta()
+        this.displayVideoPosition()
+    }
+
+    displayVideoPosition() {
+        this.elements.videoPosition.textContent = this.state.videoMeta.position
+    }
+
+    handleRatings(videoData) {
         this.ratings.setState(
             {
                 videoId: videoData.id,
@@ -140,23 +186,36 @@ export class Main {
                 userRating: videoData.user_rating,
             }
         )
+        this.ratings.render()
     }
 
-    updateMetaElements() {
+    displayMeta() {
         this.elements.playerDate.textContent = this.state.videoMeta.player_name + " | " + this.state.videoMeta.name.slice(-23, -4)
-        this.elements.index.textContent = "[" + this.state.videoMeta.position + "/" + this.state.videoCount + "]"
-        this.ratings.render()
+    }
+
+    async handleVideoCount() {
+        await this.getVideoCount()
+        this.displayVideoCount()
+        this.displayIndexCount()
+    }
+
+    displayIndexCount() {
+        this.elements.videoIndexCount.textContent = this.state.videoCount
     }
 
     async getVideoCount() {
         this.state.videoCount = await fetchVideoCount(this.state.selectedPlayer.id)
+    }
+
+    displayVideoCount() {
         this.elements.videoCount.textContent = this.state.videoCount
     }
 
     async handleClickPlayer(event) {
         this.selectPlayer(event.target)
-        await this.getVideoCount()
-        await this.getRandomVideo()
+        await this.handleVideoCount()
+        await this.getLatestVideo()
+        this.pushHistory()
     }
 
     async getPlayers() {
@@ -232,5 +291,11 @@ export class Main {
         }
         this.video.unhideOverlayElements()
         this.video.clearHideTimeout()
+    }
+
+    pushHistory() {
+        const params = this.state.selectedPlayer.id ? `?player=${this.state.selectedPlayer.name}` : ""
+        history.pushState({id: Date.now(), state: this.state}, "", `/rocket-league/clip/${this.state.videoMeta.id}${params}`)
+        updateCanonicalLinkWithUrl()
     }
 }

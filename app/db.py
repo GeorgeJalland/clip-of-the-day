@@ -46,7 +46,7 @@ def get_vid_count(session: Session, player_id: int) -> dict:
         query = query.filter(Player.id == player_id)
     return query.count()
   
-def get_video_and_ratings(session: Session, desired_position: int, ip_address: str, player_id: int | None = None) -> dict:
+def get_video_and_ratings(session: Session, filter_criterion_name: str, filter_criterion: int, ip_address: str, player_id: int | None = None) -> dict:
     user_rating = func.max(
             case(
                 (Rating.ip_address == ip_address, Rating.rating),
@@ -79,7 +79,7 @@ def get_video_and_ratings(session: Session, desired_position: int, ip_address: s
 
     subq = subq.group_by(Video.id).subquery()
 
-    query = session.query(subq).filter(subq.c.position == desired_position)
+    query = session.query(subq).filter(subq.c[filter_criterion_name] == filter_criterion)
 
     result = query.first()
 

@@ -1,8 +1,21 @@
-// define a api.js file
-// create component modules, .e.g main, player board, video with ratings
-// define states for each componenet
-// copy api.js boilerplate from theo
 import { Main } from "./components/main.js"
+import { updateCanonicalLinkWithUrl } from "./helpers/utils.js"
+
+const pathVars = window.location.pathname.split("/")
+const queryParams = new URLSearchParams(window.location.search)
 
 const main = new Main()
-main.render()
+
+if (pathVars[3]) {
+    main.renderFromUrl(pathVars[3], queryParams.get("player"))
+} else {
+    main.render()
+}
+
+window.addEventListener('popstate', (event) => {
+    console.log("popping state: ", event.state.state)
+    if (event.state.id) {
+        main.renderWithState(event.state.state)
+        updateCanonicalLinkWithUrl()
+    }
+});
