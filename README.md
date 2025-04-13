@@ -72,11 +72,6 @@ sqlite3 ./instance/app.db #check
 FLASK_APP=app.app:create_app flask run --debug -p 8000
 ```
 
-#### Client
-```bash
-python -m http.server --directory app/static 9000
-```
-
 #### File Watcher
 ```bash
 python -u -m file_watcher.file_watcher

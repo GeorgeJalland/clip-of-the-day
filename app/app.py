@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, request, g, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
+import os
 
 from app.db import SessionLocal, create_schema, submit_rating, get_players_with_ratings, get_video_and_ratings, get_vid_count
 from common.config import Config
@@ -53,6 +54,20 @@ def create_app(config_class=Config):
     def serve_videos(filepath):
         return send_from_directory(app.config.get("VIDEO_DIRECTORY"), filepath)
     
+    @app.route('/')
+    def index():
+        return send_from_directory(app.root_path, "static/index.html")
+
+    @app.route('/<path:filename>')
+    def static_files(filename):
+        static_dir = os.path.join(app.root_path, 'static')
+        file_path = os.path.join(static_dir, filename)
+
+        if os.path.isfile(file_path):
+            return send_from_directory(static_dir, filename)
+        else:
+            return index()
+
     app.register_blueprint(api)
     
     return app
