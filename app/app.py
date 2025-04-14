@@ -1,5 +1,4 @@
 from flask import Flask, Blueprint, request, g, jsonify, send_from_directory, Response
-from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 
@@ -11,8 +10,6 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
     app.config.from_object(config_class)
-
-    CORS(app, origins=['http://localhost:*'])
 
     api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -101,4 +98,4 @@ def create_app(config_class=Config):
     
     return app
 
-    
+
