@@ -7,7 +7,10 @@ import logging
 from common.config import Config
 from file_watcher.db import add_new_player_record, add_new_video_record, delete_player_record, delete_video_record, migrate_video_data, get_db, create_schema
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger("file_watcher")
 
 db = get_db()
@@ -55,10 +58,9 @@ class VideoFileHandler(FileSystemEventHandler):
             add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
 
     def on_moved(self, event):
+        logger.info(f"file moved: {event}")
         if event.is_directory:
             logger.info(f"directory moved {event}")
-            # take destination path and update player name
-            # update video name method?
 
     def on_deleted(self, event):
         if event.is_directory:
@@ -73,8 +75,6 @@ class VideoFileHandler(FileSystemEventHandler):
             delete_video_record(db, player_name, video_name)
 
 if __name__=="__main__":
-    # apply migration arg, pass via env var in docker compose up
-    # migrate database with changes, scan all dirs and add records
     migrate_video_data(db, Config.VIDEO_DIRECTORY)
     w = Watcher(directory=Config.VIDEO_DIRECTORY, handler=VideoFileHandler())
     w.run()
