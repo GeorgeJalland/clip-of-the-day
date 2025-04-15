@@ -61,6 +61,15 @@ class VideoFileHandler(FileSystemEventHandler):
         logger.info(f"file moved: {event}")
         if event.is_directory:
             logger.info(f"directory moved {event}")
+            # do something?
+        else:
+            if event.src_path.endswith(".mp4.tmp") and event.dest_path.endswith(".mp4"):
+                logger.info(f"New syncthing video detected: {event.dest_path}")
+                video_name = os.path.basename(event.dest_path)
+                player_name = os.path.basename(os.path.dirname(event.dest_path))
+                subdir_and_filename = player_name+'/'+video_name
+                full_path = event.dest_path
+                add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
 
     def on_deleted(self, event):
         if event.is_directory:
