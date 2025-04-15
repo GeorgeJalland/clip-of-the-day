@@ -16,7 +16,11 @@ export async function fetchVideo(position, playerId=null) {
         const response = await fetch(buildApiString(api_uri), {
             method: "GET",
         });
-        if (!response.ok) throw new Error("Failed to fetch");
+        if (response.status === 404) {
+            return null
+        }
+
+        if (!response.ok) throw new Error("Failed to fetch: " + response.statusText);
 
         let data = await response.json();
         data["path"] = buildApiString("/videos/" + data.path)
@@ -36,7 +40,11 @@ export async function fetchVideoById(id, playerId=null) {
         const response = await fetch(buildApiString(api_uri), {
             method: "GET",
         });
-        if (!response.ok) throw new Error("Failed to fetch");
+        if (response.status === 404) {
+            return null
+        }
+
+        if (!response.ok) throw new Error("Failed to fetch: " + response.statusText);
 
         let data = await response.json();
         data["path"] = buildApiString("/videos/" + data.path)

@@ -84,7 +84,7 @@ export class Main {
             await this.getPlayers()
             this.selectPlayer(document.getElementById("player-"+player))
         }
-        await this.getVideoById(videoId)
+        await this.getVideo(videoId, true)
         await this.handleVideoCount()
 
         if (player == null) {
@@ -153,18 +153,12 @@ export class Main {
         await this.getVideo(1)
     }
 
-    async getVideo(index) {
-        const videoData = await fetchVideo(index, this.state.selectedPlayer.id)
-        this.video.render(videoData)
-        this.state.videoMeta = videoData
-        this.handleRatings(videoData)
-        this.displayMeta()
-        this.displayVideoPosition()
-    }
-
-    async getVideoById(id) {
-        // This is repeating myself
-        const videoData = await fetchVideoById(id, this.state.selectedPlayer.id )
+    async getVideo(index, getById=false) {
+        const videoData = getById ? await fetchVideoById(index, this.state.selectedPlayer.id) : await fetchVideo(index, this.state.selectedPlayer.id)
+        if (videoData === null) {
+            await this.getLatestVideo()
+            return
+        }
         this.video.render(videoData)
         this.state.videoMeta = videoData
         this.handleRatings(videoData)

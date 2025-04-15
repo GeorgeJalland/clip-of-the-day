@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, request, g, jsonify, send_from_directory, Response
+from flask import Flask, Blueprint, request, g, jsonify, send_from_directory, Response, abort
 from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 
@@ -38,7 +38,12 @@ def create_app(config_class=Config):
     def get_video_by_id(id: int):
         player_id = request.args.get('player', None)
         ip_addr = request.remote_addr
-        return jsonify(get_video_and_ratings(g.db, "id", id, ip_addr, player_id))
+
+        video_and_ratings = get_video_and_ratings(g.db, "id", id, ip_addr, player_id)
+        if video_and_ratings is None:
+            abort(404, description="Video not found")
+
+        return jsonify(video_and_ratings)
 
     @api.get('/video-count')
     def get_video_count():
