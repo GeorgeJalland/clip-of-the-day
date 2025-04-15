@@ -46,8 +46,8 @@ export class Video {
     render(videoData) {
         this.state.video = videoData
         this.elements.videoSource.src = videoData.path
+        this.elements.video.load()
         if (this.state.userHasClickedPlay) {
-            this.elements.video.load()
             this.elements.video.play()
             this.elements.customControls.classList.remove("visible");
         } else {
@@ -92,7 +92,6 @@ export class Video {
     pauseplay() {
         if (this.state.userHasClickedPlay === false) {
             this.state.userHasClickedPlay = true;
-            this.elements.video.load();
         }
         if (this.isVideoPaused()) {
             this.elements.video.play();
