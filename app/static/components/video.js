@@ -56,7 +56,9 @@ export class Video {
         if (this.state.userHasClickedPlay) {
             this.elements.video.play()
             this.hideControls()
-            this.hideOverlayElements()
+            if (document.fullscreenElement) {
+                this.hideOverlayElements()
+            }
         } else {
             this.showControls()
             this.showOverlayElements()
