@@ -101,8 +101,10 @@ export class Main {
     }
 
     toggleTheme(color) {
-        document.body.classList.remove(`${this.state.theme}-theme`)
+        document.body.classList.remove(`${this.state.theme}-theme`);
         document.body.classList.add(`${color}-theme`);
+        document.getElementById(`${this.state.theme}Theme`).classList.remove("selectedTheme"),
+        document.getElementById(`${color}Theme`).classList.add("selectedTheme"),
         this.state.theme = color
     }
 

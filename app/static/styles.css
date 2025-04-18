@@ -6,13 +6,13 @@ body.green-theme {
     --accent-color: rgb(74, 246, 38);
     --hue-shift: 50deg;
 }
-body.orange-theme {
-    --accent-color: orange;
-    --hue-shift: -30deg;
-}
 body.yellow-theme {
     --accent-color: yellow;
     --hue-shift: 0deg;
+}
+body.pink-theme {
+    --accent-color: rgb(246, 38, 129);
+    --hue-shift: 290deg;
 }
 body {
     text-align: center;
@@ -35,7 +35,7 @@ h1 {
 #themeContainer {
     position: absolute;
     display: flex;
-    gap: 0.75vw;
+    gap: 0.5vw;
     z-index: 2;
     bottom: 102%;
     left: 0.5rem;
@@ -51,11 +51,14 @@ h1 {
 #greenTheme {
     background-color: rgb(74, 246, 38);
 }
-#orangeTheme {
-    background-color: orange;;
-}
 #yellowTheme {
     background-color: yellow;
+}
+#pinkTheme {
+    background-color: rgb(246, 38, 129);
+}
+.selectedTheme {
+    border: 0.125rem solid white !important;
 }
 #videoElement {
     border: 0.125rem solid var(--accent-color);
@@ -355,6 +358,9 @@ th {
     #mainContainer {
         display: flex;
         margin-top: 2rem;
+    }
+    #themeContainer {
+        gap: 0.75vw;
     }
     #videoElement {
         width: 100%;
