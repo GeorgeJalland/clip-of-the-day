@@ -30,7 +30,8 @@ export class Ratings {
 
     render() {
         this.elements.totalRating.textContent = this.state.totalVideoRating
-        this.elements.avgRating.textContent = this.state.avgVideoRating
+        const rating = this.state.avgVideoRating
+        this.elements.avgRating.textContent = Number.isInteger(rating) ? rating : rating.toFixed(2);
         this.resetRatingsElements()
         if (this.state.hasUserRated) {
             this.showUserRating()

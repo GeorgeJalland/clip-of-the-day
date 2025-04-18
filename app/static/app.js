@@ -15,7 +15,7 @@ if (pathVars[3]) {
 window.addEventListener('popstate', (event) => {
     console.log("popping state: ", event.state.state)
     if (event.state.id) {
-        main.renderWithState(event.state.state)
         updateCanonicalLinkWithUrl()
+        main.renderWithState(event.state.state)
     }
 });
