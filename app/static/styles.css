@@ -33,12 +33,12 @@ h1 {
     margin-top: 0.5rem;
 }
 #themeContainer {
-    position: absolute;
+    position: fixed;
     display: flex;
-    gap: 0.5vw;
+    gap: 0.5rem;
     z-index: 2;
-    bottom: 102%;
-    left: 0.5rem;
+    bottom: 4%;
+    left: 3%;
 }
 #themeContainer > div {
     width: 0.75rem;
