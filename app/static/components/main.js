@@ -7,6 +7,7 @@ export class Main {
     constructor() {
         this.elements = {
             main: document.getElementById("mainContainer"),
+            themeContainer: document.getElementById("themeContainer"),
             videoPosition: document.getElementById("videoPosition"),
             videoIndexCount: document.getElementById("videoIndexCount"),
             playerDate: document.getElementById("playerDate"),
@@ -34,7 +35,8 @@ export class Main {
             iterationMode: {
                 mode: "inOrder",
                 elementName: "newest",
-            }
+            },
+            theme: "green",
         }
         this.video = new Video(() => this.handleClickNext(), () => this.handleClickPrev())
         this.ratings = new Ratings()
@@ -42,6 +44,11 @@ export class Main {
     }
 
     addListeners() {
+        this.elements.themeContainer.addEventListener("click", (e) => {
+            if (e.target.dataset.color) {
+                this.toggleTheme(e.target.dataset.color)
+            }
+        })
         this.elements.prev.addEventListener("click", () => this.handleClickPrev())
         this.elements.next.addEventListener("click", () => this.handleClickNext())
         this.elements.inOrder.addEventListener("click", () => this.handleClickInOrder())
@@ -91,6 +98,12 @@ export class Main {
             await this.getPlayers()
         }
         this.pushHistory()
+    }
+
+    toggleTheme(color) {
+        document.body.classList.remove(`${this.state.theme}-theme`)
+        document.body.classList.add(`${color}-theme`);
+        this.state.theme = color
     }
 
     handleClickInOrder() {

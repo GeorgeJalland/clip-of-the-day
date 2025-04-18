@@ -2,15 +2,27 @@
     font-family: 'VT323';
     src: url('./fonts/cool_font.woff2') format('woff2');
 }
+body.green-theme {
+    --accent-color: rgb(74, 246, 38);
+    --hue-shift: 50deg;
+}
+body.orange-theme {
+    --accent-color: orange;
+    --hue-shift: -30deg;
+}
+body.yellow-theme {
+    --accent-color: yellow;
+    --hue-shift: 0deg;
+}
 body {
-    text-align: center; /* Center aligns all content within the body */
+    text-align: center;
     font-family: 'VT323';
     background-color: #1e1e1e;
     color: white;
     font-size: 1.2rem;
 }
 h1 {
-    color: rgb(74, 246, 38);
+    color: var(--accent-color);
 }
 #mainContainer {
     display: inline-flex;
@@ -20,8 +32,33 @@ h1 {
     justify-content: center;
     margin-top: 0.5rem;
 }
+#themeContainer {
+    position: absolute;
+    display: flex;
+    gap: 0.75vw;
+    z-index: 2;
+    bottom: 102%;
+    left: 0.5rem;
+}
+#themeContainer > div {
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 0.125rem solid grey;
+}
+#themeContainer > div:hover {
+    cursor: pointer;
+}
+#greenTheme {
+    background-color: rgb(74, 246, 38);
+}
+#orangeTheme {
+    background-color: orange;;
+}
+#yellowTheme {
+    background-color: yellow;
+}
 #videoElement {
-    border: 0.125rem solid rgb(74, 246, 38);
+    border: 0.125rem solid var(--accent-color);
     border-radius: 0.5rem;
     width: 60vw;
     height: auto;
@@ -152,7 +189,7 @@ h1 {
 .smallRatingIcon {
     height: 1rem;
     width: auto;
-    filter: hue-rotate(50deg)
+    filter: hue-rotate(var(--hue-shift))
 }
 #mainContainer:fullscreen .smallRatingIcon{
     height: 1.5vw;
@@ -195,18 +232,18 @@ h1 {
     height: 4vw;
     width: 4vw;
     cursor: pointer;
-    filter: hue-rotate(50deg)
+    filter: hue-rotate(var(--hue-shift))
 }
 .rating:hover, .rating:hover ~ .rating{
     background-image: url('./images/star.png');
-    filter: hue-rotate(50deg)
+    filter: hue-rotate(var(--hue-shift))
 }
 .rated {
     background-image: url('./images/star.png');
-    filter: hue-rotate(50deg)
+    filter: hue-rotate(var(--hue-shift))
 }
 .selectedPlayer{
-    color: rgb(74, 246, 38);
+    color: var(--accent-color);
     font-weight: bold;
 }
 .selected {
@@ -221,7 +258,7 @@ h1 {
 }
 .actions{
     display: flex;
-    color: rgb(74, 246, 38);
+    color: var(--accent-color);
     justify-content: center;
 }
 #iterationModes {
@@ -245,7 +282,7 @@ h1 {
     text-align: right;
 }
 #signature {
-    color: rgb(74, 246, 38);
+    color: var(--accent-color);
 }
 #videoCountContainer{
     position: fixed;
