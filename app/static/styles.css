@@ -54,17 +54,24 @@ h1 {
     position: absolute;
     bottom: 0;
     width: 100%;
-    display: flex;
-    justify-content: left;
-    align-items: center;
     background: rgba(0, 0, 0, 0.3);
     height: 2vw;
 }
-#progressBar {
+#progressContainer > div {
+    position: absolute;
     width: 0%;
-    background-color: white;
     height: 15%;
-    transition: width 0.3s linear;
+    transition: width 0.25s linear;
+    top: 50%;
+    transform: translateY(-50%);
+}
+#progressBar {
+    background-color: white;
+    z-index: 2;
+}
+#loadingProgressBar {
+    background-color: grey;
+    z-index: 1;
 }
 #pauseplayButton {
     position: absolute;

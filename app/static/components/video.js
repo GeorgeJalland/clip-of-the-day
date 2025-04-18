@@ -9,6 +9,8 @@ export class Video {
             video: document.getElementById("videoElement"),
             videoSource: document.getElementById("videoSource"),
             progressBar: document.getElementById("progressBar"),
+            loadingProgressBar: document.getElementById("loadingProgressBar"),
+            progressContainer: document.getElementById("progressContainer"),
             customControls: document.getElementById("customControls"),
             pauseplayButton: document.getElementById("pauseplayButton"),
             disappearingOverlays: document.querySelectorAll('.disappaearing.overlay'),
@@ -24,6 +26,8 @@ export class Video {
 
     addListeners() {
         this.elements.video.addEventListener("timeupdate", () => this.updateProgressBar());
+        this.elements.video.addEventListener("progress", () => this.updateLoadingProgressBar());
+        this.elements.progressContainer.addEventListener("click", (e) => this.seekVideo(e));
         this.elements.video.addEventListener("click", () => this.handleClickVideo())
         this.elements.pauseplayButton.addEventListener("click", () => this.pauseplay())
         this.elements.video.addEventListener('touchstart', (e) => {
@@ -53,16 +57,48 @@ export class Video {
         } else {
             this.elements.customControls.classList.add("visible");
         }
-        this.resetProgressBar()
+        this.resetProgressBars()
     }
 
-    updateProgressBar() {
-        const percent = (this.elements.video.currentTime / this.elements.video.duration) * 100;
-        this.elements.progressBar.style.width = percent + "%";
+    resetProgressBars() {
+        this.updateProgressBar(0);
+        this.updateLoadingProgressBar(0);
     }
 
-    resetProgressBar() {
-        this.elements.progressBar.style.width = "0%";
+    updateProgressBar(percent = null) {
+        if (percent) {
+            this.elements.loadingProgressBar.style.width = percent + "%";
+            return;
+        }
+        const percentage = (this.elements.video.currentTime / this.elements.video.duration) * 100;
+        this.elements.progressBar.style.width = percentage + "%";
+    }
+
+    updateLoadingProgressBar(percent = null) {
+        if (percent) {
+            this.elements.loadingProgressBar.style.width = percent + "%";
+            return;
+        }
+        const video = this.elements.video;
+        const duration = video.duration;
+        if (video.buffered.length > 0 && duration > 0) {
+            const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+            const percent = (bufferedEnd / duration) * 100;
+            this.elements.loadingProgressBar.style.width = percent + "%";
+        }
+    }
+
+    seekVideo(event) {
+        const container = this.elements.progressContainer;
+        const rect = container.getBoundingClientRect();
+
+        const clickX = event.clientX - rect.left;
+        const percent = clickX / rect.width;
+
+        const newTime = this.elements.video.duration * percent;
+        this.elements.video.currentTime = newTime;
+
+        this.updateProgressBar(percent);
     }
 
     handleClickVideo() {
