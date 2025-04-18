@@ -227,7 +227,7 @@ h1 {
 }
 #mainContainer:fullscreen #iterationModes{
     position: absolute;
-    bottom: 200%
+    bottom: 5vw;
 }
 #about {
     position: fixed;
