@@ -65,13 +65,13 @@ def create_app(config_class=Config):
     @api.get("/sitemap.xml")
     def sitemap():
         base_url = "https://clipoftheday.io/rocket-league"
-        lastmod = "2025-04-13"
         sitemap_items = ""
 
         videos = get_all_videos(g.db)
 
         for video in videos:
             loc = f"{base_url}/clip/{video.id}"
+            lastmod = video.added_time.strftime("%Y-%m-%d")
             sitemap_items += f"""
             <url>
                 <loc>{loc}</loc>
