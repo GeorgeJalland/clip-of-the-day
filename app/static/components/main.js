@@ -283,8 +283,7 @@ export class Main {
         if (document.fullscreenElement) {
             document.exitFullscreen()
         }
-        this.video.unhideOverlayElements()
-        this.video.clearHideTimeout()
+        this.video.showOverlayElements()
     }
 
     pushHistory() {

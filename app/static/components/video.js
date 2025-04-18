@@ -3,6 +3,8 @@ export class Video {
         this.state = {
             video: {},
             userHasClickedPlay: false,
+            controlsVisible: true,
+            overlaysVisible: true,
         }
 
         this.elements = {
@@ -54,8 +56,10 @@ export class Video {
         if (this.state.userHasClickedPlay) {
             this.elements.video.play()
             this.elements.customControls.classList.remove("visible");
+            this.state.controlsVisible = false;
         } else {
             this.elements.customControls.classList.add("visible");
+            this.state.controlsVisible = true;
         }
         this.resetProgressBars()
     }
@@ -105,24 +109,63 @@ export class Video {
         if (!this.isVideoPaused()) {
             this.tempShowControls()
             if (document.fullscreenElement) {
-                this.tempShowAdditionalElements()
+                this.tempShowOverlayElements()
             }
         }
     }
 
     tempShowControls() {
-        this.elements.customControls.classList.add("visible");
-        clearTimeout(this.hideControlsTimeout);
-        this.hideControlsTimeout = setTimeout(() => {
-            this.elements.customControls.classList.remove("visible");
-        }, 2500);
+        if (this.state.controlsVisible) {
+            this.hideControls()
+        } else {
+            this.showControls()
+            this.hideControlsTimeout = setTimeout(() => {
+                this.hideControls()
+            }, 2500);
+        }
     }
 
-    tempShowAdditionalElements() {
-        this.unhideOverlayElements()
-        this.hideAdditionalTimeout = setTimeout(() => {
+    showControls() {
+        clearTimeout(this.hideControlsTimeout);
+        this.elements.customControls.classList.add("visible");
+        this.state.controlsVisible = true;
+    }
+
+    hideControls() {
+        clearTimeout(this.hideControlsTimeout);
+        this.elements.customControls.classList.remove("visible");
+        this.state.controlsVisible = false;
+    }
+
+    tempShowOverlayElements() {
+        if (this.state.overlaysVisible) {
             this.hideOverlayElements()
-        }, 2500);
+        } else {
+            this.showOverlayElements()
+            this.hideOverlayTimeout = setTimeout(() => {
+                this.hideOverlayElements()
+            }, 2500);
+        }
+    }
+
+    showOverlayElements() {
+        this.clearHideTimeout()
+        this.elements.disappearingOverlays.forEach(element => {
+            element.classList.remove("hidden")
+        });
+        this.state.overlaysVisible = true;
+    }
+
+    hideOverlayElements() {
+        this.clearHideTimeout()
+        this.elements.disappearingOverlays.forEach(element => {
+            element.classList.add("hidden")
+        });
+        this.state.overlaysVisible = false;
+    }
+
+    clearHideTimeout() {
+        clearInterval(this.hideOverlayTimeout);
     }
 
     pauseplay() {
@@ -131,17 +174,15 @@ export class Video {
         }
         if (this.isVideoPaused()) {
             this.elements.video.play();
-            this.elements.customControls.classList.remove("visible");
+            this.hideControls()
             if (document.fullscreenElement) {
                 this.hideOverlayElements()
             }
         } else {
             this.elements.video.pause();
-            clearTimeout(this.hideControlsTimeout);
-            clearInterval(this.hideAdditionalTimeout);
-            this.elements.customControls.classList.add("visible");
+            this.showControls()
             if (document.fullscreenElement) {
-                this.unhideOverlayElements()
+                this.showOverlayElements()
             }
         }
     }
@@ -167,22 +208,6 @@ export class Video {
                 this.elements.video.classList.remove("slide-transition")
             }, 500);
         }
-    }
-
-    hideOverlayElements() {
-        this.elements.disappearingOverlays.forEach(element => {
-            element.classList.add("hidden")
-        });
-    }
-
-    unhideOverlayElements() {
-        this.elements.disappearingOverlays.forEach(element => {
-            element.classList.remove("hidden")
-        });
-    }
-
-    clearHideTimeout() {
-        clearInterval(this.hideAdditionalTimeout);
     }
 
     isVideoPaused() {
