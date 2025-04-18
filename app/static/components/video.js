@@ -55,11 +55,11 @@ export class Video {
         this.elements.video.load()
         if (this.state.userHasClickedPlay) {
             this.elements.video.play()
-            this.elements.customControls.classList.remove("visible");
-            this.state.controlsVisible = false;
+            this.hideControls()
+            this.hideOverlayElements()
         } else {
-            this.elements.customControls.classList.add("visible");
-            this.state.controlsVisible = true;
+            this.showControls()
+            this.showOverlayElements()
         }
         this.resetProgressBars()
     }
