@@ -87,6 +87,7 @@ export class Main {
     }
 
     async renderFromUrl(videoId, player = null) {
+        updateCanonicalLinkWithUrl()
         if (player !== null) {
             await this.getPlayers()
             this.selectPlayer(document.getElementById("player-"+player))
@@ -97,7 +98,7 @@ export class Main {
         if (player == null) {
             await this.getPlayers()
         }
-        this.pushHistory()
+        this.pushHistory(false)
     }
 
     toggleTheme(color) {
@@ -301,9 +302,11 @@ export class Main {
         this.video.showOverlayElements()
     }
 
-    pushHistory() {
+    pushHistory(updateCanonical = true) {
         const params = this.state.selectedPlayer.id ? `?player=${this.state.selectedPlayer.name}` : ""
         history.pushState({id: Date.now(), state: this.state}, "", `/rocket-league/clip/${this.state.videoMeta.id}${params}`)
-        updateCanonicalLinkWithUrl()
+        if (updateCanonical) {
+            updateCanonicalLinkWithUrl()
+        }
     }
 }
