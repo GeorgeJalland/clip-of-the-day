@@ -21,8 +21,20 @@ body {
     color: white;
     font-size: 1.2rem;
 }
-h1 {
+#headerContainer {
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
     color: var(--accent-color);
+    font-size: 2.25rem;
+}
+#sub {
+    font-size: 1.75rem;
+    margin-top: -0.25rem;
 }
 #mainContainer {
     display: inline-flex;
@@ -30,7 +42,6 @@ h1 {
     position: relative;
     align-items: center;
     justify-content: center;
-    margin-top: 0.5rem;
 }
 #themeContainer {
     position: fixed;
@@ -352,12 +363,11 @@ th {
         margin-left: 0;
         margin-right: 0;
     }
-    h1 {
-        font-size: 6.5vw;
+    #headerContainer {
+        margin-bottom: 2rem;
     }
     #mainContainer {
         display: flex;
-        margin-top: 2rem;
     }
     #themeContainer {
         gap: 0.75vw;
