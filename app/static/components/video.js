@@ -133,7 +133,12 @@ export class Video {
     }
 
     handleClickVideo() {
-        if (!this.isVideoPaused()) {
+        if (this.isVideoPaused()) {
+            this.state.controlsVisible ? this.hideControls() : this.showControls();
+            if (document.fullscreenElement) {
+                this.state.overlaysVisible ? this.hideOverlayElements() : this.showOverlayElements();
+            }
+        } else {
             this.tempShowControls()
             if (document.fullscreenElement) {
                 this.tempShowOverlayElements()
