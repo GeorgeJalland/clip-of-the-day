@@ -23,7 +23,7 @@ export class Ratings {
         document.getElementById("submitRatings").addEventListener("click", (event) => {
             if (event.target.classList.contains("rating")) {
                 const ratingValue = parseInt(event.target.dataset.value);
-                this.handleClickRating(ratingValue, this.state.videoId)
+                this.handleClickRating(event.target, ratingValue, this.state.videoId)
             }
         });
     }
@@ -38,7 +38,21 @@ export class Ratings {
         }
     }
 
-    handleClickRating(rating, videoId) {
+    handleClickRating(element, rating, videoId) {
+        element.classList.add("selectedRating")
+        let sibling = element.nextElementSibling;
+        while (sibling) {
+            sibling.classList.add("selectedRating");
+            sibling = sibling.nextElementSibling;
+        }
+        setTimeout(() => {
+            element.classList.remove("selectedRating")
+            let sibling = element.nextElementSibling;
+            while (sibling) {
+                sibling.classList.remove("selectedRating");
+                sibling = sibling.nextElementSibling;
+            }
+        }, 1000);
         if (this.state.hasUserRated) {
             this.updateRating(rating, videoId)
         } else {
