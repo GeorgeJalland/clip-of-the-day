@@ -5,6 +5,7 @@ export class Video {
             userHasClickedPlay: false,
             controlsVisible: true,
             overlaysVisible: true,
+            loading: false,
         }
 
         this.elements = {
@@ -15,6 +16,7 @@ export class Video {
             progressContainer: document.getElementById("progressContainer"),
             customControls: document.getElementById("customControls"),
             pauseplayButton: document.getElementById("pauseplayButton"),
+            loader: document.getElementById("loader"),
             disappearingOverlays: document.querySelectorAll('.disappaearing.overlay'),
         }
         this.getNextVideo = getNextVideo
@@ -29,6 +31,8 @@ export class Video {
     addListeners() {
         this.elements.video.addEventListener("timeupdate", () => this.updateProgressBar());
         this.elements.video.addEventListener("progress", () => this.updateLoadingProgressBar());
+        this.elements.video.addEventListener("waiting", () => this.handleVideoWaiting());
+        this.elements.video.addEventListener("playing", () => this.handleVideoPlaying());
         this.elements.progressContainer.addEventListener("click", (e) => this.seekVideo(e));
         this.elements.video.addEventListener("click", () => this.handleClickVideo())
         this.elements.pauseplayButton.addEventListener("click", () => this.pauseplay())
@@ -69,6 +73,26 @@ export class Video {
     resetProgressBars() {
         this.updateProgressBar(0);
         this.updateLoadingProgressBar(0);
+    }
+
+    handleVideoWaiting() {
+        this.state.loading = true
+        if (!this.state.controlsVisible) {
+            this.showLoader()
+        }
+    }
+
+    handleVideoPlaying() {
+        this.state.loading = false
+        this.hideLoader()
+    }
+
+    showLoader() {
+        this.elements.loader.classList.remove("hidden")
+    }
+
+    hideLoader() {
+        this.elements.loader.classList.add("hidden");
     }
 
     updateProgressBar(percent = null) {
@@ -121,8 +145,14 @@ export class Video {
             this.hideControls()
         } else {
             this.showControls()
+            if (this.state.loading) {
+                this.hideLoader()
+            }
             this.hideControlsTimeout = setTimeout(() => {
                 this.hideControls()
+                if (this.state.loading) {
+                    this.showLoader()
+                }
             }, 2500);
         }
     }

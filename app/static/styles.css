@@ -125,16 +125,29 @@ body {
     background-color: grey;
     z-index: 1;
 }
-#pauseplayButton {
+.center {
     position: absolute;
-    height: 4vw;
-    width: 4vw;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+#pauseplayButton {
+    height: 4vw;
+    width: 4vw;
     filter: invert(1);
 }
 #mainContainer:fullscreen #pauseplayButton {
+    height: 6vw;
+    width: 6vw;
+}
+#loader {
+    height: 4vw;
+    width: 4vw;
+    border-radius: 50%;
+    border: 2px solid var(--accent-color);
+    animation: spin 1.5s ease-in-out infinite;
+}
+#mainContainer:fullscreen #loader {
     height: 6vw;
     width: 6vw;
 }
@@ -358,6 +371,9 @@ a:hover {
 th {
     font-weight: normal;
 }
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
 @media screen and (max-width: 768px) {
     body {
         font-size: 15px;
@@ -408,7 +424,7 @@ th {
     #fsHelp {
         font-size: 2vw;
     }
-    #pauseplayButton {
+    #loader, #pauseplayButton {
         width: 8vw;
         height: 8vw;
     }
