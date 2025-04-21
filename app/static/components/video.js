@@ -10,6 +10,7 @@ export class Video {
 
         this.elements = {
             video: document.getElementById("videoElement"),
+            backgroundOverlay: document.getElementById("videoBackgroundOverlay"),
             videoSource: document.getElementById("videoSource"),
             progressBar: document.getElementById("progressBar"),
             loadingProgressBar: document.getElementById("loadingProgressBar"),
@@ -159,6 +160,7 @@ export class Video {
 
     showControls() {
         clearTimeout(this.hideControlsTimeout);
+        this.elements.backgroundOverlay.classList.remove("hidden");
         this.elements.customControls.classList.add("visible");
         this.state.controlsVisible = true;
     }
@@ -166,6 +168,7 @@ export class Video {
     hideControls() {
         clearTimeout(this.hideControlsTimeout);
         this.elements.customControls.classList.remove("visible");
+        this.elements.backgroundOverlay.classList.add("hidden");
         this.state.controlsVisible = false;
     }
 
