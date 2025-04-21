@@ -29,12 +29,13 @@ body {
     font-weight: bold;
     align-items: center;
     justify-content: center;
-    color: var(--accent-color);
     font-size: 2.25rem;
+    color: var(--accent-color);
 }
 #sub {
     font-size: 1.75rem;
     margin-top: -0.25rem;
+    color: white;
 }
 #mainContainer {
     display: inline-flex;
