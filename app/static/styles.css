@@ -103,6 +103,7 @@ body {
     pointer-events: none;
     transition: opacity 0.5s ease;
     width: 100%;
+    z-index: 2;
 }
 .visible {
     pointer-events: auto !important;
@@ -259,6 +260,7 @@ body {
     padding: 0.5rem;
     font-size: 2vw;
     transition: opacity 0.5s ease;
+    z-index: 2;
 }
 #mainContainer:fullscreen #videoIndex {
     padding: 0.5rem;
