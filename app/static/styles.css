@@ -156,6 +156,7 @@ body {
     width: 4vw;
     border-radius: 50%;
     border: 2px solid var(--accent-color);
+    box-shadow: 0 0 0.5rem 0.5rem #1e1e1e;
     animation: spin 1.5s ease-in-out infinite;
 }
 #mainContainer:fullscreen #loader {
