@@ -2,6 +2,10 @@
     font-family: 'VT323';
     src: url('./fonts/cool_font.woff2') format('woff2');
 }
+:root {
+    --bg-color: rgb(22, 21, 21);
+    --bg-accent-color: #1e1e1e;
+}
 body.green-theme {
     --accent-color: rgb(74, 246, 38);
     --hue-shift: 50deg;
@@ -17,9 +21,17 @@ body.pink-theme {
 body {
     text-align: center;
     font-family: 'VT323';
-    background-color: #1e1e1e;
+    background-color: var(--bg-color);
     color: white;
     font-size: 1.2rem;
+}
+.content-section {
+    background-color: var(--bg-accent-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+#mainContainer:fullscreen .content-section {
+    background: none;
 }
 #headerContainer {
     display: flex;
@@ -169,7 +181,7 @@ body {
     width: 4vw;
     border-radius: 50%;
     border: 2px solid var(--accent-color);
-    box-shadow: 0 0 0.5rem 0.5rem #1e1e1e;
+    box-shadow: 0 0 0.5rem 0.5rem var(--bg-color);
     animation: spin 1.5s ease-in-out infinite;
 }
 #mainContainer:fullscreen #loader {
@@ -211,9 +223,11 @@ body {
 }
 #playerBoard {
     position: absolute;
+    display: flex;
     top: 0;
     right: 102%;
     text-align: left;
+    width: fit-content;
 }
 #mainContainer:fullscreen #playerBoard{
     left: 0%;
@@ -381,7 +395,6 @@ body {
     flex-direction: column;
     top: 110%;
     gap: 0.5rem;
-    padding-bottom: 3vw;
     margin-top: 1rem;
 }
 #newFeatures div {
@@ -391,7 +404,6 @@ body {
 }
 #newFeatures summary {
     font-size: 1.4rem;
-    margin-bottom: 1rem;
 }
 a {
     color: inherit;
