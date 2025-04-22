@@ -382,13 +382,14 @@ body {
     gap: 0.5rem;
     padding-bottom: 3vw;
 }
-#newFeatures span {
+#newFeatures div {
     text-align: left;
     margin-left: 3vw;
     margin-right: 3vw;
 }
-#newFeatures h2 {
-    font-weight: normal;
+#newFeatures summary {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
 }
 a {
     color: inherit;
