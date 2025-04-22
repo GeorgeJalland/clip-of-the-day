@@ -22,20 +22,32 @@ body {
     font-size: 1.2rem;
 }
 #headerContainer {
-    margin-top: 1rem;
-    margin-bottom: 2.5rem;
     display: flex;
-    flex-direction: column;
-    font-weight: bold;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    font-size: 2.25rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
     color: var(--accent-color);
 }
-#sub {
+.endLetters {
+    font-size: 5rem;
+    margin-bottom: -0.35rem;
+}
+#y {
+    margin-left: -0.1rem;
+}
+#verticalHeaders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+#subHead {
     font-size: 1.75rem;
-    margin-top: -0.25rem;
+    margin-bottom: -0.8rem;
     color: white;
+    letter-spacing: 0.45rem;
 }
 #mainContainer {
     display: inline-flex;
@@ -407,9 +419,6 @@ th {
         font-size: 15px;
         margin-left: 0;
         margin-right: 0;
-    }
-    #headerContainer {
-        margin-bottom: 2rem;
     }
     #mainContainer {
         display: flex;
