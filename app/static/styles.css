@@ -93,6 +93,7 @@ body {
 }
 #videoBackgroundOverlay {
     position: absolute;
+    border-radius: 0.5rem;
     top: 0;
     left: 0;
     width: 100%;
@@ -381,6 +382,7 @@ body {
     top: 110%;
     gap: 0.5rem;
     padding-bottom: 3vw;
+    margin-top: 1rem;
 }
 #newFeatures div {
     text-align: left;
@@ -388,7 +390,7 @@ body {
     margin-right: 3vw;
 }
 #newFeatures summary {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     margin-bottom: 1rem;
 }
 a {
@@ -468,5 +470,8 @@ th {
     }
     #newFeatures {
         top: 160%
+    }
+    #newFeatures summary {
+        font-size: 1.2rem;
     }
 }
