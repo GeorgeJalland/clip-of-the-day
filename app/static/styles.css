@@ -441,6 +441,9 @@ th {
     #mainContainer {
         display: flex;
     }
+    #videoBackgroundOverlay {
+        border-radius: 0;
+    }
     #themeContainer {
         gap: 0.75vw;
     }
