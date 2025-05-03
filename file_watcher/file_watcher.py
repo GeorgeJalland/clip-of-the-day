@@ -2,16 +2,14 @@ import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 import os
-import logging
 
 from common.config import Config
-from file_watcher.db import add_new_player_record, add_new_video_record, delete_player_record, delete_video_record, migrate_video_data, get_db, create_schema
+from common.logger import get_logger
+from file_watcher.db import add_new_player_record, add_new_video_record, delete_player_record, delete_video_record, get_db, create_schema
+from file_watcher.thumbnail import ThumbnailGenerator, get_thumbnail_path
+from file_watcher.migrations import migrate_video_data, generate_missing_thumbnails
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-logger = logging.getLogger("file_watcher")
+logger = get_logger("file_watcher")
 
 db = get_db()
 
@@ -41,21 +39,23 @@ class Watcher:
 
 class VideoFileHandler(FileSystemEventHandler):
 
+    def __init__(self, thumbail_generator: ThumbnailGenerator):
+        super().__init__()
+        self.thumbnail_generator = thumbail_generator
+
     def on_created(self, event):
         if event.is_directory:
+            if event.src_path == Config.THUMBNAIL_DIRECTORY_NAME:
+                return
             logger.info(f"new directory detected: {event}")
             player_name = os.path.basename(event.src_path)
             add_new_player_record(db, player_name)
-        else:        
+        else:
             logger.info(f"new file detected: {event}")
-            video_name = os.path.basename(event.src_path)
-            if video_name[-4:] != ".mp4":
+            if not event.src_path.endswith(".mp4"):
                 logger.info("file not video format")
                 return
-            player_name = os.path.basename(os.path.dirname(event.src_path))
-            subdir_and_filename = player_name+'/'+video_name
-            full_path = event.src_path
-            add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
+            self.create_thumbail_and_video_record(event.src_path)
 
     def on_moved(self, event):
         logger.info(f"file moved: {event}")
@@ -65,25 +65,40 @@ class VideoFileHandler(FileSystemEventHandler):
         else:
             if event.src_path.endswith(".mp4.tmp") and event.dest_path.endswith(".mp4"):
                 logger.info(f"New syncthing video detected: {event.dest_path}")
-                video_name = os.path.basename(event.dest_path)
-                player_name = os.path.basename(os.path.dirname(event.dest_path))
-                subdir_and_filename = player_name+'/'+video_name
-                full_path = event.dest_path
-                add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path)
+                self.create_thumbail_and_video_record(event.dest_path)
+
+    def create_thumbail_and_video_record(self, event_path):
+        video_name = os.path.basename(event_path)
+        player_name = os.path.basename(os.path.dirname(event_path))
+        subdir_and_filename = player_name+'/'+video_name
+        full_path = event_path
+        thumbnail_output_path = get_thumbnail_path(event_path)
+        thumbnail_path = self.thumbnail_generator.delayed_generate(event_path, output_path=thumbnail_output_path)
+        relative_thumbnail_path = player_name + "/" + Config.THUMBNAIL_DIRECTORY_NAME + "/" + os.path.basename(thumbnail_path)
+        add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path, thumbnail_path, relative_thumbnail_path)
 
     def on_deleted(self, event):
         if event.is_directory:
+            if event.src_path == Config.THUMBNAIL_DIRECTORY_NAME:
+                return
             # since on delete cascade this will drop all videos for given player too
             logger.info(f"directory deleted: {event}")
             player_name = os.path.basename(event.src_path)
             delete_player_record(db, player_name)
         else:
             logger.info(f"file deleted: {event}")
-            video_name = os.path.basename(event.src_path)
-            player_name = os.path.basename(os.path.dirname(event.src_path))
-            delete_video_record(db, player_name, video_name)
-
+            if event.src_path.endswith(".mp4"):
+                video_name = os.path.basename(event.src_path)
+                player_name = os.path.basename(os.path.dirname(event.src_path))
+                delete_video_record(db, player_name, video_name)
+                return
+            if event.src_path.endswith(".jpg"):
+                logger.info(f"thumbnail deleted: {event}")
+                return
+                 
 if __name__=="__main__":
     migrate_video_data(db, Config.VIDEO_DIRECTORY)
-    w = Watcher(directory=Config.VIDEO_DIRECTORY, handler=VideoFileHandler())
+    generate_missing_thumbnails(db)
+    thumbnail_generator = ThumbnailGenerator()
+    w = Watcher(directory=Config.VIDEO_DIRECTORY, handler=VideoFileHandler(thumbnail_generator))
     w.run()

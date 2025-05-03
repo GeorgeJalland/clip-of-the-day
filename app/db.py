@@ -65,6 +65,7 @@ def get_video_and_ratings(session: Session, filter_criterion_name: str, filter_c
             Video.id,
             Video.name,
             Video.subdir_and_filename.label("path"),
+            Video.relative_thumbnail_path,
             Player.name.label("player_name"),
             func.coalesce(func.sum(Rating.rating), 0).label("total_rating"),
             func.coalesce(func.avg(Rating.rating), 0).label("average_rating"),
