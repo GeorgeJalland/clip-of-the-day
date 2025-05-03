@@ -45,7 +45,7 @@ class VideoFileHandler(FileSystemEventHandler):
 
     def on_created(self, event):
         if event.is_directory:
-            if event.src_path == "thumbnails":
+            if event.src_path == Config.THUMBNAIL_DIRECTORY_NAME:
                 return
             logger.info(f"new directory detected: {event}")
             player_name = os.path.basename(event.src_path)
@@ -74,11 +74,12 @@ class VideoFileHandler(FileSystemEventHandler):
         full_path = event_path
         thumbnail_output_path = get_thumbnail_path(event_path)
         thumbnail_path = self.thumbnail_generator.delayed_generate(event_path, output_path=thumbnail_output_path)
-        add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path, thumbnail_path)
+        relative_thumbnail_path = player_name + "/" + Config.THUMBNAIL_DIRECTORY_NAME + "/" + os.path.basename(thumbnail_path)
+        add_new_video_record(db, player_name, video_name, subdir_and_filename, full_path, thumbnail_path, relative_thumbnail_path)
 
     def on_deleted(self, event):
         if event.is_directory:
-            if event.src_path == "thumbnails":
+            if event.src_path == Config.THUMBNAIL_DIRECTORY_NAME:
                 return
             # since on delete cascade this will drop all videos for given player too
             logger.info(f"directory deleted: {event}")

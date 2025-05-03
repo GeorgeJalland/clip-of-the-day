@@ -8,7 +8,7 @@ class ThumbnailGenerator:
     def __init__(self):
         self.logger = get_logger(__name__)
 
-    def generate(self, video_path: str, output_path: str, time_in_seconds: int = 3):
+    def generate(self, video_path: str, output_path: str, time_in_seconds: int = 0):
         self.logger.info(f"Generating thumbnail for {video_path}")
 
         cap = cv2.VideoCapture(video_path)

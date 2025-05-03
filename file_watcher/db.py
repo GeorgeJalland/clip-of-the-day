@@ -21,12 +21,12 @@ def get_db():
 def create_schema(engine):
     Base.metadata.create_all(engine)
 
-def add_new_video_record(db, player_name, video_name, subdir_and_filename, full_video_path, thumbnail_path):
+def add_new_video_record(db, player_name, video_name, subdir_and_filename, full_video_path, thumbnail_path, relative_thumbnail_path):
     logger.info(f"creating new video record for {video_name}")
     with Session(db) as session:
         player = session.query(Player).filter_by(name=player_name).first()
         player_id = player.id if player else add_new_player_record(db, player_name)
-        new_video = Video(player_id=player_id, name=video_name, subdir_and_filename=subdir_and_filename, full_path=full_video_path, thumbnail_path=thumbnail_path)
+        new_video = Video(player_id=player_id, name=video_name, subdir_and_filename=subdir_and_filename, full_path=full_video_path, thumbnail_path=thumbnail_path, relative_thumbnail_path=relative_thumbnail_path)
         session.add(new_video)
         session.commit()
         new_video_id = new_video.id

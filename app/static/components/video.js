@@ -56,6 +56,7 @@ export class Video {
 
     render(videoData) {
         this.state.video = videoData
+        this.elements.video.poster = videoData.relative_thumbnail_path
         this.elements.videoSource.src = videoData.path
         this.elements.video.load()
         if (this.state.userHasClickedPlay) {

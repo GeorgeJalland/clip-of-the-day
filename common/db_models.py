@@ -29,6 +29,7 @@ class Video(Base):
     subdir_and_filename = Column(String(100), nullable=False)
     full_path = Column(String(200), nullable=False)
     thumbnail_path = Column(String(200), nullable=False)
+    relative_thumbnail_path = Column(String(200), nullable=False)
 
     player = relationship("Player", lazy="joined")
     ratings = relationship("Rating", back_populates="video", passive_deletes=True)

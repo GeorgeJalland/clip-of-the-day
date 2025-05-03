@@ -8,3 +8,4 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(project_root, 'instance/app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     VIDEO_DIRECTORY = os.getenv('VIDEO_DIRECTORY')
+    THUMBNAIL_DIRECTORY_NAME = "thumbnails"

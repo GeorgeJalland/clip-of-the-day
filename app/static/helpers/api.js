@@ -24,6 +24,7 @@ export async function fetchVideo(position, playerId=null) {
 
         let data = await response.json();
         data["path"] = buildApiString("/videos/" + data.path)
+        data["relative_thumbnail_path"] = buildApiString("/videos/" + data.relative_thumbnail_path)
         return data
 
     } catch (error) {
@@ -48,6 +49,7 @@ export async function fetchVideoById(id, playerId=null) {
 
         let data = await response.json();
         data["path"] = buildApiString("/videos/" + data.path)
+        data["relative_thumbnail_path"] = buildApiString("/videos/" + data.relative_thumbnail_path)
         return data
 
     } catch (error) {

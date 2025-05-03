@@ -2,6 +2,7 @@ import os
 
 from file_watcher.thumbnail import get_thumbnail_path, ThumbnailGenerator
 from common.logger import get_logger
+from common.config import Config
 from file_watcher.db import get_all_videos, add_new_video_record, delete_video_record
 
 logger = get_logger(__name__)
@@ -32,10 +33,12 @@ def migrate_video_data(db, video_directory, file_format=".mp4"):
     thumbnail_generator = ThumbnailGenerator()
     for video in sorted(list(vids_not_in_database), key=lambda item: item[1]):
         video_path = video[2]
+        player_name = video[0]
         thumbnail_path = get_thumbnail_path(video_path)
+        relative_thumbnail_path = player_name + "/" + Config.THUMBNAIL_DIRECTORY_NAME + "/" + os.path.basename(thumbnail_path)
         if not os.path.exists(thumbnail_path):
             thumbnail_generator.generate(video_path, thumbnail_path)
-        add_new_video_record(db=db, player_name=video[0], video_name=video[1], subdir_and_filename=video[0]+'/'+video[1], full_video_path=video_path, thumbnail_path=thumbnail_path)
+        add_new_video_record(db=db, player_name=player_name, video_name=video[1], subdir_and_filename=player_name+'/'+video[1], full_video_path=video_path, thumbnail_path=thumbnail_path, relative_thumbnail_path=relative_thumbnail_path)
         
     # if video in db but not file system; delete record
     vids_not_in_filesystem = videos_in_database - videos_in_filesystem
