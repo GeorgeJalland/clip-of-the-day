@@ -2,7 +2,6 @@ from sqlalchemy import ForeignKey, Column, Integer, String, DateTime, CheckConst
 from sqlalchemy.orm import DeclarativeBase, relationship
 from datetime import datetime
 import logging
-import os
 
 logger = logging.getLogger(__name__)
 
