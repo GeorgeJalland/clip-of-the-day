@@ -1,4 +1,4 @@
-FROM python:3.10.0-alpine
+FROM python:3.10.12-alpine
 
 WORKDIR /clip-of-the-day
 COPY ./app ./app
