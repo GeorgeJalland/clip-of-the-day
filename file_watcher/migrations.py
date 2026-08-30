@@ -7,6 +7,9 @@ from file_watcher.db import get_all_videos, add_new_video_record, delete_video_r
 
 logger = get_logger(__name__)
 
+# TODO: path joins shoudl be os.path.join instead of string concatenation
+# TODO: path generation should be in one place, not spread across multiple files
+
 def migrate_video_data(db, video_directory, file_format=".mp4"):
     
     logger.info("--------------------------- migrating video data ---------------------------")
@@ -19,14 +22,15 @@ def migrate_video_data(db, video_directory, file_format=".mp4"):
     # sort videos by video name so added in correct order
     thumbnail_generator = ThumbnailGenerator()
     for video in sorted(list(vids_not_in_database), key=lambda item: item[1]):
-        video_path = video[2]
         player_name = video[0]
+        video_name = video[1]
+        video_path = os.path.join(video_directory, video[0], video[1])
         thumbnail_path = get_thumbnail_path(video_path)
-        relative_thumbnail_path = player_name + "/" + Config.THUMBNAIL_DIRECTORY_NAME + "/" + os.path.basename(thumbnail_path)
+        relative_thumbnail_path = os.path.join(player_name, Config.THUMBNAIL_DIRECTORY_NAME, os.path.basename(thumbnail_path))
         if not os.path.exists(thumbnail_path):
             thumbnail_generator.generate(video_path, thumbnail_path)
-        add_new_video_record(db=db, player_name=player_name, video_name=video[1], subdir_and_filename=player_name+'/'+video[1], full_video_path=video_path, thumbnail_path=thumbnail_path, relative_thumbnail_path=relative_thumbnail_path)
-        
+        add_new_video_record(db=db, player_name=player_name, video_name=video_name, subdir_and_filename=os.path.join(player_name, video[1]), full_video_path=video_path, thumbnail_path=thumbnail_path, relative_thumbnail_path=relative_thumbnail_path)
+
     # if video in db but not file system; delete record
     vids_not_in_filesystem = videos_in_database - videos_in_filesystem
     for video in vids_not_in_filesystem:
@@ -42,11 +46,11 @@ def get_videos_in_filesystem(video_directory, file_format=".mp4") -> set:
             continue
         for file in files:
             if file[-4:] == file_format:
-                videos.add((player, file, video_directory+'/'+player+'/'+file))
+                videos.add((player, file))
     return videos
 
 def get_videos_in_database(db) -> set:
-    return {(video.player.name, video.name, video.full_path) for video in get_all_videos(db)}
+    return {(video.player.name, video.name) for video in get_all_videos(db)}
 
 def generate_missing_thumbnails(db):
     logger.info("--------------------------- generating missing thumbnails ---------------------------")
