@@ -96,6 +96,6 @@ docker compose up --detach clip-of-the-day
 
 #### File Watcher
 ```bash
-sudo docker compose build file_watcher
-docker compose up --detach file_watcher
+sudo docker compose build file-watcher
+docker compose up --detach file-watcher
 ```
