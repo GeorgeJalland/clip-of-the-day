@@ -8,24 +8,11 @@ from file_watcher.db import get_all_videos, add_new_video_record, delete_video_r
 logger = get_logger(__name__)
 
 def migrate_video_data(db, video_directory, file_format=".mp4"):
-    def get_videos_in_filesystem():
-        videos = set()
-        for root, _, files in os.walk(video_directory):
-            player = os.path.basename(root)
-            if not player or player[0:1] == ".":
-                continue
-            for file in files:
-                if file[-4:] == file_format:
-                    videos.add((player, file, video_directory+'/'+player+'/'+file))
-        return videos
-
-    def get_videos_in_database():
-        return {(video.player.name, video.name, video.full_path) for video in get_all_videos(db)}
     
     logger.info("--------------------------- migrating video data ---------------------------")
 
-    videos_in_filesystem = get_videos_in_filesystem()
-    videos_in_database = get_videos_in_database()
+    videos_in_filesystem = get_videos_in_filesystem(video_directory, file_format)
+    videos_in_database = get_videos_in_database(db)
 
     # if video in filesystem and not db; add record
     vids_not_in_database = videos_in_filesystem - videos_in_database
@@ -46,6 +33,20 @@ def migrate_video_data(db, video_directory, file_format=".mp4"):
         delete_video_record(db=db, player_name=video[0], video_name=video[1])
 
     logger.info("--------------------------- migration complete ---------------------------")
+
+def get_videos_in_filesystem(video_directory, file_format=".mp4") -> set:
+    videos = set()
+    for root, _, files in os.walk(video_directory):
+        player = os.path.basename(root)
+        if not player or player[0:1] == ".":
+            continue
+        for file in files:
+            if file[-4:] == file_format:
+                videos.add((player, file, video_directory+'/'+player+'/'+file))
+    return videos
+
+def get_videos_in_database(db) -> set:
+    return {(video.player.name, video.name, video.full_path) for video in get_all_videos(db)}
 
 def generate_missing_thumbnails(db):
     logger.info("--------------------------- generating missing thumbnails ---------------------------")
